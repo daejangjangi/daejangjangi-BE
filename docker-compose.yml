@@ -1,0 +1,39 @@
+services:
+  mysql:
+    container_name: mysql
+    image: mysql:8.4
+    environment:
+      - MYSQL_DATABASE=daejangjangi
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+
+    ports:
+      - "13306:3306" # local 에서 사용중인 DB와 port 충돌하여 수정.
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  mongo:
+    container_name: mongo
+    image: mongo:7.0.12
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_DATABASE: test
+    volumes:
+      - mongo_data:/data/db
+
+  redis:
+    container_name: redis
+    image: redis:alpine
+    hostname: redis
+    ports:
+      - 6379:6379
+    volumes:
+      - redis_data:/data
+
+volumes:
+  mysql_data:
+  mongo_data:
+  redis_data:
