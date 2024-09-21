@@ -1,0 +1,27 @@
+server:
+  port: 8080
+spring:
+  # MySQL
+  datasource:
+    url: jdbc:mysql://localhost:13306/daejangjangi?useSSL=false&allowPublicKeyRetrieval=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+  # JPA
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
+
+  data:
+    # REDIS
+    redis:
+      host: localhost
+      port: 6379
+
+    # MONGO
+    mongodb:
+      uri: mongodb://localhost:27017/test
