@@ -1,6 +1,6 @@
-package com.daejangjangi.backend.config;
+package com.daejangjangi.backend.global.config;
 
-import com.daejangjangi.backend.config.log.LogFilter;
+import com.daejangjangi.backend.global.config.log.LogFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
