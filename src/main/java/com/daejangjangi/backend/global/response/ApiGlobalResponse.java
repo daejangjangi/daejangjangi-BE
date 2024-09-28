@@ -1,5 +1,6 @@
 package com.daejangjangi.backend.global.response;
 
+import com.daejangjangi.backend.global.exception.ApiGlobalErrorType;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
@@ -24,6 +25,14 @@ public class ApiGlobalResponse<T> {
 
   public static <T> ApiGlobalResponse<T> ok(final T data) {
     return new ApiGlobalResponse<T>(HttpStatus.OK.name(), HttpStatus.OK.getReasonPhrase(), data);
+  }
+
+  public static <T> ApiGlobalResponse<T> error(ApiGlobalErrorType errorType) {
+    return error(errorType.name(), errorType.getMessage());
+  }
+
+  public static <T> ApiGlobalResponse<T> error(ApiGlobalErrorType errorType, T data) {
+    return error(errorType.name(), errorType.getMessage(), data);
   }
 
   public static <T> ApiGlobalResponse<T> error(String code, String message) {
