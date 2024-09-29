@@ -8,6 +8,7 @@ import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @RestControllerAdvice
 @Slf4j
@@ -23,6 +24,15 @@ public class GlobalExceptionHandler {
         b -> b.getField() + " : " + b.getDefaultMessage()
     ).toList();
     return ApiGlobalResponse.error(ApiGlobalErrorType.BAD_REQUEST, errorMessageList);
+  }
+
+  /**
+   * 존재하지 않는 리소스에 요청한 경우 예외 처리
+   */
+  @ExceptionHandler(NoResourceFoundException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public ApiGlobalResponse<?> handler() {
+    return ApiGlobalResponse.error(ApiGlobalErrorType.NO_STATIC_RESOURCE);
   }
 
   /**

@@ -1,5 +1,10 @@
 package com.daejangjangi.backend.basic;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.daejangjangi.backend.global.config.SecurityConfig;
 import com.daejangjangi.backend.global.exception.ApiGlobalErrorType;
 import org.junit.jupiter.api.DisplayName;
@@ -11,11 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SuppressWarnings("NoAsciiCharacters")
 @TestPropertySource(properties = "logging.config=classpath:logback-spring-test.xml")
@@ -75,5 +75,16 @@ public class BasicControllerTest {
         .andExpect(jsonPath("$.code").value(ApiGlobalErrorType.INTERNAL_SERVER_ERROR.name()))
         .andExpect(
             jsonPath("$.message").value(ApiGlobalErrorType.INTERNAL_SERVER_ERROR.getMessage()));
+  }
+
+  @Test
+  @DisplayName("예외 처리 확인 - 없는 리소스 접근")
+  void exception_handling_test_no_resource() throws Exception {
+    String noResourceUrl = "no-resource";
+    mvc.perform(get("/" + noResourceUrl))
+        .andExpect(status().isBadRequest())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.code").value(ApiGlobalErrorType.NO_STATIC_RESOURCE.name()))
+        .andExpect(jsonPath("$.message").value(ApiGlobalErrorType.NO_STATIC_RESOURCE.getMessage()));
   }
 }
