@@ -1,6 +1,6 @@
-package com.daejangjangi.backend.config;
+package com.daejangjangi.backend.global.config;
 
-import com.daejangjangi.backend.config.log.LogFilter;
+import com.daejangjangi.backend.global.config.log.LogFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -11,7 +11,6 @@ import org.springframework.security.config.annotation.web.configurers.HeadersCon
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.context.SecurityContextHolderFilter;
-
 
 @Configuration
 @EnableWebSecurity
@@ -36,6 +35,8 @@ public class SecurityConfig {
                 HeadersConfigurer.FrameOptionsConfig::sameOrigin)) // X-Frame-Options sameOrigin 제한
         .sessionManagement(c -> c
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 비활성화
+
+        .authorizeHttpRequests(e -> e.anyRequest().permitAll())
 
         // 로깅 필터 추가
         .addFilterBefore(new LogFilter(), SecurityContextHolderFilter.class)

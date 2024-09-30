@@ -1,4 +1,4 @@
-package com.daejangjangi.backend.config.log;
+package com.daejangjangi.backend.global.config.log;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
