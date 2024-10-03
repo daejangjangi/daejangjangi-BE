@@ -1,0 +1,11 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: Daejangjangi
+  datasource:
+    url: jdbc:mysql://mysql:3306/daejangjangi?useSSL=false&allowPublicKeyRetrieval=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${datasource.prod.usernames}
+    password: ${datasource.prod.password}
