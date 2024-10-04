@@ -29,3 +29,13 @@ jobs:
 
       - name: Build and test with gradle
         run: ./gradlew clean build
+
+      - name: slack-notification
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{job.status}}
+          author_name: Github Action Test
+          fields: repo, message, commit, author, action, eventName, ref, workflow, job, took
+        env:
+          SLACK_WEBHOOK_URL: ${{secrets.SLACK_WEBHOOK_URL}}
+        if: always()
