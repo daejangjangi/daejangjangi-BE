@@ -51,3 +51,55 @@ jobs:
           context: .
           push: true
           tags: ${{env.DOCKER_IMAGE_NAME}}
+
+      - name: slack-notification
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{job.status}}
+          author_name: Github Action Test
+          fields: repo, message, commit, author, action, eventName, ref, workflow, job, took
+        env:
+          SLACK_WEBHOOK_URL: ${{secrets.SLACK_WEBHOOK_URL}}
+        if: always()
+
+  cd:
+    needs: ci
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST}}
+          username: ${{ secrets.EC2_USERNAME}}
+          key: ${{secrets.SSH_PRIVATE_KEY}}
+          script: |
+            set -e
+            echo "Starting deployment process"
+
+            echo "Pulling latest Docker image"
+            docker pull ${{ env.DOCKER_IMAGE_NAME }}
+
+            echo "Stopping and removing existing containers"
+            docker-compose -f docker-compose.yml down
+
+            echo "Starting new containers"
+            docker-compose -f docker-compose.yml up -d
+
+            echo "Pruning unused docker images"
+            docker image prune -af
+
+            echo "Deployment completed successfully!"
+
+      - name: slack-notification
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{job.status}}
+          author_name: Github Action Test
+          fields: repo, message, commit, author, action, eventName, ref, workflow, job, took
+        env:
+          SLACK_WEBHOOK_URL: ${{secrets.SLACK_WEBHOOK_URL}}
+        if: always()
