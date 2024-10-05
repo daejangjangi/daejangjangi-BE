@@ -9,3 +9,9 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: ${datasource.dev.usernames}
     password: ${datasource.dev.password}
+  data:
+    redis:
+      host: redis
+      port: 6379
+    mongodb:
+      uri: mongodb://mongo:27017/daejangjangi
