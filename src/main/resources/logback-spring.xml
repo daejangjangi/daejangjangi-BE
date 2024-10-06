@@ -11,17 +11,17 @@
       <charset>${CONSOLE_LOG_CHARSET}</charset>
     </encoder>
   </appender>
-<!--  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
-<!--    <file>/logs/application.log</file>-->
-<!--    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
-<!--      <fileNamePattern>/logs/application-%d{yyyyMMdd}.log</fileNamePattern>-->
-<!--      <maxHistory>-1</maxHistory> &lt;!&ndash; 최대 보관일수 미지정, 삭제 x &ndash;&gt;-->
-<!--    </rollingPolicy>-->
-<!--    <encoder>-->
-<!--      <pattern>${LOG_PATTERN}</pattern>-->
-<!--      <charset>${CONSOLE_LOG_CHARSET}</charset>-->
-<!--    </encoder>-->
-<!--  </appender>-->
+  <!--  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+  <!--    <file>/logs/application.log</file>-->
+  <!--    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+  <!--      <fileNamePattern>/logs/application-%d{yyyyMMdd}.log</fileNamePattern>-->
+  <!--      <maxHistory>-1</maxHistory> &lt;!&ndash; 최대 보관일수 미지정, 삭제 x &ndash;&gt;-->
+  <!--    </rollingPolicy>-->
+  <!--    <encoder>-->
+  <!--      <pattern>${LOG_PATTERN}</pattern>-->
+  <!--      <charset>${CONSOLE_LOG_CHARSET}</charset>-->
+  <!--    </encoder>-->
+  <!--  </appender>-->
 
   <springProfile name="local">
     <logger name="com.daejangjangi" level="DEBUG"/>
@@ -30,18 +30,18 @@
     </root>
   </springProfile>
 
-<!--  <springProfile name="dev">-->
-<!--    <root level="INFO">-->
-<!--      <appender-ref ref="CONSOLE"/>-->
-<!--      <appender-ref ref="FILE"/>-->
-<!--    </root>-->
-<!--  </springProfile>-->
+  <springProfile name="dev">
+    <root level="INFO">
+      <appender-ref ref="CONSOLE"/>
+      <!--      <appender-ref ref="FILE"/>-->
+    </root>
+  </springProfile>
 
-<!--  <springProfile name="prod">-->
-<!--    <root level="INFO">-->
-<!--      <appender-ref ref="CONSOLE"/>-->
-<!--      <appender-ref ref="FILE"/>-->
-<!--    </root>-->
-<!--  </springProfile>-->
+  <!--  <springProfile name="prod">-->
+  <!--    <root level="INFO">-->
+  <!--      <appender-ref ref="CONSOLE"/>-->
+  <!--      <appender-ref ref="FILE"/>-->
+  <!--    </root>-->
+  <!--  </springProfile>-->
 
 </configuration>
