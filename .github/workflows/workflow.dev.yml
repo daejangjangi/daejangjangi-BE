@@ -8,7 +8,7 @@ on:
       - closed
 
 env:
-  DOCKER_IMAGE_NAME: daejangjangi/backend-dev:0.0.1
+  DOCKER_IMAGE_NAME: daejangjangi/backend-dev:1.0.0
 
 jobs:
   ci:
