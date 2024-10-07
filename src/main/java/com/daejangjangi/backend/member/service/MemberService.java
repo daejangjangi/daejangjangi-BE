@@ -1,7 +1,8 @@
-package com.daejangjangi.backend.member;
+package com.daejangjangi.backend.member.service;
 
 import com.daejangjangi.backend.member.exception.EmailDuplicationException;
 import com.daejangjangi.backend.member.exception.NicknameDuplicationException;
+import com.daejangjangi.backend.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

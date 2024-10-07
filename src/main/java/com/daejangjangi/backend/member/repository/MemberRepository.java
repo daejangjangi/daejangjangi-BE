@@ -1,5 +1,6 @@
-package com.daejangjangi.backend.member;
+package com.daejangjangi.backend.member.repository;
 
+import com.daejangjangi.backend.member.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
