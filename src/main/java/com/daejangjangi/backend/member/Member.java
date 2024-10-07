@@ -31,4 +31,6 @@ public class Member {
   private Long id;
   @Column(length = 50, nullable = false)
   private String email;
+  @Column(length = 5, nullable = false, unique = true)
+  private String nickname;
 }

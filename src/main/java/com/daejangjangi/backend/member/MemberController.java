@@ -19,4 +19,10 @@ public class MemberController {
     memberService.checkEmail(email);
     return ApiGlobalResponse.ok();
   }
+
+  @GetMapping("/nickname/check/{nickname}")
+  public ApiGlobalResponse<?> nicknameDuplicationCheck(@PathVariable("nickname") String nickname) {
+    memberService.checkNickname(nickname);
+    return ApiGlobalResponse.ok();
+  }
 }
