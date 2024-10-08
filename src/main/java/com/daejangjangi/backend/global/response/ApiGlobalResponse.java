@@ -1,6 +1,6 @@
 package com.daejangjangi.backend.global.response;
 
-import com.daejangjangi.backend.global.exception.ApiGlobalErrorType;
+import com.daejangjangi.backend.global.exception.type.ApiGlobalErrorType;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 

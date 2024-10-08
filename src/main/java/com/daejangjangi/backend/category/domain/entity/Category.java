@@ -1,4 +1,4 @@
-package com.daejangjangi.backend.category;
+package com.daejangjangi.backend.category.domain.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

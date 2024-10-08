@@ -1,6 +1,6 @@
-package com.daejangjangi.backend.member.domain;
+package com.daejangjangi.backend.member.domain.entity;
 
-import com.daejangjangi.backend.disease.Disease;
+import com.daejangjangi.backend.disease.domain.entity.Disease;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;

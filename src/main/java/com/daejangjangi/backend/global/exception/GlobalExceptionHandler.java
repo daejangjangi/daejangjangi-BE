@@ -1,5 +1,6 @@
 package com.daejangjangi.backend.global.exception;
 
+import com.daejangjangi.backend.global.exception.type.ApiGlobalErrorType;
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;

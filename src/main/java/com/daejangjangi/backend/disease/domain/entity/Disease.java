@@ -1,4 +1,4 @@
-package com.daejangjangi.backend.disease;
+package com.daejangjangi.backend.disease.domain.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

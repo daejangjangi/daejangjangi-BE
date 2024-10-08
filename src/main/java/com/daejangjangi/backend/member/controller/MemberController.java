@@ -1,12 +1,12 @@
 package com.daejangjangi.backend.member.controller;
 
-import com.daejangjangi.backend.category.Category;
-import com.daejangjangi.backend.category.CategoryService;
-import com.daejangjangi.backend.disease.Disease;
-import com.daejangjangi.backend.disease.DiseaseService;
+import com.daejangjangi.backend.category.domain.entity.Category;
+import com.daejangjangi.backend.category.service.CategoryService;
+import com.daejangjangi.backend.disease.domain.entity.Disease;
+import com.daejangjangi.backend.disease.service.DiseaseService;
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
-import com.daejangjangi.backend.member.domain.Member;
-import com.daejangjangi.backend.member.domain.MemberRequestDto;
+import com.daejangjangi.backend.member.domain.entity.Member;
+import com.daejangjangi.backend.member.domain.dto.MemberRequestDto;
 import com.daejangjangi.backend.member.service.MemberService;
 import jakarta.validation.Valid;
 import java.util.List;

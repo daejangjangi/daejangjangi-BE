@@ -1,5 +1,6 @@
 package com.daejangjangi.backend.global.exception;
 
+import com.daejangjangi.backend.global.exception.type.ApiGlobalErrorType;
 import lombok.Getter;
 
 @Getter

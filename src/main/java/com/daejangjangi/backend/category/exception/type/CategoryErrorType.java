@@ -1,4 +1,4 @@
-package com.daejangjangi.backend.category;
+package com.daejangjangi.backend.category.exception.type;
 
 import lombok.Getter;
 

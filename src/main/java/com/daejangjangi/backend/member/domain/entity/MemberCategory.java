@@ -1,6 +1,6 @@
-package com.daejangjangi.backend.member.domain;
+package com.daejangjangi.backend.member.domain.entity;
 
-import com.daejangjangi.backend.category.Category;
+import com.daejangjangi.backend.category.domain.entity.Category;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

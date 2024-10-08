@@ -1,5 +1,6 @@
-package com.daejangjangi.backend.category;
+package com.daejangjangi.backend.category.exception;
 
+import com.daejangjangi.backend.category.exception.type.CategoryErrorType;
 import com.daejangjangi.backend.global.exception.ClientDataException;
 import lombok.Getter;
 

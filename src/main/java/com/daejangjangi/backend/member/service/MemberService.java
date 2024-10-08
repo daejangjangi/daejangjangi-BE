@@ -1,10 +1,10 @@
 package com.daejangjangi.backend.member.service;
 
-import com.daejangjangi.backend.category.Category;
-import com.daejangjangi.backend.disease.Disease;
-import com.daejangjangi.backend.member.domain.Member;
-import com.daejangjangi.backend.member.domain.MemberCategory;
-import com.daejangjangi.backend.member.domain.MemberDisease;
+import com.daejangjangi.backend.category.domain.entity.Category;
+import com.daejangjangi.backend.disease.domain.entity.Disease;
+import com.daejangjangi.backend.member.domain.entity.Member;
+import com.daejangjangi.backend.member.domain.entity.MemberCategory;
+import com.daejangjangi.backend.member.domain.entity.MemberDisease;
 import com.daejangjangi.backend.member.exception.EmailDuplicationException;
 import com.daejangjangi.backend.member.exception.NicknameDuplicationException;
 import com.daejangjangi.backend.member.repository.MemberCategoryRepository;

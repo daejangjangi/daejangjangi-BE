@@ -1,5 +1,6 @@
-package com.daejangjangi.backend.disease;
+package com.daejangjangi.backend.disease.exception;
 
+import com.daejangjangi.backend.disease.exception.type.DiseaseErrorType;
 import com.daejangjangi.backend.global.exception.ClientDataException;
 import lombok.Getter;
 

@@ -1,4 +1,4 @@
-package com.daejangjangi.backend.disease;
+package com.daejangjangi.backend.disease.exception.type;
 
 import lombok.Getter;
 
@@ -6,7 +6,7 @@ import lombok.Getter;
 public enum DiseaseErrorType {
 
   NOT_MANAGED_DISEASE("관리되지 않는 질병입니다.");
-  
+
   private final String message;
 
   DiseaseErrorType(String message) {

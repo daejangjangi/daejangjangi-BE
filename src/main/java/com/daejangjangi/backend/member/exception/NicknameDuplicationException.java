@@ -1,6 +1,7 @@
 package com.daejangjangi.backend.member.exception;
 
 import com.daejangjangi.backend.global.exception.ClientDataException;
+import com.daejangjangi.backend.member.exception.type.MemberErrorType;
 import lombok.Getter;
 
 @Getter

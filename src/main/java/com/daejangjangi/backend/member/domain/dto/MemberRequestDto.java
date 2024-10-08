@@ -1,5 +1,6 @@
-package com.daejangjangi.backend.member.domain;
+package com.daejangjangi.backend.member.domain.dto;
 
+import com.daejangjangi.backend.member.domain.entity.Member;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
