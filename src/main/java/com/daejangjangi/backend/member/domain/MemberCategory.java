@@ -11,6 +11,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -19,6 +20,15 @@ import lombok.NoArgsConstructor;
 @Table(name = "members_categories")
 @Entity
 public class MemberCategory {
+
+  @Builder
+  public MemberCategory(
+      Member member,
+      Category category
+  ) {
+    this.member = member;
+    this.category = category;
+  }
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

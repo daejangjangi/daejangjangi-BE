@@ -10,6 +10,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -18,6 +19,15 @@ import lombok.NoArgsConstructor;
 @Table(name = "members_diseases")
 @Entity
 public class MemberDisease {
+
+  @Builder
+  public MemberDisease(
+      Member member,
+      Disease disease
+  ) {
+    this.member = member;
+    this.disease = disease;
+  }
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
