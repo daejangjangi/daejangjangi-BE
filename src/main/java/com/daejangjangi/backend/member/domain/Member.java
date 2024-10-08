@@ -63,7 +63,7 @@ public class Member {
   @Column(name = "member_email", length = 50, nullable = false)
   private String email;
 
-  @Column(name = "member_password", length = 50, nullable = false)
+  @Column(name = "member_password", length = 100, nullable = false)
   private String password;
 
   @Column(name = "member_nickname", length = 5, nullable = false, unique = true)
@@ -131,5 +131,14 @@ public class Member {
         category.updateParent(this);
       }
     }
+  }
+
+  /**
+   * 비밀번호 암호화
+   *
+   * @param encodedPassword
+   */
+  public void encodePassword(String encodedPassword) {
+    this.password = encodedPassword;
   }
 }
