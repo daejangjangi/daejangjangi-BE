@@ -74,4 +74,19 @@ public class MemberRequestDto {
           .build();
     }
   }
+  
+  public record Login(
+
+      @Schema(description = "이메일")
+
+      @NotBlank
+      String email,
+
+      @Schema(description = "비밀번호")
+
+      @NotBlank
+      String password
+  ) {
+
+  }
 }
