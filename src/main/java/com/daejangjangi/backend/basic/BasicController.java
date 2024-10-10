@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class BasicController {
 
-  @PreAuthorize("hasAuthority('MEMBER')")
   @GetMapping("/health-check")
   public ApiGlobalResponse<String> healthCheck() {
     return ApiGlobalResponse.ok();

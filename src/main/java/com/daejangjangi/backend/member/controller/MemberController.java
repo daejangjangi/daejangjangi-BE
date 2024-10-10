@@ -7,6 +7,7 @@ import com.daejangjangi.backend.disease.service.DiseaseService;
 import com.daejangjangi.backend.global.config.SecurityConfig;
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
 import com.daejangjangi.backend.member.domain.dto.MemberRequestDto;
+import com.daejangjangi.backend.member.domain.dto.MemberResponseDto;
 import com.daejangjangi.backend.member.domain.entity.Member;
 import com.daejangjangi.backend.member.service.MemberService;
 import jakarta.servlet.ServletException;
@@ -16,6 +17,7 @@ import jakarta.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -60,5 +62,13 @@ public class MemberController {
       throws ServletException, IOException {
     request.setAttribute("loginRequest", loginRequest);
     request.getRequestDispatcher(SecurityConfig.FILTER_PROCESS_URL).forward(request, response);
+  }
+
+  @PreAuthorize("hasAuthority('MEMBER')")
+  @GetMapping("/info")
+  public ApiGlobalResponse<?> info() {
+    Member member = memberService.info();
+    MemberResponseDto.Info response = member.toDto();
+    return ApiGlobalResponse.ok(response);
   }
 }

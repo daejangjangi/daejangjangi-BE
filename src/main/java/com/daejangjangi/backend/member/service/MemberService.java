@@ -14,8 +14,11 @@ import com.daejangjangi.backend.member.repository.MemberRepository;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -94,6 +97,46 @@ public class MemberService implements UserDetailsService {
     member.addCategories(memberCategories);
   }
 
+  /**
+   * 회원 정보 반환
+   *
+   * @return Member
+   */
+  public Member info() {
+    Long id = getCurrentId();
+    return findById(id);
+  }
+
+  /**
+   * 로그인 회원 id 반환
+   *
+   * @return Long
+   */
+  public Long getCurrentId() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    if (Objects.isNull(authentication)) {
+      throw new RuntimeException();
+    }
+    String name = authentication.getName();
+    return Long.parseLong(name);
+  }
+
+  /**
+   * 회원 조회 by Id
+   *
+   * @param id
+   * @return Member
+   */
+  public Member findById(Long id) {
+    return memberRepository.findById(id).orElseThrow(NotFoundMemberException::new);
+  }
+
+  /**
+   * 회원 조회 by email
+   *
+   * @param email
+   * @return Member
+   */
   public Member findByEmail(String email) {
     return memberRepository.findByEmail(email).orElseThrow(NotFoundMemberException::new);
   }
