@@ -1,6 +1,5 @@
 package com.daejangjangi.backend.member.domain.dto;
 
-import com.daejangjangi.backend.member.domain.entity.Member;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -58,23 +57,9 @@ public class MemberRequestDto {
       @Size(min = 1)
       List<String> categories
   ) {
-
-    /**
-     * Member 엔티티 변환
-     *
-     * @return
-     */
-    public Member toEntity() {
-      return Member.builder()
-          .email(this.email)
-          .password(this.password)
-          .nickname(this.nickname)
-          .gender(this.gender)
-          .birth(this.birth)
-          .build();
-    }
+    
   }
-  
+
   public record Login(
 
       @Schema(description = "이메일")

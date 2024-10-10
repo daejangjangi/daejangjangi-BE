@@ -21,7 +21,7 @@ public class MemberResponseDto {
 
       @Schema(description = "회원 장질환")
 
-      List<String> disease,
+      List<String> diseases,
 
       @Schema(description = "회원 관심 상품 카테고리")
 
