@@ -9,6 +9,7 @@ import com.daejangjangi.backend.global.response.ApiGlobalResponse;
 import com.daejangjangi.backend.member.domain.dto.MemberRequestDto;
 import com.daejangjangi.backend.member.domain.dto.MemberResponseDto;
 import com.daejangjangi.backend.member.domain.entity.Member;
+import com.daejangjangi.backend.member.domain.mapper.MemberMapper;
 import com.daejangjangi.backend.member.service.MemberService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -48,7 +49,7 @@ public class MemberController {
 
   @PostMapping("/join")
   public ApiGlobalResponse<?> join(@Valid @RequestBody MemberRequestDto.Join request) {
-    Member member = request.toEntity();
+    Member member = MemberMapper.INSTANCE.joinRequestToEntity(request);
     List<Disease> diseases = diseaseService.findByNames(request.diseases());
     List<Category> categories = categoryService.findByNames(request.categories());
     memberService.save(member, diseases, categories);
@@ -68,7 +69,7 @@ public class MemberController {
   @GetMapping("/info")
   public ApiGlobalResponse<?> info() {
     Member member = memberService.info();
-    MemberResponseDto.Info response = member.toDto();
+    MemberResponseDto.Info response = MemberMapper.INSTANCE.entityToInfoResponse(member);
     return ApiGlobalResponse.ok(response);
   }
 }
