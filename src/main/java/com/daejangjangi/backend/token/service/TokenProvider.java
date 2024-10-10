@@ -22,8 +22,7 @@ public class TokenProvider {
   private final Long ACCESS_EXP;
   private final Long REFRESH_EXP;
 
-  private static final String Bearer = "Bearer ";
-  private static final String ROLE_CLAIM = "role";
+  public static final String ROLE_CLAIM = "role";
 
   public TokenProvider(
       @Value("${jwt.access.secret}") String accessSecret,
@@ -45,14 +44,6 @@ public class TokenProvider {
 
   public String generateRefreshToken(Authentication authentication) {
     return createToken(authentication, REFRESH_SECRET, REFRESH_EXP);
-  }
-
-  public String extractFromAuthorizationHeader(HttpServletRequest request) {
-    String header = request.getHeader(HttpHeaders.AUTHORIZATION);
-    if (StringUtils.hasText(header) && header.startsWith(Bearer)) {
-      return header.replace(Bearer, "");
-    }
-    return null;
   }
 
   /*--------------Private----------------------------Private----------------------------Private---*/
