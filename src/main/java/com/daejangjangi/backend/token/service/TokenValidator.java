@@ -33,15 +33,36 @@ public class TokenValidator {
     this.REFRESH_SECRET = Keys.hmacShaKeyFor(refreshKeyBytes);
   }
 
+  /**
+   * accessToken 검증
+   *
+   * @param accessToken
+   * @return Claims
+   */
   public Claims validateAccessToken(String accessToken) {
     return getClaimsFromToken(accessToken, ACCESS_SECRET);
   }
 
+  /**
+   * refreshToken 검증
+   *
+   * @param refreshToken
+   * @return Claims
+   */
   public Claims validateRefreshToken(String refreshToken) {
     return getClaimsFromToken(refreshToken, REFRESH_SECRET);
   }
 
-  public Claims getClaimsFromToken(String token, SecretKey secretKey) {
+  /*--------------Private----------------------------Private----------------------------Private---*/
+
+  /**
+   * 토큰 parsing
+   *
+   * @param token
+   * @param secretKey
+   * @return Claims
+   */
+  private Claims getClaimsFromToken(String token, SecretKey secretKey) {
     try {
       if (!StringUtils.hasText(token)) {
         throw new NotAuthenticatedAccessException();

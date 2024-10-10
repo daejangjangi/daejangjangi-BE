@@ -38,10 +38,22 @@ public class TokenProvider {
     this.REFRESH_EXP = refreshExp;
   }
 
+  /**
+   * 액세스 토큰 발급
+   *
+   * @param authentication
+   * @return String - accessToken
+   */
   public String generateAccessToken(Authentication authentication) {
     return createToken(authentication, ACCESS_SECRET, ACCESS_EXP);
   }
 
+  /**
+   * 리프레쉬 토큰 발급
+   *
+   * @param authentication
+   * @return String - refreshToken
+   */
   public String generateRefreshToken(Authentication authentication) {
     return createToken(authentication, REFRESH_SECRET, REFRESH_EXP);
   }

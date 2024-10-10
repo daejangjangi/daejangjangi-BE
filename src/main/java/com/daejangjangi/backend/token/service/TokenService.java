@@ -25,15 +25,29 @@ public class TokenService {
 
   private static final String Bearer = "Bearer ";
 
+  /**
+   * accessToken & refreshToken 발급
+   *
+   * @param authentication
+   * @return TokenDto
+   */
+  @Transactional
   public TokenDto getToken(Authentication authentication) {
     String accessToken = tokenProvider.generateAccessToken(authentication);
     String refreshToken = tokenProvider.generateRefreshToken(authentication);
+    save(authentication.getName(), refreshToken);
     return TokenDto.builder()
         .accessToken(accessToken)
         .refreshToken(refreshToken)
         .build();
   }
 
+  /**
+   * AuthorizationHeader 내에서 accessToken 추출
+   *
+   * @param request
+   * @return String - accessToken
+   */
   public String extractFromAuthorizationHeader(HttpServletRequest request) {
     String header = request.getHeader(HttpHeaders.AUTHORIZATION);
     if (StringUtils.hasText(header) && header.startsWith(Bearer)) {
@@ -42,10 +56,21 @@ public class TokenService {
     return null;
   }
 
+  /**
+   * 액세스 토큰 검증
+   *
+   * @param accessToken
+   */
   public void validateToken(String accessToken) {
     tokenValidator.validateAccessToken(accessToken);
   }
 
+  /**
+   * 액세스 토큰 기반 Authentication 발급
+   *
+   * @param accessToken
+   * @return Authentication
+   */
   public Authentication getAuthentication(String accessToken) {
     Claims claims = tokenValidator.validateAccessToken(accessToken);
     return authProvider.getAuthentication(claims);
