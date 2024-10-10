@@ -6,7 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.daejangjangi.backend.global.config.SecurityConfig;
-import com.daejangjangi.backend.global.exception.ApiGlobalErrorType;
+import com.daejangjangi.backend.global.exception.type.ApiGlobalErrorType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

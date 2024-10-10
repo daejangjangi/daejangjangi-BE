@@ -15,6 +15,7 @@ import org.springframework.security.web.context.SecurityContextHolderFilter;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
   @Bean
   public WebSecurityCustomizer webSecurityCustomizer() {
     return web -> web.ignoring() // Security ignore
