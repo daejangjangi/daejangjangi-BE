@@ -88,6 +88,8 @@ public class MemberService implements UserDetailsService {
    */
   @Transactional
   public void save(Member member, List<Disease> diseases, List<Category> categories) {
+    checkEmail(member.getEmail());
+    checkNickname(member.getNickname());
     String encodedPassword = passwordEncoder.encode(member.getPassword());
     member.encodePassword(encodedPassword);
     member = memberRepository.save(member);

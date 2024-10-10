@@ -61,7 +61,7 @@ public class Member {
   @Column(name = "member_sns_id", length = 100, nullable = false)
   private String snsId;
 
-  @Column(name = "member_email", length = 50, nullable = false)
+  @Column(name = "member_email", length = 50, nullable = false, unique = true)
   private String email;
 
   @Column(name = "member_password", length = 100, nullable = false)
