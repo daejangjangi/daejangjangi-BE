@@ -1,5 +1,6 @@
 package com.daejangjangi.backend.member.domain.entity;
 
+import com.daejangjangi.backend.member.domain.dto.MemberResponseDto;
 import com.daejangjangi.backend.member.domain.enums.Role;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -60,7 +61,7 @@ public class Member {
   @Column(name = "member_sns_id", length = 100, nullable = false)
   private String snsId;
 
-  @Column(name = "member_email", length = 50, nullable = false)
+  @Column(name = "member_email", length = 50, nullable = false, unique = true)
   private String email;
 
   @Column(name = "member_password", length = 100, nullable = false)
@@ -140,5 +141,17 @@ public class Member {
    */
   public void encodePassword(String encodedPassword) {
     this.password = encodedPassword;
+  }
+
+
+  /**
+   * Dto 변환
+   *
+   * @return MemberResponseDto.Info
+   */
+  public MemberResponseDto.Info toDto() {
+    List<String> disease = this.diseases.stream().map(e -> e.getDisease().getName()).toList();
+    List<String> categories = this.categories.stream().map(e -> e.getCategory().getName()).toList();
+    return new MemberResponseDto.Info(nickname, birth, gender, disease, categories);
   }
 }

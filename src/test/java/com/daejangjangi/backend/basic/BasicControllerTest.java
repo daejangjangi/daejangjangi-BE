@@ -1,30 +1,27 @@
 package com.daejangjangi.backend.basic;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.daejangjangi.backend.global.config.SecurityConfig;
+import com.daejangjangi.backend.global.basic.ControllerTest;
 import com.daejangjangi.backend.global.exception.type.ApiGlobalErrorType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.web.servlet.MockMvc;
 
 @SuppressWarnings("NoAsciiCharacters")
-@TestPropertySource(properties = "logging.config=classpath:logback-spring-test.xml")
 @WebMvcTest(BasicController.class)
-@Import(SecurityConfig.class)
-public class BasicControllerTest {
+public class BasicControllerTest extends ControllerTest {
 
-  @Autowired
-  protected MockMvc mvc;
+  @Override
+  protected Object initController() {
+    return new BasicController();
+  }
 
   @Test
   @DisplayName("서비스 정상 연결 확인")
@@ -82,6 +79,18 @@ public class BasicControllerTest {
   void exception_handling_test_no_resource() throws Exception {
     String noResourceUrl = "no-resource";
     mvc.perform(get("/" + noResourceUrl))
+        .andExpect(status().isBadRequest())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.code").value(ApiGlobalErrorType.NO_STATIC_RESOURCE.name()))
+        .andExpect(jsonPath("$.message").value(ApiGlobalErrorType.NO_STATIC_RESOURCE.getMessage()));
+  }
+
+  @Test
+  @DisplayName("예외 처리 확인 - 없는 메서드 접근")
+  void exception_handling_test_no_method() throws Exception {
+    mvc.perform(post("/health-check")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(gson.toJson("")))
         .andExpect(status().isBadRequest())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.code").value(ApiGlobalErrorType.NO_STATIC_RESOURCE.name()))
