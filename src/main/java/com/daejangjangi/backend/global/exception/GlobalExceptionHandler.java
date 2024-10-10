@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -32,7 +33,8 @@ public class GlobalExceptionHandler {
   /**
    * 존재하지 않는 리소스에 요청한 경우 예외 처리
    */
-  @ExceptionHandler({NoResourceFoundException.class, NoHandlerFoundException.class})
+  @ExceptionHandler({NoResourceFoundException.class, NoHandlerFoundException.class,
+      HttpRequestMethodNotSupportedException.class})
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public ApiGlobalResponse<?> handler() {
     return ApiGlobalResponse.error(ApiGlobalErrorType.NO_STATIC_RESOURCE);

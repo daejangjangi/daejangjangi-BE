@@ -84,4 +84,16 @@ public class BasicControllerTest extends ControllerTest {
         .andExpect(jsonPath("$.code").value(ApiGlobalErrorType.NO_STATIC_RESOURCE.name()))
         .andExpect(jsonPath("$.message").value(ApiGlobalErrorType.NO_STATIC_RESOURCE.getMessage()));
   }
+
+  @Test
+  @DisplayName("예외 처리 확인 - 없는 메서드 접근")
+  void exception_handling_test_no_method() throws Exception {
+    mvc.perform(post("/health-check")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(gson.toJson("")))
+        .andExpect(status().isBadRequest())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.code").value(ApiGlobalErrorType.NO_STATIC_RESOURCE.name()))
+        .andExpect(jsonPath("$.message").value(ApiGlobalErrorType.NO_STATIC_RESOURCE.getMessage()));
+  }
 }
