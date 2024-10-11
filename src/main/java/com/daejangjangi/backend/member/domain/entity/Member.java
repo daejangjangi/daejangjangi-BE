@@ -90,7 +90,7 @@ public class Member {
   @OneToMany(mappedBy = "member", orphanRemoval = true, cascade = CascadeType.ALL)
   private List<MemberCategory> categories;
 
-  /*-------------Business Logic---------------------------Business Logic------------------------*/
+  /*-------------Business Logic---------------------------Business Logic--------------------------*/
 
   /**
    * note : 회원 탈퇴 처리 상의

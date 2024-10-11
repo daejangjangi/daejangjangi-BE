@@ -43,7 +43,7 @@ public class MemberCategory {
   @JoinColumn(name = "category_id")
   private Category category;
 
-  /*-------------Business Logic---------------------------Business Logic---------------------------Business Logic---------------------------Business Logic---------------------------Business Logic--------------*/
+  /*-------------Business Logic---------------------------Business Logic--------------------------*/
 
   /**
    * 회원 갱신

@@ -41,7 +41,7 @@ public class MemberDisease {
   @JoinColumn(name = "disease_id")
   private Disease disease;
 
-  /*-------------Business Logic---------------------------Business Logic---------------------------Business Logic---------------------------Business Logic---------------------------Business Logic--------------*/
+  /*-------------Business Logic---------------------------Business Logic--------------------------*/
 
   /**
    * 회원 갱신
