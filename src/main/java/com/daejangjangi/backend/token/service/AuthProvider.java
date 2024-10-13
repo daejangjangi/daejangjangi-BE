@@ -1,5 +1,6 @@
 package com.daejangjangi.backend.token.service;
 
+import com.daejangjangi.backend.member.domain.entity.Member;
 import io.jsonwebtoken.Claims;
 import java.util.Collections;
 import java.util.List;
@@ -24,6 +25,18 @@ public class AuthProvider {
     return new UsernamePasswordAuthenticationToken(principal, null, authorities);
   }
 
+  /**
+   * Member 정보 기반 Authentication 발급
+   *
+   * @param member
+   * @return
+   */
+  public Authentication getAuthentication(Member member) {
+    List<SimpleGrantedAuthority> authorities = getAuthorities(member);
+    User principal = new User(String.valueOf(member.getId()), "", authorities);
+    return new UsernamePasswordAuthenticationToken(principal, null, authorities);
+  }
+
   /*--------------Private----------------------------Private----------------------------Private---*/
 
   /**
@@ -35,5 +48,16 @@ public class AuthProvider {
   private List<SimpleGrantedAuthority> getAuthorities(Claims claims) {
     return Collections.singletonList(
         new SimpleGrantedAuthority(claims.get(TokenProvider.ROLE_CLAIM).toString()));
+  }
+
+  /**
+   * Member 에서 권한 추출
+   *
+   * @param member
+   * @return
+   */
+  private List<SimpleGrantedAuthority> getAuthorities(Member member) {
+    return Collections.singletonList(
+        new SimpleGrantedAuthority(member.getRole().name()));
   }
 }

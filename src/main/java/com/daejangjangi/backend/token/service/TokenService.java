@@ -1,5 +1,6 @@
 package com.daejangjangi.backend.token.service;
 
+import com.daejangjangi.backend.member.domain.entity.Member;
 import com.daejangjangi.backend.token.domain.dto.TokenDto;
 import com.daejangjangi.backend.token.domain.dto.TokenRequestDto;
 import com.daejangjangi.backend.token.domain.entity.Token;
@@ -26,20 +27,25 @@ public class TokenService {
   private static final String Bearer = "Bearer ";
 
   /**
-   * accessToken & refreshToken 발급
+   * accessToken & refreshToken 발급 by Authentication
    *
    * @param authentication
    * @return TokenDto
    */
   @Transactional
   public TokenDto getToken(Authentication authentication) {
-    String accessToken = tokenProvider.generateAccessToken(authentication);
-    String refreshToken = tokenProvider.generateRefreshToken(authentication);
-    save(authentication.getName(), refreshToken);
-    return TokenDto.builder()
-        .accessToken(accessToken)
-        .refreshToken(refreshToken)
-        .build();
+    return generateToken(authentication);
+  }
+
+  /**
+   * accessToken & refreshToken 발급 by Member
+   *
+   * @param member
+   * @return
+   */
+  public TokenDto getToken(Member member) {
+    Authentication authentication = authProvider.getAuthentication(member);
+    return generateToken(authentication);
   }
 
   /**
@@ -100,6 +106,22 @@ public class TokenService {
   }
 
   /*--------------Private----------------------------Private----------------------------Private---*/
+
+  /**
+   * 토큰 생성 및 저장
+   *
+   * @param authentication
+   * @return
+   */
+  private TokenDto generateToken(Authentication authentication) {
+    String accessToken = tokenProvider.generateAccessToken(authentication);
+    String refreshToken = tokenProvider.generateRefreshToken(authentication);
+    save(authentication.getName(), refreshToken);
+    return TokenDto.builder()
+        .accessToken(accessToken)
+        .refreshToken(refreshToken)
+        .build();
+  }
 
   /**
    * 토큰 저장

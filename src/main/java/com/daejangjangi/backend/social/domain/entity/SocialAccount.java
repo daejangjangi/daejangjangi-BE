@@ -1,8 +1,11 @@
-package com.daejangjangi.backend.member.domain.entity;
+package com.daejangjangi.backend.social.domain.entity;
 
-import com.daejangjangi.backend.category.domain.entity.Category;
+import com.daejangjangi.backend.member.domain.entity.Member;
+import com.daejangjangi.backend.social.domain.enums.SocialAccountProvider;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,33 +18,36 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Entity
+@Table(name = "social_accounts")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "members_categories")
-@Entity
-public class MemberCategory {
+public class SocialAccount {
 
   @Builder
-  public MemberCategory(
-      Member member,
-      Category category
+  public SocialAccount(
+      String snsId,
+      SocialAccountProvider provider
   ) {
-    this.member = member;
-    this.category = category;
+    this.snsId = snsId;
+    this.provider = provider;
   }
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "member_category_id")
+  @Column(name = "social_account_id")
   private Long id;
+
+  @Column(name = "sns_id", unique = true, nullable = false)
+  private String snsId;
+
+  @Column(name = "social_account_provider", nullable = false)
+  @Enumerated(EnumType.STRING)
+  private SocialAccountProvider provider;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "member_id", nullable = false)
   private Member member;
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "category_id", nullable = false)
-  private Category category;
 
   /*-------------Business Logic---------------------------Business Logic--------------------------*/
 

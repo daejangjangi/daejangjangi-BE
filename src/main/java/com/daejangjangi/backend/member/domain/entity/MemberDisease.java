@@ -34,11 +34,11 @@ public class MemberDisease {
   private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "member_id")
+  @JoinColumn(name = "member_id", nullable = false)
   private Member member;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "disease_id")
+  @JoinColumn(name = "disease_id", nullable = false)
   private Disease disease;
 
   /*-------------Business Logic---------------------------Business Logic--------------------------*/
