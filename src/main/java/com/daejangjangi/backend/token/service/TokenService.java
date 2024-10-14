@@ -8,6 +8,7 @@ import com.daejangjangi.backend.token.exception.InvalidTokenException;
 import com.daejangjangi.backend.token.repository.TokenRepository;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
@@ -125,15 +126,18 @@ public class TokenService {
 
   /**
    * 토큰 저장
+   * <p>
+   * 요구사항 : 토큰이 null 인 경우, 새로운 객체를 만들어서, memberId와 refreshToken을 초기화한 뒤 저장해주고, null이 아닌 경우,
+   * refreshToken 만 업데이트하도록 구현.
    *
    * @param memberId
    * @param refreshToken
    */
   private void save(String memberId, String refreshToken) {
-    Token token = Token.builder()
+    Token token = tokenRepository.findByMemberId(memberId).orElseGet(() -> Token.builder()
         .memberId(memberId)
-        .refreshToken(refreshToken)
-        .build();
+        .build());
+    token.updateRefreshToken(refreshToken);
     tokenRepository.save(token);
   }
 
