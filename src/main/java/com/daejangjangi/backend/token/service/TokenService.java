@@ -1,5 +1,6 @@
 package com.daejangjangi.backend.token.service;
 
+import com.daejangjangi.backend.member.domain.entity.Member;
 import com.daejangjangi.backend.token.domain.dto.TokenDto;
 import com.daejangjangi.backend.token.domain.dto.TokenRequestDto;
 import com.daejangjangi.backend.token.domain.entity.Token;
@@ -7,6 +8,7 @@ import com.daejangjangi.backend.token.exception.InvalidTokenException;
 import com.daejangjangi.backend.token.repository.TokenRepository;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
@@ -26,20 +28,25 @@ public class TokenService {
   private static final String Bearer = "Bearer ";
 
   /**
-   * accessToken & refreshToken 발급
+   * accessToken & refreshToken 발급 by Authentication
    *
    * @param authentication
    * @return TokenDto
    */
   @Transactional
   public TokenDto getToken(Authentication authentication) {
-    String accessToken = tokenProvider.generateAccessToken(authentication);
-    String refreshToken = tokenProvider.generateRefreshToken(authentication);
-    save(authentication.getName(), refreshToken);
-    return TokenDto.builder()
-        .accessToken(accessToken)
-        .refreshToken(refreshToken)
-        .build();
+    return generateToken(authentication);
+  }
+
+  /**
+   * accessToken & refreshToken 발급 by Member
+   *
+   * @param member
+   * @return
+   */
+  public TokenDto getToken(Member member) {
+    Authentication authentication = authProvider.getAuthentication(member);
+    return generateToken(authentication);
   }
 
   /**
@@ -102,16 +109,35 @@ public class TokenService {
   /*--------------Private----------------------------Private----------------------------Private---*/
 
   /**
+   * 토큰 생성 및 저장
+   *
+   * @param authentication
+   * @return
+   */
+  private TokenDto generateToken(Authentication authentication) {
+    String accessToken = tokenProvider.generateAccessToken(authentication);
+    String refreshToken = tokenProvider.generateRefreshToken(authentication);
+    save(authentication.getName(), refreshToken);
+    return TokenDto.builder()
+        .accessToken(accessToken)
+        .refreshToken(refreshToken)
+        .build();
+  }
+
+  /**
    * 토큰 저장
+   * <p>
+   * 요구사항 : 토큰이 null 인 경우, 새로운 객체를 만들어서, memberId와 refreshToken을 초기화한 뒤 저장해주고, null이 아닌 경우,
+   * refreshToken 만 업데이트하도록 구현.
    *
    * @param memberId
    * @param refreshToken
    */
   private void save(String memberId, String refreshToken) {
-    Token token = Token.builder()
+    Token token = tokenRepository.findByMemberId(memberId).orElseGet(() -> Token.builder()
         .memberId(memberId)
-        .refreshToken(refreshToken)
-        .build();
+        .build());
+    token.updateRefreshToken(refreshToken);
     tokenRepository.save(token);
   }
 

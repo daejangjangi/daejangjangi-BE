@@ -1,7 +1,7 @@
 package com.daejangjangi.backend.member.service;
 
-import com.daejangjangi.backend.category.domain.entity.Category;
-import com.daejangjangi.backend.disease.domain.entity.Disease;
+import com.daejangjangi.backend.category.domain.Category;
+import com.daejangjangi.backend.disease.domain.Disease;
 import com.daejangjangi.backend.member.domain.entity.Member;
 import com.daejangjangi.backend.member.domain.entity.MemberCategory;
 import com.daejangjangi.backend.member.domain.entity.MemberDisease;

@@ -31,7 +31,6 @@ public class Member {
 
   @Builder
   public Member(
-      String snsId,
       String email,
       String password,
       String nickname,
@@ -39,7 +38,6 @@ public class Member {
       String profile,
       LocalDate birth
   ) {
-    this.snsId = snsId != null ? snsId : SNS_ID_DEFAULT;
     this.email = email;
     this.password = password;
     this.nickname = nickname;
@@ -56,9 +54,6 @@ public class Member {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "member_id")
   private Long id;
-
-  @Column(name = "member_sns_id", length = 100, nullable = false)
-  private String snsId;
 
   @Column(name = "member_email", length = 50, nullable = false, unique = true)
   private String email;
@@ -90,7 +85,7 @@ public class Member {
   @OneToMany(mappedBy = "member", orphanRemoval = true, cascade = CascadeType.ALL)
   private List<MemberCategory> categories;
 
-  /*-------------Business Logic---------------------------Business Logic------------------------*/
+  /*-------------Business Logic---------------------------Business Logic--------------------------*/
 
   /**
    * note : 회원 탈퇴 처리 상의

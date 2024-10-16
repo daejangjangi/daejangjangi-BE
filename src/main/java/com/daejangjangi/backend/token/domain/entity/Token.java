@@ -31,7 +31,7 @@ public class Token {
   private String memberId;
   private String refreshToken;
 
-  /*-------------Business Logic---------------------------Business Logic------------------------*/
+  /*-------------Business Logic---------------------------Business Logic--------------------------*/
 
   /**
    * refreshToken 변경

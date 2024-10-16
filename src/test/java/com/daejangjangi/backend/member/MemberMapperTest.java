@@ -2,8 +2,8 @@ package com.daejangjangi.backend.member;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.daejangjangi.backend.category.domain.entity.Category;
-import com.daejangjangi.backend.disease.domain.entity.Disease;
+import com.daejangjangi.backend.category.domain.Category;
+import com.daejangjangi.backend.disease.domain.Disease;
 import com.daejangjangi.backend.global.basic.ServiceTest;
 import com.daejangjangi.backend.member.domain.dto.MemberRequestDto;
 import com.daejangjangi.backend.member.domain.dto.MemberRequestDto.Join;

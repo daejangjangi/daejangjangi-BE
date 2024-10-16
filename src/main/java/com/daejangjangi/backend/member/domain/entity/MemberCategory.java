@@ -1,6 +1,6 @@
 package com.daejangjangi.backend.member.domain.entity;
 
-import com.daejangjangi.backend.category.domain.entity.Category;
+import com.daejangjangi.backend.category.domain.Category;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -36,14 +36,14 @@ public class MemberCategory {
   private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "member_id")
+  @JoinColumn(name = "member_id", nullable = false)
   private Member member;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "category_id")
+  @JoinColumn(name = "category_id", nullable = false)
   private Category category;
 
-  /*-------------Business Logic---------------------------Business Logic---------------------------Business Logic---------------------------Business Logic---------------------------Business Logic--------------*/
+  /*-------------Business Logic---------------------------Business Logic--------------------------*/
 
   /**
    * 회원 갱신

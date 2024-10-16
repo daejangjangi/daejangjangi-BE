@@ -1,6 +1,6 @@
 package com.daejangjangi.backend.disease.service;
 
-import com.daejangjangi.backend.disease.domain.entity.Disease;
+import com.daejangjangi.backend.disease.domain.Disease;
 import com.daejangjangi.backend.disease.exception.NotManagedDiseaseException;
 import com.daejangjangi.backend.disease.repository.DiseaseRepository;
 import java.util.List;

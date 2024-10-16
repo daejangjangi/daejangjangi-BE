@@ -57,7 +57,7 @@ public class MemberRequestDto {
       @Size(min = 1)
       List<String> categories
   ) {
-    
+
   }
 
   public record Login(

@@ -6,7 +6,6 @@ import com.daejangjangi.backend.global.exception.UnAuthenticatedException;
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
 import com.daejangjangi.backend.global.utils.Base64Util;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
