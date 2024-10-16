@@ -1,6 +1,6 @@
 package com.daejangjangi.backend.category.service;
 
-import com.daejangjangi.backend.category.domain.entity.Category;
+import com.daejangjangi.backend.category.domain.Category;
 import com.daejangjangi.backend.category.exception.NotManagedCategoryException;
 import com.daejangjangi.backend.category.repository.CategoryRepository;
 import java.util.List;

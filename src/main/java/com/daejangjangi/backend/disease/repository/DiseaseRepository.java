@@ -1,6 +1,6 @@
 package com.daejangjangi.backend.disease.repository;
 
-import com.daejangjangi.backend.disease.domain.entity.Disease;
+import com.daejangjangi.backend.disease.domain.Disease;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 

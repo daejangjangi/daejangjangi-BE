@@ -10,7 +10,7 @@ public class ExpiredTokenException extends UnAuthenticatedException {
   private final String code;
 
   public ExpiredTokenException() {
-    this(TokenErrorType.INVALID_TOKEN_ERROR.getMessage());
+    this(TokenErrorType.EXPIRED_TOKEN.getMessage());
   }
 
   public ExpiredTokenException(final String message) {

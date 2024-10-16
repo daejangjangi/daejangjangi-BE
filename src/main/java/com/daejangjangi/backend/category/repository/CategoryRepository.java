@@ -1,6 +1,6 @@
 package com.daejangjangi.backend.category.repository;
 
-import com.daejangjangi.backend.category.domain.entity.Category;
+import com.daejangjangi.backend.category.domain.Category;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 

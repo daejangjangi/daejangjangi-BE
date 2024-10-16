@@ -1,8 +1,8 @@
 package com.daejangjangi.backend.member.controller;
 
-import com.daejangjangi.backend.category.domain.entity.Category;
+import com.daejangjangi.backend.category.domain.Category;
 import com.daejangjangi.backend.category.service.CategoryService;
-import com.daejangjangi.backend.disease.domain.entity.Disease;
+import com.daejangjangi.backend.disease.domain.Disease;
 import com.daejangjangi.backend.disease.service.DiseaseService;
 import com.daejangjangi.backend.global.config.SecurityConfig;
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
