@@ -16,7 +16,16 @@ import java.util.Objects;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post extends BaseEntity {
 
-  @Builder
+  public Post(
+      String title,
+      String content
+  ) {
+    this.title = title;
+    this.content = content;
+    this.hit = 0L;
+    this.boards = new ArrayList<>();
+  }
+
   public Post(
       Long id,
       String title,
@@ -25,8 +34,6 @@ public class Post extends BaseEntity {
     this.id = id;
     this.title = title;
     this.content = content;
-    this.hit = 0L;
-    this.boards = new ArrayList<>();
   }
 
   @Id
