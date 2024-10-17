@@ -1,7 +1,7 @@
 INSERT INTO diseases(disease_name, created_at, created_by)
 VALUES ("변비", now(), "hyensu"),
-       ("과민성장증후군설사형", now(), "hyensu"),
-       ("과민성장증후군변비형", now(), "hyensu"),
+       ("과민성장증후군_설사형", now(), "hyensu"),
+       ("과민성장증후군_변비형", now(), "hyensu"),
        ("치질", now(), "hyensu"),
        ("치핵", now(), "hyensu"),
        ("치열", now(), "hyensu"),
@@ -19,7 +19,7 @@ VALUES ("유산균", now(), "hyensu"),
        ("식이섬유", now(), "hyensu"),
        ("저포드맵", now(), "hyensu"),
        ("비건", now(), "hyensu"),
-       ("기타 장건강 간식", now(), "hyensu")
+       ("기타_장건강_간식", now(), "hyensu")
 ;
 
 INSERT INTO boards(board_name)
