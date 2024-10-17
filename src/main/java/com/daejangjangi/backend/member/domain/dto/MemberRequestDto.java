@@ -14,47 +14,49 @@ public class MemberRequestDto {
   public record Join(
       @Schema(description = "이메일")
 
-      @Email
-      @NotBlank
-      @Size(max = 50)
+      @Email(message = "이메일 형식이 맞지 않습니다.")
+      @NotBlank(message = "이메일을 입력하세요.")
+      @Size(max = 50, message = "이메일은 최대 {max}자리 이하이어야 합니다.")
       String email,
 
       @Schema(description = "비밀번호")
 
-      @NotBlank
-      @Size(min = 8, max = 16)
-      @Pattern(regexp = "(?=.*[0-8])(?=.*[a-zA-Z])(?=.*[!@#$%^&*()\\[\\]{}]).+")
+      @NotBlank(message = "비밀번호를 입력하세요.")
+      @Size(min = 8, max = 16, message = "비밀번호는 최소 {min}자리 이상, 최대 {max}자리 이하이어야 합니다.")
+      @Pattern(regexp = "(?=.*[0-9]).+", message = "비밀번호에 숫자가 포함되어야 합니다.")
+      @Pattern(regexp = "(?=.*[a-zA-Z]).+", message = "비밀번호에 영문자가 포함되어야 합니다.")
+      @Pattern(regexp = "(?=.*[!@#$%^&*()\\[\\]{}]).+", message = "비밀번호에 특수문자(!,@,#,$,%,^,&,*,(,),[,])가 포함되어야 합니다.")
       String password,
 
       @Schema(description = "닉네임")
 
-      @NotBlank
-      @Size(max = 5)
-      @Pattern(regexp = "^[A-Za-z가-힣0-9]+$")
+      @NotBlank(message = "닉네임을 입력하세요.")
+      @Size(max = 5, message = "닉네임은 최대 {max}자 이하이어야 합니다.")
+      @Pattern(regexp = "^[A-Za-z가-힣0-9]+$", message = "닉네임은 영문자,한글,숫자로만 입력해야 합니다.")
       String nickname,
 
       @Schema(description = "성별")
 
-      @NotBlank
-      @Size(max = 1)
-      @Pattern(regexp = "^[mw]+$")
+      @NotBlank(message = "성별을 입력하세요.")
+      @Size(max = 1, message = "성별은 최대 {max}자 이하이어야 합니다.")
+      @Pattern(regexp = "^[mw]+$", message = "성별은 m(남성) 또는 w(여성)를 입력해야 합니다.")
       String gender,
 
       @Schema(description = "생년월일")
 
-      @NotNull
+      @NotNull(message = "생일을 입력하세요.")
       LocalDate birth,
 
       @Schema(description = "회원 장질환")
 
-      @NotNull
-      @Size(min = 1)
+      @NotNull(message = "질병을 선택해주세요.")
+      @Size(min = 1, message = "질병을 최소 {min}개 이상 선택 바랍니다.")
       List<String> diseases,
 
       @Schema(description = "회원 관심 상품 카테고리")
 
-      @NotNull
-      @Size(min = 1)
+      @NotNull(message = "관심 상품을 선택해주세요.")
+      @Size(min = 1, message = "관심 상품을 최소 {min}개 이상 선택 바랍니다.")
       List<String> categories
   ) {
 
@@ -64,12 +66,12 @@ public class MemberRequestDto {
 
       @Schema(description = "이메일")
 
-      @NotBlank
+      @NotBlank(message = "이메일을 입력해주세요.")
       String email,
 
       @Schema(description = "비밀번호")
 
-      @NotBlank
+      @NotBlank(message = "비밀번호를 입력해주세요.")
       String password
   ) {
 
