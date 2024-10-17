@@ -19,5 +19,6 @@ springdoc:
   default-consumes-media-type: application/json
   default-produces-media-type: application/json
   writer-with-default-pretty-printer: true
+  override-with-generic-response: false  # 사용하지 않는 response 지우기
   paths-to-match:
     - /**

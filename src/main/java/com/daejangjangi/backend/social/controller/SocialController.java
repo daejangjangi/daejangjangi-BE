@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/socials")
 @RequiredArgsConstructor
-public class SocialController {
+public class SocialController implements SocialApi {
 
   private final SocialService socialService;
   private final SocialValidator socialValidator;
