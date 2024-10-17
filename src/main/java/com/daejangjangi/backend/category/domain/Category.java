@@ -1,5 +1,6 @@
 package com.daejangjangi.backend.category.domain;
 
+import com.daejangjangi.backend.global.common.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,7 +12,7 @@ import lombok.Getter;
 @Table(name = "categories")
 @Getter
 @Entity
-public class Category {
+public class Category extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -9,8 +9,7 @@ public class TokenRequestDto {
 
       @Schema(description = "리프레쉬 토큰")
 
-      @NotBlank
-      String refreshToken
+      @NotBlank(message = "리프레쉬 토큰을 입력하세요.") String refreshToken
   ) {
 
   }

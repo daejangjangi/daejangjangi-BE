@@ -10,11 +10,18 @@ spring:
     username: ${datasource.dev.usernames}
     password: ${datasource.dev.password}
   jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
     properties:
       hibernate:
-        show_sql: true
         format_sql: true
         use_sql_comments: true
+    defer-datasource-initialization: true
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:init.sql
   data:
     redis:
       host: redis

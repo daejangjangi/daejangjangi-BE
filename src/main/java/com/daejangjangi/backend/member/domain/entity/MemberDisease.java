@@ -1,6 +1,7 @@
 package com.daejangjangi.backend.member.domain.entity;
 
 import com.daejangjangi.backend.disease.domain.Disease;
+import com.daejangjangi.backend.global.common.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -18,7 +19,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "members_diseases")
 @Entity
-public class MemberDisease {
+public class MemberDisease extends BaseEntity {
 
   @Builder
   public MemberDisease(

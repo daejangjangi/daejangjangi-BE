@@ -8,7 +8,6 @@ import com.daejangjangi.backend.token.exception.InvalidTokenException;
 import com.daejangjangi.backend.token.repository.TokenRepository;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;

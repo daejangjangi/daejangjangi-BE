@@ -1,5 +1,6 @@
 package com.daejangjangi.backend.social.domain.entity;
 
+import com.daejangjangi.backend.global.common.BaseEntity;
 import com.daejangjangi.backend.member.domain.entity.Member;
 import com.daejangjangi.backend.social.domain.enums.SocialAccountProvider;
 import jakarta.persistence.Column;
@@ -22,7 +23,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "social_accounts")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class SocialAccount {
+public class SocialAccount extends BaseEntity {
 
   @Builder
   public SocialAccount(

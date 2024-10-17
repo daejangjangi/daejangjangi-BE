@@ -1,6 +1,7 @@
 package com.daejangjangi.backend.member.domain.entity;
 
 import com.daejangjangi.backend.category.domain.Category;
+import com.daejangjangi.backend.global.common.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -19,7 +20,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "members_categories")
 @Entity
-public class MemberCategory {
+public class MemberCategory extends BaseEntity {
 
   @Builder
   public MemberCategory(
