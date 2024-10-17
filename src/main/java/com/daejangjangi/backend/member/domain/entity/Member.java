@@ -80,6 +80,7 @@ public class Member extends BaseEntity {
   private LocalDateTime deletedAt;
 
   @Enumerated(EnumType.STRING)
+  @Column(name = "member_role", nullable = false)
   private Role role;
 
   @OneToMany(mappedBy = "member", orphanRemoval = true, cascade = CascadeType.ALL)
