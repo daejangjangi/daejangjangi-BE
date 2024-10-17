@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - feat/*
+      - docs/*
 
 jobs:
   gradle:
