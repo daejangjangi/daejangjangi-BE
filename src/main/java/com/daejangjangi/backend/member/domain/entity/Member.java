@@ -1,5 +1,6 @@
 package com.daejangjangi.backend.member.domain.entity;
 
+import com.daejangjangi.backend.global.common.BaseEntity;
 import com.daejangjangi.backend.member.domain.enums.Role;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -25,7 +26,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member {
+public class Member extends BaseEntity {
 
   private static final String SNS_ID_DEFAULT = "NotOauth";
 
