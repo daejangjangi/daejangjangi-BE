@@ -41,7 +41,7 @@ public class MemberService implements UserDetailsService {
    *
    * @param username the username identifying the user whose data is required.
    * @return UserDetails
-   * @throws UsernameNotFoundException
+   * @throws UsernameNotFoundException SecurityFilter 내 예외
    */
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -62,7 +62,7 @@ public class MemberService implements UserDetailsService {
   /**
    * 이메일 중복 확인
    *
-   * @param email
+   * @param email 이메일
    */
   public void checkEmail(String email) {
     if (memberRepository.existsByEmail(email)) {
@@ -73,7 +73,7 @@ public class MemberService implements UserDetailsService {
   /**
    * 닉네임 중복 확인
    *
-   * @param nickname
+   * @param nickname 닉네임
    */
   public void checkNickname(String nickname) {
     if (memberRepository.existsByNickname(nickname)) {
@@ -84,7 +84,9 @@ public class MemberService implements UserDetailsService {
   /**
    * 회원가입
    *
-   * @param member
+   * @param member     회원 정보
+   * @param diseases   장건강 질환
+   * @param categories 관심 상품 카테고리
    */
   @Transactional
   public void save(Member member, List<Disease> diseases, List<Category> categories) {
@@ -126,7 +128,7 @@ public class MemberService implements UserDetailsService {
   /**
    * 회원 조회 by Id
    *
-   * @param id
+   * @param id 회원 id
    * @return Member
    */
   public Member findById(Long id) {
@@ -136,20 +138,92 @@ public class MemberService implements UserDetailsService {
   /**
    * 회원 조회 by email
    *
-   * @param email
+   * @param email 이메일
    * @return Member
    */
   public Member findByEmail(String email) {
     return memberRepository.findByEmail(email).orElseThrow(NotFoundMemberException::new);
   }
 
+  /**
+   * 회원 정보 수정
+   *
+   * @param newMember     수정된 회원 정보
+   * @param newDiseases   수정된 장건강 질환
+   * @param newCategories 수정된 관심 상품 카테고리
+   */
+  @Transactional
+  public void update(Member newMember, List<Disease> newDiseases, List<Category> newCategories) {
+    Long memberId = getCurrentId();
+    Member originMember = findById(memberId);
+    originMember.updateMember(newMember);
+    List<MemberDisease> memberDiseases = updateDiseases(originMember, newDiseases);
+    originMember.addDiseases(memberDiseases);
+    List<MemberCategory> memberCategories = updateCategories(originMember, newCategories);
+    originMember.addCategories(memberCategories);
+  }
+
   /*--------------Private----------------------------Private----------------------------Private---*/
+
+  /**
+   * 회원 장건강 질환 수정
+   *
+   * @param originMember 기존 회원
+   * @param newDiseases  새롭게 등록한 장건강 질환
+   * @return List<MemberDisease>
+   */
+  private List<MemberDisease> updateDiseases(Member originMember, List<Disease> newDiseases) {
+    List<Disease> removeDiseaseList = new ArrayList<>();
+    List<Disease> addDiseaseList = new ArrayList<>();
+    List<Disease> originDiseases = getOriginDiseases(originMember);
+    // 새로운 회원 장건강 질환 목록에 포함되지 않는 기존 질환 항목 제거.
+    for (Disease disease : originDiseases) {
+      if (!newDiseases.contains(disease)) {
+        removeDiseaseList.add(disease);
+      }
+    }
+    removeDiseases(originMember, removeDiseaseList);
+    // 기존 회원 장건강 질환 목록에 포함되지 않는 새로운 질환 항목 추가.
+    for (Disease disease : newDiseases) {
+      if (!originDiseases.contains(disease)) {
+        addDiseaseList.add(disease);
+      }
+    }
+    return saveDiseases(originMember, addDiseaseList);
+  }
+
+  /**
+   * 회원 관심 상품 카테고리 수정
+   *
+   * @param originMember  기존 회원
+   * @param newCategories 새롭게 등록한 관심 상품 카테고리
+   * @return List<MemberCategory>
+   */
+  private List<MemberCategory> updateCategories(Member originMember, List<Category> newCategories) {
+    List<Category> removeCategoryList = new ArrayList<>();
+    List<Category> addCategoryList = new ArrayList<>();
+    List<Category> originCategories = getOriginCategories(originMember);
+    // 새로운 회원 관심 상품 카테고리 목록에 포함되지 않는 기존 관심 상품 항목 제거.
+    for (Category category : originCategories) {
+      if (!newCategories.contains(category)) {
+        removeCategoryList.add(category);
+      }
+    }
+    memberCategoryRepository.deleteAllByMemberAndCategories(originMember, removeCategoryList);
+    // 기존 회원 관심 상품 카테고리 목록에 포함되지 않는 새로운 관심 상품 항목 추가.
+    for (Category category : newCategories) {
+      if (!originCategories.contains(category)) {
+        addCategoryList.add(category);
+      }
+    }
+    return saveCategories(originMember, addCategoryList);
+  }
 
   /**
    * 회원 장건강 질환 저장
    *
-   * @param member
-   * @param diseases
+   * @param member   회원 정보
+   * @param diseases 질환
    * @return List - MemberDisease
    */
   private List<MemberDisease> saveDiseases(Member member, List<Disease> diseases) {
@@ -165,10 +239,10 @@ public class MemberService implements UserDetailsService {
   }
 
   /**
-   * 회원 관심 상품 카테고리 저장
+   * 회원 괌심 상품 카테고리 저장
    *
-   * @param member
-   * @param categories
+   * @param member     회원 정보
+   * @param categories 카테고리
    * @return List - MemberCategory
    */
   private List<MemberCategory> saveCategories(Member member, List<Category> categories) {
@@ -181,5 +255,42 @@ public class MemberService implements UserDetailsService {
       memberCategories.add(memberCategory);
     }
     return memberCategoryRepository.saveAll(memberCategories);
+  }
+
+  /**
+   * 회원 장건강 질환 제거
+   *
+   * @param member   회원 정보
+   * @param diseases 장건강 질환
+   */
+  private void removeDiseases(Member member, List<Disease> diseases) {
+    List<MemberDisease> memberDiseases =
+        memberDiseaseRepository.findByMemberAndDiseaseIn(member, diseases);
+    // todo : deleteAll & deleteAllInBatch 차이점 정리
+    memberDiseaseRepository.deleteAllInBatch(memberDiseases);
+  }
+
+  /**
+   * 기존 회원 장건강 질환 목록
+   *
+   * @param member 회원 정보
+   * @return List<Disease>
+   */
+  private List<Disease> getOriginDiseases(Member member) {
+    return member.getDiseases().stream()
+        .map(MemberDisease::getDisease)
+        .toList();
+  }
+
+  /**
+   * 기존 회원 관심 상품 카테고리 목록
+   *
+   * @param member 회원 정보
+   * @return List<Category>
+   */
+  private List<Category> getOriginCategories(Member member) {
+    return member.getCategories().stream()
+        .map(MemberCategory::getCategory)
+        .toList();
   }
 }

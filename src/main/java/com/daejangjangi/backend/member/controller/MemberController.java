@@ -22,6 +22,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -71,5 +72,15 @@ public class MemberController implements MemberApi {
     Member member = memberService.info();
     MemberResponseDto.Info response = MemberMapper.INSTANCE.entityToInfoResponse(member);
     return ApiGlobalResponse.ok(response);
+  }
+
+  @PreAuthorize("hasAuthority('MEMBER')")
+  @PutMapping
+  public ApiGlobalResponse<?> modify(@Valid @RequestBody MemberRequestDto.Modify request) {
+    Member member = MemberMapper.INSTANCE.modifyRequestToEntity(request);
+    List<Disease> diseases = diseaseService.findByNames(request.diseases());
+    List<Category> categories = categoryService.findByNames(request.categories());
+    memberService.update(member, diseases, categories);
+    return ApiGlobalResponse.ok();
   }
 }
