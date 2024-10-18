@@ -73,6 +73,7 @@ public class MemberRequestDto {
 
       @Schema(description = "이메일")
 
+      @Email(message = "이메일 형식이 맞지 않습니다.")
       @NotBlank(message = "이메일을 입력해주세요.")
       String email,
 
