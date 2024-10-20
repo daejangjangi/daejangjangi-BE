@@ -117,4 +117,9 @@ public interface FaqApi {
       )
   })
   ApiGlobalResponse<?> register(@RequestBody FaqRequestDto.Register request);
+
+  @Operation(summary = "자주 묻는 질문 목록 조회", tags = {"FAQ (자주 묻는 질문) API"})
+  @Response401WithSwagger
+  @Response403WithSwagger
+  ApiGlobalResponse<?> faqs();
 }
