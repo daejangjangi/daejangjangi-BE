@@ -35,9 +35,8 @@ public class PostService {
   @Transactional
   public void createPost(Member member, Post post, List<Board> boards) {
     post.updateMember(member);
-    postRepository.save(post);
-    post.addBoards(saveBoardPosts(post, boards));
-
+    Post savePost = postRepository.save(post);
+    savePost.addBoards(saveBoardPosts(post, boards));
   }
 
   /**
@@ -59,7 +58,6 @@ public class PostService {
    * @param boards
    * @return List - BoardPost
    */
-  @Transactional
   public List<BoardPost> saveBoardPosts(Post post, List<Board> boards) {
     List<BoardPost> boardPosts = new ArrayList<>();
 
