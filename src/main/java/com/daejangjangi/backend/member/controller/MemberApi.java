@@ -450,4 +450,115 @@ public interface MemberApi {
       )
   })
   ApiGlobalResponse<?> info();
+
+  @Operation(summary = "회원 정보 수정", tags = {"Member (회원) API"})
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "400", description = "잘못된 요청",
+          content = @Content(
+              mediaType = "application/json",
+              array = @ArraySchema(schema = @Schema(implementation = ApiGlobalResponse.class)),
+              examples = {
+                  @ExampleObject(
+                      name = "NOT_MANAGED_DISEASE",
+                      summary = "관리되지 않는 질병",
+                      value = """
+                          {
+                            "code": "NOT_MANAGED_DISEASE",
+                            "message": "관리되지 않는 질병입니다.",
+                            "data": null
+                          }
+                          """
+                  ),
+                  @ExampleObject(
+                      name = "NOT_MANAGED_CATEGORY",
+                      summary = "관리되지 않는 카테고리",
+                      value = """
+                          {
+                            "code": "NOT_MANAGED_CATEGORY",
+                            "message": "관리되지 않는 카테고리입니다.",
+                            "data": null
+                          }
+                          """
+                  ),
+                  @ExampleObject(
+                      name = "NOT_FOUND_MEMBER",
+                      summary = "미가입 회원",
+                      value = """
+                          {
+                            "code": "NOT_FOUND_MEMBER",
+                            "message": "존재하지 않는 회원입니다.",
+                            "data": null
+                          }
+                          """
+                  ),
+              }
+          )
+      ),
+      @ApiResponse(responseCode = "401", description = "미인증",
+          content = @Content(
+              mediaType = "application/json",
+              array = @ArraySchema(schema = @Schema(implementation = ApiGlobalResponse.class)),
+              examples = {
+                  @ExampleObject(
+                      name = "NOT_AUTHENTICATED_ACCESS",
+                      summary = "인증되지 않은 접근",
+                      value = """
+                          {
+                            "code": "UNAUTHENTICATED",
+                            "message": "로그인 후 이용 바랍니다.",
+                            "data": null
+                          }
+                          """
+                  ),
+                  @ExampleObject(
+                      name = "EXPIRED_TOKEN",
+                      summary = "만료된 토큰",
+                      value = """
+                          {
+                            "code": "EXPIRED_TOKEN",
+                            "message": "만료된 토큰입니다.",
+                            "data": null
+                          }
+                          """
+                  ),
+                  @ExampleObject(
+                      name = "INVALID_JWT_SIGNATURE",
+                      summary = "유효하지 않은 서명",
+                      value = """
+                          {
+                            "code": "INVALID_JWT_SIGNATURE",
+                            "message": "유효하지 않은 서명입니다.",
+                            "data": null
+                          }
+                          """
+                  ),
+                  @ExampleObject(
+                      name = "UNAUTHENTICATED",
+                      summary = "인증되지 않음",
+                      value = """
+                          {
+                            "code": "UNAUTHENTICATED",
+                            "message": "로그인 후 이용 바랍니다.",
+                            "data": null
+                          }
+                          """
+                  ),
+                  @ExampleObject(
+                      name = "INVALID_TOKEN_ERROR",
+                      summary = "유효하지 않은 토큰",
+                      value = """
+                          {
+                            "code": "INVALID_TOKEN_ERROR",
+                            "message": "유효하지 않는 토큰입니다.",
+                            "data": null
+                          }
+                          """
+                  )
+              }
+          )
+      )
+  })
+  ApiGlobalResponse<?> modify(
+      @RequestBody MemberRequestDto.Modify request
+  );
 }

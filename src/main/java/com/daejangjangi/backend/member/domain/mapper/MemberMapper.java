@@ -25,4 +25,9 @@ public interface MemberMapper {
   @Mapping(target = "diseases", source = "member.diseases")
   @Mapping(target = "categories", source = "member.categories")
   MemberResponseDto.Info entityToInfoResponse(Member member);
+
+  @Mapping(target = "nickname", source = "modifyRequest.nickname")
+  @Mapping(target = "birth", source = "modifyRequest.birth")
+  @Mapping(target = "gender", source = "modifyRequest.gender")
+  Member modifyRequestToEntity(MemberRequestDto.Modify modifyRequest);
 }

@@ -140,4 +140,23 @@ public class Member extends BaseEntity {
   public void encodePassword(String encodedPassword) {
     this.password = encodedPassword;
   }
+
+  /**
+   * 회원 정보 수정
+   *
+   * @param member
+   */
+  public void updateMember(Member member) {
+    if (!Objects.equals(this.nickname, member.nickname)) {
+      this.nickname = member.nickname;
+    }
+
+    if (!Objects.equals(this.birth, member.birth)) {
+      this.birth = member.birth;
+    }
+
+    if (!Objects.equals(this.gender, member.gender)) {
+      this.gender = member.gender;
+    }
+  }
 }
