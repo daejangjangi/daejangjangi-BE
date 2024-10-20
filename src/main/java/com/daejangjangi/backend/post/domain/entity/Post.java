@@ -48,7 +48,7 @@ public class Post extends BaseEntity {
   @Column(name = "post_title", length = 100, nullable = false)
   private String title;
 
-  @Column(name = "post_content", columnDefinition = "longtext", length = 10000, nullable = false)
+  @Column(name = "post_content", columnDefinition = "longtext", length = 1000, nullable = false)
   private String content;
 
   @Column(name = "post_hit")

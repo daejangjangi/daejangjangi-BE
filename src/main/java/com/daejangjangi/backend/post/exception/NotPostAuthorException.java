@@ -15,6 +15,6 @@ public class NotPostAuthorException extends ForbiddenException {
 
   public NotPostAuthorException(String message) {
     super(message);
-    this.code = PostErrorType.NOT_POST_AUTHOR.getMessage();
+    this.code = PostErrorType.NOT_POST_AUTHOR.name();
   }
 }
