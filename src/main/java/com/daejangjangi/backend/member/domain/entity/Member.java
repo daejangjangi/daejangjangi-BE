@@ -28,7 +28,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseEntity {
 
-  private static final String CREATED_BY_SELF = "self";
 
   @Builder
   public Member(
@@ -49,8 +48,6 @@ public class Member extends BaseEntity {
 
     this.diseases = new ArrayList<>();
     this.categories = new ArrayList<>();
-
-    this.setCreatedBy(CREATED_BY_SELF);
   }
 
   @Id
