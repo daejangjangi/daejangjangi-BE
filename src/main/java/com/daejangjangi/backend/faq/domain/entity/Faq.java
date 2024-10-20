@@ -63,4 +63,13 @@ public class Faq extends BaseEntity {
   public void updateParent(Member member) {
     this.member = member;
   }
+
+  /**
+   * 답변하기
+   *
+   * @param answer faq 답변
+   */
+  public void updateAnswer(String answer) {
+    this.answer = answer;
+  }
 }

@@ -46,4 +46,14 @@ public class FaqController implements FaqApi {
     List<FaqResponseDto.Faqs> response = FaqMapper.INSTANCE.entityToFaqsResponse(faqs);
     return ApiGlobalResponse.ok(response);
   }
+
+  @PreAuthorize("hasAuthority('ADMIN')")
+  @PostMapping("/answer")
+  public ApiGlobalResponse<?> answer(@Valid @RequestBody FaqRequestDto.Answer request) {
+    Long faqId = request.id();
+    String answer = request.answer();
+    Faq faq = faqService.findById(faqId);
+    faqService.updateAnswer(faq, answer);
+    return ApiGlobalResponse.ok();
+  }
 }

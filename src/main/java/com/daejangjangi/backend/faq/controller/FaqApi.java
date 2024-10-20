@@ -122,4 +122,11 @@ public interface FaqApi {
   @Response401WithSwagger
   @Response403WithSwagger
   ApiGlobalResponse<?> faqs();
+
+  @Operation(summary = "답변 등록", tags = {"FAQ (자주 묻는 질문) API"})
+  @Response401WithSwagger
+  @Response403WithSwagger
+  ApiGlobalResponse<?> answer(
+      @RequestBody FaqRequestDto.Answer request
+  );
 }
