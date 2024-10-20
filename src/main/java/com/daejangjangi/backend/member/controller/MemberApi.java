@@ -1,5 +1,7 @@
 package com.daejangjangi.backend.member.controller;
 
+import com.daejangjangi.backend.global.annotation.Response401WithSwagger;
+import com.daejangjangi.backend.global.annotation.Response403WithSwagger;
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
 import com.daejangjangi.backend.member.domain.dto.MemberRequestDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -384,74 +386,13 @@ public interface MemberApi {
   ) throws ServletException, IOException;
 
   @Operation(summary = "회원 정보 조회", tags = {"Member (회원) API"})
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "401", description = "미인증",
-          content = @Content(
-              mediaType = "application/json",
-              array = @ArraySchema(schema = @Schema(implementation = ApiGlobalResponse.class)),
-              examples = {
-                  @ExampleObject(
-                      name = "NOT_AUTHENTICATED_ACCESS",
-                      summary = "인증되지 않은 접근",
-                      value = """
-                          {
-                            "code": "UNAUTHENTICATED",
-                            "message": "로그인 후 이용 바랍니다.",
-                            "data": null
-                          }
-                          """
-                  ),
-                  @ExampleObject(
-                      name = "EXPIRED_TOKEN",
-                      summary = "만료된 토큰",
-                      value = """
-                          {
-                            "code": "EXPIRED_TOKEN",
-                            "message": "만료된 토큰입니다.",
-                            "data": null
-                          }
-                          """
-                  ),
-                  @ExampleObject(
-                      name = "INVALID_JWT_SIGNATURE",
-                      summary = "유효하지 않은 서명",
-                      value = """
-                          {
-                            "code": "INVALID_JWT_SIGNATURE",
-                            "message": "유효하지 않은 서명입니다.",
-                            "data": null
-                          }
-                          """
-                  ),
-                  @ExampleObject(
-                      name = "UNAUTHENTICATED",
-                      summary = "인증되지 않음",
-                      value = """
-                          {
-                            "code": "UNAUTHENTICATED",
-                            "message": "로그인 후 이용 바랍니다.",
-                            "data": null
-                          }
-                          """
-                  ),
-                  @ExampleObject(
-                      name = "INVALID_TOKEN_ERROR",
-                      summary = "유효하지 않은 토큰",
-                      value = """
-                          {
-                            "code": "INVALID_TOKEN_ERROR",
-                            "message": "유효하지 않는 토큰입니다.",
-                            "data": null
-                          }
-                          """
-                  )
-              }
-          )
-      )
-  })
+  @Response401WithSwagger
+  @Response403WithSwagger
   ApiGlobalResponse<?> info();
 
   @Operation(summary = "회원 정보 수정", tags = {"Member (회원) API"})
+  @Response401WithSwagger
+  @Response403WithSwagger
   @ApiResponses(value = {
       @ApiResponse(responseCode = "400", description = "잘못된 요청",
           content = @Content(
@@ -491,69 +432,6 @@ public interface MemberApi {
                           }
                           """
                   ),
-              }
-          )
-      ),
-      @ApiResponse(responseCode = "401", description = "미인증",
-          content = @Content(
-              mediaType = "application/json",
-              array = @ArraySchema(schema = @Schema(implementation = ApiGlobalResponse.class)),
-              examples = {
-                  @ExampleObject(
-                      name = "NOT_AUTHENTICATED_ACCESS",
-                      summary = "인증되지 않은 접근",
-                      value = """
-                          {
-                            "code": "UNAUTHENTICATED",
-                            "message": "로그인 후 이용 바랍니다.",
-                            "data": null
-                          }
-                          """
-                  ),
-                  @ExampleObject(
-                      name = "EXPIRED_TOKEN",
-                      summary = "만료된 토큰",
-                      value = """
-                          {
-                            "code": "EXPIRED_TOKEN",
-                            "message": "만료된 토큰입니다.",
-                            "data": null
-                          }
-                          """
-                  ),
-                  @ExampleObject(
-                      name = "INVALID_JWT_SIGNATURE",
-                      summary = "유효하지 않은 서명",
-                      value = """
-                          {
-                            "code": "INVALID_JWT_SIGNATURE",
-                            "message": "유효하지 않은 서명입니다.",
-                            "data": null
-                          }
-                          """
-                  ),
-                  @ExampleObject(
-                      name = "UNAUTHENTICATED",
-                      summary = "인증되지 않음",
-                      value = """
-                          {
-                            "code": "UNAUTHENTICATED",
-                            "message": "로그인 후 이용 바랍니다.",
-                            "data": null
-                          }
-                          """
-                  ),
-                  @ExampleObject(
-                      name = "INVALID_TOKEN_ERROR",
-                      summary = "유효하지 않은 토큰",
-                      value = """
-                          {
-                            "code": "INVALID_TOKEN_ERROR",
-                            "message": "유효하지 않는 토큰입니다.",
-                            "data": null
-                          }
-                          """
-                  )
               }
           )
       )
