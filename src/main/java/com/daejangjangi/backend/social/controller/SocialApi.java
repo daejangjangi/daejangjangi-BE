@@ -1,5 +1,6 @@
 package com.daejangjangi.backend.social.controller;
 
+import com.daejangjangi.backend.global.annotation.ResponseCommonWithSwagger;
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
 import com.daejangjangi.backend.social.domain.dto.SocialRequestDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,36 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "Social (소셜) API", description = "소셜 관련 API")
-@ApiResponses(value = {
-    @ApiResponse(responseCode = "200", description = "OK",
-        content = @Content(
-            mediaType = "application/json",
-            schema = @Schema(implementation = ApiGlobalResponse.class),
-            examples = @ExampleObject(
-                value = """
-                    {
-                      "code": "OK",
-                      "message": "OK",
-                      "data": null
-                    }"""
-            )
-        )
-    ),
-    @ApiResponse(responseCode = "500", description = "서버 내부 오류",
-        content = @Content(
-            mediaType = "application/json",
-            schema = @Schema(implementation = ApiGlobalResponse.class),
-            examples = @ExampleObject(
-                value = """
-                    {
-                      "code": "INTERNAL_SERVER_ERROR",
-                      "message": "서버 내부 오류 입니다.",
-                      "data": null
-                    }"""
-            )
-        )
-    )
-})
+@ResponseCommonWithSwagger
 public interface SocialApi {
 
   @Operation(summary = "소셜 로그인", tags = {"Social (소셜) API"})
