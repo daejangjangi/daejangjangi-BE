@@ -11,6 +11,8 @@ import com.daejangjangi.backend.member.exception.NotFoundMemberException;
 import com.daejangjangi.backend.member.repository.MemberCategoryRepository;
 import com.daejangjangi.backend.member.repository.MemberDiseaseRepository;
 import com.daejangjangi.backend.member.repository.MemberRepository;
+import com.daejangjangi.backend.token.domain.entity.Token;
+import com.daejangjangi.backend.token.repository.TokenRepository;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -31,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class MemberService implements UserDetailsService {
 
+  private final TokenRepository tokenRepository;
   private final MemberRepository memberRepository;
   private final MemberDiseaseRepository memberDiseaseRepository;
   private final MemberCategoryRepository memberCategoryRepository;
@@ -161,6 +164,16 @@ public class MemberService implements UserDetailsService {
     originMember.addDiseases(memberDiseases);
     List<MemberCategory> memberCategories = updateCategories(originMember, newCategories);
     originMember.addCategories(memberCategories);
+  }
+
+  /**
+   * 로그아웃
+   */
+  public void logout() {
+    Long memberId = getCurrentId();
+    Token token = tokenRepository.findByMemberId(memberId)
+        .orElseThrow(NotFoundMemberException::new);
+    tokenRepository.delete(token);
   }
 
   /*--------------Private----------------------------Private----------------------------Private---*/

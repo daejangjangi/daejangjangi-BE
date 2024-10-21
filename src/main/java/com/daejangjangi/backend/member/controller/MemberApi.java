@@ -411,4 +411,9 @@ public interface MemberApi {
   ApiGlobalResponse<?> modify(
       @RequestBody MemberRequestDto.Modify request
   );
+
+  @Operation(summary = "로그아웃", tags = {"Member (회원) API"})
+  @Response401WithSwagger
+  @Response403WithSwagger
+  ApiGlobalResponse<?> logout();
 }

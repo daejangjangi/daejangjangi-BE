@@ -83,4 +83,11 @@ public class MemberController implements MemberApi {
     memberService.update(member, diseases, categories);
     return ApiGlobalResponse.ok();
   }
+
+  @PreAuthorize("hasAuthority('MEMBER')")
+  @GetMapping("/logout")
+  public ApiGlobalResponse<?> logout() {
+    memberService.logout();
+    return ApiGlobalResponse.ok();
+  }
 }

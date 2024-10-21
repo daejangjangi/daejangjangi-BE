@@ -116,7 +116,8 @@ public class TokenService {
   private TokenDto generateToken(Authentication authentication) {
     String accessToken = tokenProvider.generateAccessToken(authentication);
     String refreshToken = tokenProvider.generateRefreshToken(authentication);
-    save(authentication.getName(), refreshToken);
+    Long memberId = Long.parseLong(authentication.getName());
+    save(memberId, refreshToken);
     return TokenDto.builder()
         .accessToken(accessToken)
         .refreshToken(refreshToken)
@@ -132,7 +133,7 @@ public class TokenService {
    * @param memberId
    * @param refreshToken
    */
-  private void save(String memberId, String refreshToken) {
+  private void save(Long memberId, String refreshToken) {
     Token token = tokenRepository.findByMemberId(memberId).orElseGet(() -> Token.builder()
         .memberId(memberId)
         .build());
