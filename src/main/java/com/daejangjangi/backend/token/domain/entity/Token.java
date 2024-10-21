@@ -19,7 +19,7 @@ public class Token extends BaseEntity {
 
   @Builder
   public Token(
-      String memberId,
+      Long memberId,
       String refreshToken
   ) {
     this.memberId = memberId;
@@ -29,7 +29,7 @@ public class Token extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-  private String memberId;
+  private Long memberId;
   private String refreshToken;
 
   /*-------------Business Logic---------------------------Business Logic--------------------------*/
