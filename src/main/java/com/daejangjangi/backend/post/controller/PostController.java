@@ -3,11 +3,14 @@ package com.daejangjangi.backend.post.controller;
 import com.daejangjangi.backend.board.domain.entity.Board;
 import com.daejangjangi.backend.board.service.BoardService;
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
+import com.daejangjangi.backend.like.service.PostLikeService;
 import com.daejangjangi.backend.member.domain.entity.Member;
 import com.daejangjangi.backend.member.service.MemberService;
 import com.daejangjangi.backend.post.domain.dto.PostRequestDto;
+import com.daejangjangi.backend.post.domain.dto.PostResponseDto;
 import com.daejangjangi.backend.post.domain.entity.Post;
 import com.daejangjangi.backend.post.domain.mapper.PostMapper;
+import com.daejangjangi.backend.post.service.PostLockService;
 import com.daejangjangi.backend.post.service.PostService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -23,6 +26,8 @@ public class PostController implements PostApi {
   private final PostService postService;
   private final MemberService memberService;
   private final BoardService boardService;
+  private final PostLockService postLockService;
+  private final PostLikeService postLikeService;
 
   @PostMapping
   @PreAuthorize("hasAuthority('MEMBER')")
@@ -43,5 +48,24 @@ public class PostController implements PostApi {
     postService.modifyPost(member, post, boards);
     return ApiGlobalResponse.ok();
   }
+
+  @PostMapping("/{postId}/likes")
+  @PreAuthorize("hasAuthority('MEMBER')")
+  public ApiGlobalResponse<?> LikePost(@PathVariable("postId") Long postId) {
+    Member member = memberService.info();
+    Post post = postService.findById(postId);
+    postLockService.likePostWithLock(member, post);
+    return ApiGlobalResponse.ok();
+  }
+
+  @GetMapping("/{postId}")
+  @PreAuthorize("hasAuthority('MEMBER')")
+  public ApiGlobalResponse<?> info(@PathVariable("postId") Long postId) {
+    Member member = memberService.info();
+    Post post = postService.findById(postId);
+    PostResponseDto.Info response = PostMapper.INSTANCE.entityToResponseDto(post, member);
+    return ApiGlobalResponse.ok(response);
+  }
+
 
 }

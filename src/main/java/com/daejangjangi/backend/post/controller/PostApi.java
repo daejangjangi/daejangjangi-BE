@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @Tag(name = "Post (게시글) API", description = "게시글 관련 API")
@@ -408,4 +409,92 @@ public interface PostApi {
   ApiGlobalResponse<?> modifyPost(
       @RequestBody PostRequestDto.ModifyPost request
   );
+
+  @Operation(summary = "게시글 좋아요", tags = {"Post (게시글) API"})
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "401", description = "미인증",
+          content = @Content(
+              mediaType = "application/json",
+              array = @ArraySchema(schema = @Schema(implementation = ApiGlobalResponse.class)),
+              examples = {
+                  @ExampleObject(
+                      name = "NOT_AUTHENTICATED_ACCESS",
+                      summary = "인증되지 않은 접근",
+                      value = """
+                          {
+                            "code": "UNAUTHENTICATED",
+                            "message": "로그인 후 이용 바랍니다.",
+                            "data": null
+                          }
+                          """
+                  ),
+                  @ExampleObject(
+                      name = "EXPIRED_TOKEN",
+                      summary = "만료된 토큰",
+                      value = """
+                          {
+                            "code": "EXPIRED_TOKEN",
+                            "message": "만료된 토큰입니다.",
+                            "data": null
+                          }
+                          """
+                  ),
+                  @ExampleObject(
+                      name = "INVALID_JWT_SIGNATURE",
+                      summary = "유효하지 않은 서명",
+                      value = """
+                          {
+                            "code": "INVALID_JWT_SIGNATURE",
+                            "message": "유효하지 않은 서명입니다.",
+                            "data": null
+                          }
+                          """
+                  ),
+                  @ExampleObject(
+                      name = "UNAUTHENTICATED",
+                      summary = "인증되지 않음",
+                      value = """
+                          {
+                            "code": "UNAUTHENTICATED",
+                            "message": "로그인 후 이용 바랍니다.",
+                            "data": null
+                          }
+                          """
+                  ),
+                  @ExampleObject(
+                      name = "INVALID_TOKEN_ERROR",
+                      summary = "유효하지 않은 토큰",
+                      value = """
+                          {
+                            "code": "INVALID_TOKEN_ERROR",
+                            "message": "유효하지 않는 토큰입니다.",
+                            "data": null
+                          }
+                          """
+                  )
+              }
+          )
+      ),
+      @ApiResponse(responseCode = "400", description = "잘못된 요청",
+          content = @Content(
+              mediaType = "application/json",
+              array = @ArraySchema(schema = @Schema(implementation = ApiGlobalResponse.class)),
+              examples = {
+                  @ExampleObject(
+                      name = "NOT_FOUND_POST",
+                      summary = "존재하지 않는 게시글",
+                      value = """
+                          {
+                            "code": "NOT_FOUND_POST",
+                            "message": "존재하지 않는 게시글입니다.",
+                            "data": null
+                          }
+                          """
+                  )
+              }
+          )
+      )
+  })
+  ApiGlobalResponse<?> LikePost(@PathVariable("postId") Long postId);
+
 }

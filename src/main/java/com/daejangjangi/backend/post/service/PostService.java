@@ -43,7 +43,7 @@ public class PostService {
    * @param member   회원 정보
    * @param authorId 게시글 작성자 id
    */
-  public void checkPostAuthor(Member member, Long authorId) {
+  private void checkPostAuthor(Member member, Long authorId) {
     if (!Objects.equals(member.getId(), authorId)) {
       throw new NotPostAuthorException();
     }
@@ -105,5 +105,16 @@ public class PostService {
     if (!removedBoards.isEmpty()) {
       boardPostRepository.deleteAllByBoardAndPost(removedBoards, post);
     }
+  }
+
+  /**
+   * Id로 게시글 찾기
+   *
+   * @param postId 게시글 Id
+   * @return Post
+   */
+  @Transactional
+  public Post findById(Long postId) {
+    return postRepository.findById(postId).orElseThrow(NotFoundPostException::new);
   }
 }
