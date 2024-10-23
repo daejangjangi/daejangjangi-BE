@@ -1,5 +1,7 @@
 package com.daejangjangi.backend.faq.domain.dto;
 
+import com.daejangjangi.backend.faq.domain.enums.FaqCategory;
+import com.daejangjangi.backend.global.annotation.validation.ValidEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -15,6 +17,7 @@ public class FaqRequestDto {
       })
 
       @NotBlank(message = "카테고리를 입력하세요.")
+      @ValidEnum(enumClass = FaqCategory.class, message = "지원하지 않는 카테고리 입니다.")
       String category,
 
       @Schema(description = "FAQ 질문")

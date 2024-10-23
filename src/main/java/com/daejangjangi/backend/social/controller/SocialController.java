@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class SocialController implements SocialApi {
 
   private final SocialService socialService;
-  private final SocialValidator socialValidator;
   private final MemberService memberService;
 
   @PostMapping("/login")
@@ -29,8 +28,7 @@ public class SocialController implements SocialApi {
       @Valid @RequestBody SocialRequestDto.SocialLogin request) {
     String email = request.email();
     String snsId = request.snsId();
-    String provider = request.provider().toUpperCase();
-    socialValidator.checkSocialAccountProvider(request.provider());
+    String provider = request.provider();
     TokenResponseDto response = socialService.checkSocialAccountLinkage(snsId, provider);
     if (Objects.isNull(response)) {
       Member member = memberService.findByEmail(email);

@@ -1,5 +1,7 @@
 package com.daejangjangi.backend.social.domain.dto;
 
+import com.daejangjangi.backend.global.annotation.validation.ValidEnum;
+import com.daejangjangi.backend.social.domain.enums.SocialAccountProvider;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -22,6 +24,7 @@ public class SocialRequestDto {
       @Schema(description = "소셜 계정 제공자", enumAsRef = true)
 
       @NotBlank(message = "소셜 계정 제공자를 입력하세요.")
+      @ValidEnum(enumClass = SocialAccountProvider.class, message = "지원하지 않는 제공자 입니다.")
       String provider
   ) {
 

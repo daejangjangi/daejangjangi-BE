@@ -6,7 +6,6 @@ import com.daejangjangi.backend.faq.domain.dto.FaqResponseDto;
 import com.daejangjangi.backend.faq.domain.entity.Faq;
 import com.daejangjangi.backend.faq.domain.mapper.FaqMapper;
 import com.daejangjangi.backend.faq.service.FaqService;
-import com.daejangjangi.backend.faq.service.FaqValidator;
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
 import com.daejangjangi.backend.member.domain.entity.Member;
 import com.daejangjangi.backend.member.service.MemberService;
@@ -28,12 +27,10 @@ public class FaqController implements FaqApi {
 
   private final MemberService memberService;
   private final FaqService faqService;
-  private final FaqValidator faqValidator;
 
   @PreAuthorize("hasAuthority('MEMBER')")
   @PostMapping
   public ApiGlobalResponse<Null> register(@Valid @RequestBody FaqRequestDto.Register request) {
-    faqValidator.checkFaqCategory(request.category());
     Member member = memberService.info();
     Faq faq = FaqMapper.INSTANCE.registerRequestToEntity(request);
     faqService.save(member, faq);
