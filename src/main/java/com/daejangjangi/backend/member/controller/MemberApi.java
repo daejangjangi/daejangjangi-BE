@@ -1,8 +1,8 @@
 package com.daejangjangi.backend.member.controller;
 
-import com.daejangjangi.backend.global.annotation.Response401WithSwagger;
-import com.daejangjangi.backend.global.annotation.Response403WithSwagger;
-import com.daejangjangi.backend.global.annotation.ResponseCommonWithSwagger;
+import com.daejangjangi.backend.global.annotation.swagger.Response401WithSwagger;
+import com.daejangjangi.backend.global.annotation.swagger.Response403WithSwagger;
+import com.daejangjangi.backend.global.annotation.swagger.ResponseCommonWithSwagger;
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
 import com.daejangjangi.backend.member.domain.dto.MemberRequestDto;
 import com.daejangjangi.backend.member.domain.dto.MemberResponseDto;

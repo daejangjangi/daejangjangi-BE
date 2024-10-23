@@ -1,6 +1,6 @@
 package com.daejangjangi.backend.basic;
 
-import com.daejangjangi.backend.global.annotation.ResponseCommonWithSwagger;
+import com.daejangjangi.backend.global.annotation.swagger.ResponseCommonWithSwagger;
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

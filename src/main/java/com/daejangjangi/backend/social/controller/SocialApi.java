@@ -1,6 +1,6 @@
 package com.daejangjangi.backend.social.controller;
 
-import com.daejangjangi.backend.global.annotation.ResponseCommonWithSwagger;
+import com.daejangjangi.backend.global.annotation.swagger.ResponseCommonWithSwagger;
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
 import com.daejangjangi.backend.social.domain.dto.SocialRequestDto;
 import com.daejangjangi.backend.token.domain.dto.TokenResponseDto;

@@ -2,9 +2,9 @@ package com.daejangjangi.backend.faq.controller;
 
 import com.daejangjangi.backend.faq.domain.dto.FaqRequestDto;
 import com.daejangjangi.backend.faq.domain.dto.FaqResponseDto;
-import com.daejangjangi.backend.global.annotation.Response401WithSwagger;
-import com.daejangjangi.backend.global.annotation.Response403WithSwagger;
-import com.daejangjangi.backend.global.annotation.ResponseCommonWithSwagger;
+import com.daejangjangi.backend.global.annotation.swagger.Response401WithSwagger;
+import com.daejangjangi.backend.global.annotation.swagger.Response403WithSwagger;
+import com.daejangjangi.backend.global.annotation.swagger.ResponseCommonWithSwagger;
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;

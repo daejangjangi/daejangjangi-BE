@@ -1,4 +1,4 @@
-package com.daejangjangi.backend.global.annotation;
+package com.daejangjangi.backend.global.annotation.swagger;
 
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -6,7 +6,6 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
