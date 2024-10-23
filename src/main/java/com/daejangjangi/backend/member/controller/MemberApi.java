@@ -2,8 +2,10 @@ package com.daejangjangi.backend.member.controller;
 
 import com.daejangjangi.backend.global.annotation.Response401WithSwagger;
 import com.daejangjangi.backend.global.annotation.Response403WithSwagger;
+import com.daejangjangi.backend.global.annotation.ResponseCommonWithSwagger;
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
 import com.daejangjangi.backend.member.domain.dto.MemberRequestDto;
+import com.daejangjangi.backend.member.domain.dto.MemberResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -18,38 +20,10 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import org.apache.commons.lang3.ObjectUtils.Null;
 
 @Tag(name = "Member (회원) API", description = "회원 관련 API")
-@ApiResponses(value = {
-    @ApiResponse(responseCode = "200", description = "OK",
-        content = @Content(
-            mediaType = "application/json",
-            schema = @Schema(implementation = ApiGlobalResponse.class),
-            examples = @ExampleObject(
-                value = """
-                    {
-                      "code": "OK",
-                      "message": "OK",
-                      "data": null
-                    }"""
-            )
-        )
-    ),
-    @ApiResponse(responseCode = "500", description = "서버 내부 오류",
-        content = @Content(
-            mediaType = "application/json",
-            schema = @Schema(implementation = ApiGlobalResponse.class),
-            examples = @ExampleObject(
-                value = """
-                    {
-                      "code": "INTERNAL_SERVER_ERROR",
-                      "message": "서버 내부 오류 입니다.",
-                      "data": null
-                    }"""
-            )
-        )
-    )
-})
+@ResponseCommonWithSwagger
 public interface MemberApi {
 
   @Operation(summary = "이메일 중복 확인", tags = {"Member (회원) API"})
@@ -69,7 +43,7 @@ public interface MemberApi {
           )
       )
   })
-  ApiGlobalResponse<?> emailDuplicationCheck(
+  ApiGlobalResponse<Null> emailDuplicationCheck(
       @Parameter String email
   );
 
@@ -90,7 +64,7 @@ public interface MemberApi {
           )
       )
   })
-  ApiGlobalResponse<?> nicknameDuplicationCheck(
+  ApiGlobalResponse<Null> nicknameDuplicationCheck(
       @Parameter String nickname
   );
 
@@ -340,7 +314,7 @@ public interface MemberApi {
           )
       )
   })
-  ApiGlobalResponse<?> join(
+  ApiGlobalResponse<Null> join(
       @RequestBody MemberRequestDto.Join request
   );
 
@@ -388,7 +362,7 @@ public interface MemberApi {
   @Operation(summary = "회원 정보 조회", tags = {"Member (회원) API"})
   @Response401WithSwagger
   @Response403WithSwagger
-  ApiGlobalResponse<?> info();
+  ApiGlobalResponse<MemberResponseDto.Info> info();
 
   @Operation(summary = "회원 정보 수정", tags = {"Member (회원) API"})
   @Response401WithSwagger
@@ -436,7 +410,12 @@ public interface MemberApi {
           )
       )
   })
-  ApiGlobalResponse<?> modify(
+  ApiGlobalResponse<Null> modify(
       @RequestBody MemberRequestDto.Modify request
   );
+
+  @Operation(summary = "로그아웃", tags = {"Member (회원) API"})
+  @Response401WithSwagger
+  @Response403WithSwagger
+  ApiGlobalResponse<Null> logout();
 }

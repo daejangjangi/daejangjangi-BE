@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 
 public class FaqRequestDto {
 
-  @Schema(name = "FAQ-Register", description = "FAQ 등록 DTO")
+  @Schema(name = "FAQRegisterRequest", description = "FAQ 등록 요청 DTO")
   public record Register(
 
       @Schema(description = "FAQ 카테고리", allowableValues = {
@@ -26,7 +26,7 @@ public class FaqRequestDto {
 
   }
 
-  @Schema(name = "FAQ-Answer", description = "FAQ 답변 등록 DTO")
+  @Schema(name = "FAQAnswerRequest", description = "FAQ 답변 등록 요청 DTO")
   public record Answer(
 
       @Schema(description = "FAQ 아이디", type = "Long")

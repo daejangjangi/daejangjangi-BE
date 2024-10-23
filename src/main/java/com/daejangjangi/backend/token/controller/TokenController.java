@@ -1,8 +1,8 @@
 package com.daejangjangi.backend.token.controller;
 
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
-import com.daejangjangi.backend.token.domain.dto.TokenDto;
 import com.daejangjangi.backend.token.domain.dto.TokenRequestDto;
+import com.daejangjangi.backend.token.domain.dto.TokenResponseDto;
 import com.daejangjangi.backend.token.service.TokenService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +19,9 @@ public class TokenController implements TokenApi {
   private final TokenService tokenService;
 
   @PostMapping("/reissue")
-  public ApiGlobalResponse<?> reissue(@Valid @RequestBody TokenRequestDto.Reissue request) {
-    TokenDto response = tokenService.reissueToken(request);
+  public ApiGlobalResponse<TokenResponseDto> reissue(
+      @Valid @RequestBody TokenRequestDto.Reissue request) {
+    TokenResponseDto response = tokenService.reissueToken(request);
     return ApiGlobalResponse.ok(response);
   }
 }

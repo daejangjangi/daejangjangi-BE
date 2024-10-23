@@ -1,8 +1,8 @@
 package com.daejangjangi.backend.token.service;
 
 import com.daejangjangi.backend.member.domain.entity.Member;
-import com.daejangjangi.backend.token.domain.dto.TokenDto;
 import com.daejangjangi.backend.token.domain.dto.TokenRequestDto;
+import com.daejangjangi.backend.token.domain.dto.TokenResponseDto;
 import com.daejangjangi.backend.token.domain.entity.Token;
 import com.daejangjangi.backend.token.exception.InvalidTokenException;
 import com.daejangjangi.backend.token.repository.TokenRepository;
@@ -33,7 +33,7 @@ public class TokenService {
    * @return TokenDto
    */
   @Transactional
-  public TokenDto getToken(Authentication authentication) {
+  public TokenResponseDto getToken(Authentication authentication) {
     return generateToken(authentication);
   }
 
@@ -43,7 +43,7 @@ public class TokenService {
    * @param member
    * @return
    */
-  public TokenDto getToken(Member member) {
+  public TokenResponseDto getToken(Member member) {
     Authentication authentication = authProvider.getAuthentication(member);
     return generateToken(authentication);
   }
@@ -89,7 +89,7 @@ public class TokenService {
    * @return TokenDto
    */
   @Transactional
-  public TokenDto reissueToken(TokenRequestDto.Reissue request) {
+  public TokenResponseDto reissueToken(TokenRequestDto.Reissue request) {
     String refreshToken = request.refreshToken();
     if (!StringUtils.hasText(refreshToken)) {
       throw new InvalidTokenException();
@@ -99,7 +99,7 @@ public class TokenService {
     String reissuedAccessToken = tokenProvider.generateAccessToken(authentication);
     String reissuedRefreshToken = tokenProvider.generateRefreshToken(authentication);
     update(refreshToken, reissuedRefreshToken);
-    return TokenDto.builder()
+    return TokenResponseDto.builder()
         .accessToken(reissuedAccessToken)
         .refreshToken(reissuedRefreshToken)
         .build();
@@ -113,11 +113,12 @@ public class TokenService {
    * @param authentication
    * @return
    */
-  private TokenDto generateToken(Authentication authentication) {
+  private TokenResponseDto generateToken(Authentication authentication) {
     String accessToken = tokenProvider.generateAccessToken(authentication);
     String refreshToken = tokenProvider.generateRefreshToken(authentication);
-    save(authentication.getName(), refreshToken);
-    return TokenDto.builder()
+    Long memberId = Long.parseLong(authentication.getName());
+    save(memberId, refreshToken);
+    return TokenResponseDto.builder()
         .accessToken(accessToken)
         .refreshToken(refreshToken)
         .build();
@@ -132,7 +133,7 @@ public class TokenService {
    * @param memberId
    * @param refreshToken
    */
-  private void save(String memberId, String refreshToken) {
+  private void save(Long memberId, String refreshToken) {
     Token token = tokenRepository.findByMemberId(memberId).orElseGet(() -> Token.builder()
         .memberId(memberId)
         .build());

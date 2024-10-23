@@ -13,6 +13,7 @@ import com.daejangjangi.backend.member.service.MemberService;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.ObjectUtils.Null;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,7 +32,7 @@ public class FaqController implements FaqApi {
 
   @PreAuthorize("hasAuthority('MEMBER')")
   @PostMapping
-  public ApiGlobalResponse<?> register(@Valid @RequestBody FaqRequestDto.Register request) {
+  public ApiGlobalResponse<Null> register(@Valid @RequestBody FaqRequestDto.Register request) {
     faqValidator.checkFaqCategory(request.category());
     Member member = memberService.info();
     Faq faq = FaqMapper.INSTANCE.registerRequestToEntity(request);
@@ -41,7 +42,7 @@ public class FaqController implements FaqApi {
 
   @PreAuthorize("hasAuthority('MEMBER')")
   @GetMapping
-  public ApiGlobalResponse<?> faqs() {
+  public ApiGlobalResponse<List<FaqResponseDto.Faqs>> faqs() {
     List<Faq> faqs = faqService.faqs();
     List<FaqResponseDto.Faqs> response = FaqMapper.INSTANCE.entityToFaqsResponse(faqs);
     return ApiGlobalResponse.ok(response);
@@ -49,7 +50,7 @@ public class FaqController implements FaqApi {
 
   @PreAuthorize("hasAuthority('ADMIN')")
   @PostMapping("/answer")
-  public ApiGlobalResponse<?> answer(@Valid @RequestBody FaqRequestDto.Answer request) {
+  public ApiGlobalResponse<Null> answer(@Valid @RequestBody FaqRequestDto.Answer request) {
     Long faqId = request.id();
     String answer = request.answer();
     Faq faq = faqService.findById(faqId);

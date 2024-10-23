@@ -8,5 +8,5 @@ public interface TokenRepository extends JpaRepository<Token, Long> {
 
   Optional<Token> findByRefreshToken(String refreshToken);
 
-  Optional<Token> findByMemberId(String memberId);
+  Optional<Token> findByMemberId(Long memberId);
 }
