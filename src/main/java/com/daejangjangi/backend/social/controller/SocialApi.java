@@ -3,6 +3,7 @@ package com.daejangjangi.backend.social.controller;
 import com.daejangjangi.backend.global.annotation.ResponseCommonWithSwagger;
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
 import com.daejangjangi.backend.social.domain.dto.SocialRequestDto;
+import com.daejangjangi.backend.token.domain.dto.TokenResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -85,5 +86,6 @@ public interface SocialApi {
           )
       )
   })
-  ApiGlobalResponse<?> socialLogin(@RequestBody SocialRequestDto.SocialLogin request);
+  ApiGlobalResponse<TokenResponseDto> socialLogin(
+      @RequestBody SocialRequestDto.SocialLogin request);
 }

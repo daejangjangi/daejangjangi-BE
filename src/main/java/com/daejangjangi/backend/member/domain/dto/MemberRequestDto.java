@@ -11,7 +11,7 @@ import java.util.List;
 
 public class MemberRequestDto {
 
-  @Schema(description = "회원가입 DTO")
+  @Schema(name = "JoinRequest", description = "회원가입 요청 DTO")
   public record Join(
       @Schema(description = "이메일")
 
@@ -68,7 +68,7 @@ public class MemberRequestDto {
 
   }
 
-  @Schema(description = "로그인 DTO")
+  @Schema(name = "LoginRequest", description = "로그인 요청 DTO")
   public record Login(
 
       @Schema(description = "이메일")
@@ -85,7 +85,7 @@ public class MemberRequestDto {
 
   }
 
-  @Schema(name = "Member-Modify", description = "회원 수정 DTO")
+  @Schema(name = "MemberModifyRequest", description = "회원 수정 요청 DTO")
   public record Modify(
       @Size(max = 5, message = "닉네임은 최대 {max}자 이하이어야 합니다.")
       @Pattern(regexp = "^[A-Za-z가-힣0-9]+$", message = "닉네임은 영문자,한글,숫자로만 입력해야 합니다.")

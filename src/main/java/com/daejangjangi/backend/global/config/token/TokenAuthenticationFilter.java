@@ -3,7 +3,7 @@ package com.daejangjangi.backend.global.config.token;
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
 import com.daejangjangi.backend.member.domain.dto.MemberRequestDto;
 import com.daejangjangi.backend.member.exception.type.MemberErrorType;
-import com.daejangjangi.backend.token.domain.dto.TokenDto;
+import com.daejangjangi.backend.token.domain.dto.TokenResponseDto;
 import com.daejangjangi.backend.token.service.TokenService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -81,8 +81,8 @@ public class TokenAuthenticationFilter extends UsernamePasswordAuthenticationFil
   @Override
   protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
       FilterChain chain, Authentication authResult) {
-    TokenDto tokenDto = tokenService.getToken(authResult);
-    writeResponse(response, HttpStatus.OK.value(), ApiGlobalResponse.ok(tokenDto));
+    TokenResponseDto tokenResponseDto = tokenService.getToken(authResult);
+    writeResponse(response, HttpStatus.OK.value(), ApiGlobalResponse.ok(tokenResponseDto));
   }
 
   /**

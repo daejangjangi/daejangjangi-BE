@@ -6,7 +6,7 @@ import com.daejangjangi.backend.member.service.MemberService;
 import com.daejangjangi.backend.social.domain.dto.SocialRequestDto;
 import com.daejangjangi.backend.social.service.SocialService;
 import com.daejangjangi.backend.social.service.SocialValidator;
-import com.daejangjangi.backend.token.domain.dto.TokenDto;
+import com.daejangjangi.backend.token.domain.dto.TokenResponseDto;
 import jakarta.validation.Valid;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
@@ -25,13 +25,13 @@ public class SocialController implements SocialApi {
   private final MemberService memberService;
 
   @PostMapping("/login")
-  public ApiGlobalResponse<?> socialLogin(
+  public ApiGlobalResponse<TokenResponseDto> socialLogin(
       @Valid @RequestBody SocialRequestDto.SocialLogin request) {
     String email = request.email();
     String snsId = request.snsId();
     String provider = request.provider().toUpperCase();
     socialValidator.checkSocialAccountProvider(request.provider());
-    TokenDto response = socialService.checkSocialAccountLinkage(snsId, provider);
+    TokenResponseDto response = socialService.checkSocialAccountLinkage(snsId, provider);
     if (Objects.isNull(response)) {
       Member member = memberService.findByEmail(email);
       response = socialService.linkAccount(snsId, provider, member);

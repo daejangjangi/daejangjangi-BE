@@ -18,6 +18,7 @@ import jakarta.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.ObjectUtils.Null;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,19 +38,20 @@ public class MemberController implements MemberApi {
   private final CategoryService categoryService;
 
   @GetMapping("/email/check/{email}")
-  public ApiGlobalResponse<?> emailDuplicationCheck(@PathVariable("email") String email) {
+  public ApiGlobalResponse<Null> emailDuplicationCheck(@PathVariable("email") String email) {
     memberService.checkEmail(email);
     return ApiGlobalResponse.ok();
   }
 
   @GetMapping("/nickname/check/{nickname}")
-  public ApiGlobalResponse<?> nicknameDuplicationCheck(@PathVariable("nickname") String nickname) {
+  public ApiGlobalResponse<Null> nicknameDuplicationCheck(
+      @PathVariable("nickname") String nickname) {
     memberService.checkNickname(nickname);
     return ApiGlobalResponse.ok();
   }
 
   @PostMapping("/join")
-  public ApiGlobalResponse<?> join(@Valid @RequestBody MemberRequestDto.Join request) {
+  public ApiGlobalResponse<Null> join(@Valid @RequestBody MemberRequestDto.Join request) {
     Member member = MemberMapper.INSTANCE.joinRequestToEntity(request);
     List<Disease> diseases = diseaseService.findByNames(request.diseases());
     List<Category> categories = categoryService.findByNames(request.categories());
@@ -68,7 +70,7 @@ public class MemberController implements MemberApi {
 
   @PreAuthorize("hasAuthority('MEMBER')")
   @GetMapping("/info")
-  public ApiGlobalResponse<?> info() {
+  public ApiGlobalResponse<MemberResponseDto.Info> info() {
     Member member = memberService.info();
     MemberResponseDto.Info response = MemberMapper.INSTANCE.entityToInfoResponse(member);
     return ApiGlobalResponse.ok(response);
@@ -76,7 +78,7 @@ public class MemberController implements MemberApi {
 
   @PreAuthorize("hasAuthority('MEMBER')")
   @PutMapping
-  public ApiGlobalResponse<?> modify(@Valid @RequestBody MemberRequestDto.Modify request) {
+  public ApiGlobalResponse<Null> modify(@Valid @RequestBody MemberRequestDto.Modify request) {
     Member member = MemberMapper.INSTANCE.modifyRequestToEntity(request);
     List<Disease> diseases = diseaseService.findByNames(request.diseases());
     List<Category> categories = categoryService.findByNames(request.categories());
@@ -86,7 +88,7 @@ public class MemberController implements MemberApi {
 
   @PreAuthorize("hasAuthority('MEMBER')")
   @PostMapping("/logout")
-  public ApiGlobalResponse<?> logout() {
+  public ApiGlobalResponse<Null> logout() {
     memberService.logout();
     return ApiGlobalResponse.ok();
   }

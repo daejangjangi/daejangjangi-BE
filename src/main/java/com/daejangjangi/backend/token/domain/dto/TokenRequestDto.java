@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 
 public class TokenRequestDto {
 
+  @Schema(name = "ReissueRequest", description = "재발급 요청 DTO")
   public record Reissue(
 
       @Schema(description = "리프레쉬 토큰")

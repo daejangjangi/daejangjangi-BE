@@ -1,6 +1,7 @@
 package com.daejangjangi.backend.faq.controller;
 
 import com.daejangjangi.backend.faq.domain.dto.FaqRequestDto;
+import com.daejangjangi.backend.faq.domain.dto.FaqResponseDto;
 import com.daejangjangi.backend.global.annotation.Response401WithSwagger;
 import com.daejangjangi.backend.global.annotation.Response403WithSwagger;
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
@@ -13,6 +14,8 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
+import org.apache.commons.lang3.ObjectUtils.Null;
 
 @Tag(name = "FAQ (자주 묻는 질문) API", description = "자주 묻는 질문 관련 API")
 @ApiResponses(value = {
@@ -116,17 +119,17 @@ public interface FaqApi {
           )
       )
   })
-  ApiGlobalResponse<?> register(@RequestBody FaqRequestDto.Register request);
+  ApiGlobalResponse<Null> register(@RequestBody FaqRequestDto.Register request);
 
   @Operation(summary = "자주 묻는 질문 목록 조회", tags = {"FAQ (자주 묻는 질문) API"})
   @Response401WithSwagger
   @Response403WithSwagger
-  ApiGlobalResponse<?> faqs();
+  ApiGlobalResponse<List<FaqResponseDto.Faqs>> faqs();
 
   @Operation(summary = "답변 등록", tags = {"FAQ (자주 묻는 질문) API"})
   @Response401WithSwagger
   @Response403WithSwagger
-  ApiGlobalResponse<?> answer(
+  ApiGlobalResponse<Null> answer(
       @RequestBody FaqRequestDto.Answer request
   );
 }

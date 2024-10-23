@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 public class FaqResponseDto {
 
-  @Schema(description = "자주 묻는 질문 응답 DTO")
+  @Schema(name = "FaqsResponse", description = "FAQ 응답 DTO")
   public record Faqs(
 
       @Schema(description = "FAQ 카테고리")

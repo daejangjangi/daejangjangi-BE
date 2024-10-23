@@ -6,6 +6,7 @@ import java.util.List;
 
 public class MemberResponseDto {
 
+  @Schema(name = "MemberInfoResponse", description = "회원정보 응답 DTO")
   public record Info(
       @Schema(description = "닉네임")
 

@@ -5,6 +5,7 @@ import com.daejangjangi.backend.global.annotation.Response403WithSwagger;
 import com.daejangjangi.backend.global.annotation.ResponseCommonWithSwagger;
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
 import com.daejangjangi.backend.token.domain.dto.TokenRequestDto;
+import com.daejangjangi.backend.token.domain.dto.TokenResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -40,5 +41,5 @@ public interface TokenApi {
           )
       )
   })
-  ApiGlobalResponse<?> reissue(@RequestBody TokenRequestDto.Reissue request);
+  ApiGlobalResponse<TokenResponseDto> reissue(@RequestBody TokenRequestDto.Reissue request);
 }
