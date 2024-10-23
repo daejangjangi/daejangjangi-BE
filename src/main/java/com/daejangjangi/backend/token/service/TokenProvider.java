@@ -38,7 +38,7 @@ public class TokenProvider {
   /**
    * 액세스 토큰 발급
    *
-   * @param authentication
+   * @param authentication authentication
    * @return String - accessToken
    */
   public String generateAccessToken(Authentication authentication) {
@@ -48,7 +48,7 @@ public class TokenProvider {
   /**
    * 리프레쉬 토큰 발급
    *
-   * @param authentication
+   * @param authentication authentication
    * @return String - refreshToken
    */
   public String generateRefreshToken(Authentication authentication) {
@@ -60,9 +60,9 @@ public class TokenProvider {
   /**
    * JWT 생성 로직
    *
-   * @param authentication
-   * @param secret
-   * @param exp
+   * @param authentication authentication
+   * @param secret         비밀키
+   * @param exp            만료일
    * @return String
    */
   private String createToken(Authentication authentication, SecretKey secret, Long exp) {
