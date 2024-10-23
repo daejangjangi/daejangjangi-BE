@@ -85,7 +85,7 @@ public class MemberController implements MemberApi {
   }
 
   @PreAuthorize("hasAuthority('MEMBER')")
-  @GetMapping("/logout")
+  @PostMapping("/logout")
   public ApiGlobalResponse<?> logout() {
     memberService.logout();
     return ApiGlobalResponse.ok();
