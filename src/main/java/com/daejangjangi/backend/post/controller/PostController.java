@@ -10,7 +10,6 @@ import com.daejangjangi.backend.post.domain.dto.PostRequestDto;
 import com.daejangjangi.backend.post.domain.dto.PostResponseDto;
 import com.daejangjangi.backend.post.domain.entity.Post;
 import com.daejangjangi.backend.post.domain.mapper.PostMapper;
-import com.daejangjangi.backend.post.service.PostLockService;
 import com.daejangjangi.backend.post.service.PostService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -26,7 +25,6 @@ public class PostController implements PostApi {
   private final PostService postService;
   private final MemberService memberService;
   private final BoardService boardService;
-  private final PostLockService postLockService;
   private final PostLikeService postLikeService;
 
   @PostMapping
@@ -54,7 +52,7 @@ public class PostController implements PostApi {
   public ApiGlobalResponse<?> LikePost(@PathVariable("postId") Long postId) {
     Member member = memberService.info();
     Post post = postService.findById(postId);
-    postLockService.likePostWithLock(member, post);
+    postLikeService.likePostWithLock(member, post);
     return ApiGlobalResponse.ok();
   }
 
