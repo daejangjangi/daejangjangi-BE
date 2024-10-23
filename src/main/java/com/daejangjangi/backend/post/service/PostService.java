@@ -11,13 +11,11 @@ import com.daejangjangi.backend.post.repository.PostRepository;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PostService {
@@ -28,25 +26,24 @@ public class PostService {
   /**
    * 게시글 생성
    *
-   * @param member
-   * @param post
-   * @param boards
+   * @param member 회원 정보
+   * @param post   게시글 정보
+   * @param boards 게시글 카테고리
    */
   @Transactional
   public void createPost(Member member, Post post, List<Board> boards) {
     post.updateMember(member);
-    postRepository.save(post);
-    post.addBoards(saveBoardPosts(post, boards));
-
+    Post savePost = postRepository.save(post);
+    savePost.addBoards(saveBoardPosts(post, boards));
   }
 
   /**
    * 게시글 작성자 확인
    *
-   * @param member
-   * @param authorId
+   * @param member   회원 정보
+   * @param authorId 게시글 작성자 id
    */
-  public void isPostAuthor(Member member, Long authorId) {
+  private void checkPostAuthor(Member member, Long authorId) {
     if (!Objects.equals(member.getId(), authorId)) {
       throw new NotPostAuthorException();
     }
@@ -55,11 +52,10 @@ public class PostService {
   /**
    * 게시글 카테고리 저장
    *
-   * @param post
-   * @param boards
+   * @param post   게시글 정보
+   * @param boards 게시글 카테고리 정보
    * @return List - BoardPost
    */
-  @Transactional
   public List<BoardPost> saveBoardPosts(Post post, List<Board> boards) {
     List<BoardPost> boardPosts = new ArrayList<>();
 
@@ -75,14 +71,14 @@ public class PostService {
   /**
    * 게시글 수정
    *
-   * @param member
-   * @param post
-   * @param newBoards
+   * @param member    회원 정보
+   * @param post      수정된 게시글 정보
+   * @param newBoards 새롭게 등록한 게시글 카테고리
    */
   @Transactional
   public void modifyPost(Member member, Post post, List<Board> newBoards) {
     Post originPost = postRepository.findById(post.getId()).orElseThrow(NotFoundPostException::new);
-    isPostAuthor(member, originPost.getMember().getId());
+    checkPostAuthor(member, originPost.getMember().getId());
     List<Board> originBoardPosts = originPost.getBoards().stream().map(BoardPost::getBoard)
         .toList();
     originPost.updatePost(post);
@@ -109,5 +105,16 @@ public class PostService {
     if (!removedBoards.isEmpty()) {
       boardPostRepository.deleteAllByBoardAndPost(removedBoards, post);
     }
+  }
+
+  /**
+   * Id로 게시글 찾기
+   *
+   * @param postId 게시글 Id
+   * @return Post
+   */
+  @Transactional
+  public Post findById(Long postId) {
+    return postRepository.findById(postId).orElseThrow(NotFoundPostException::new);
   }
 }
