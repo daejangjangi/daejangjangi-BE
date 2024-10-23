@@ -13,14 +13,14 @@ public class MemberRequestDto {
 
   @Schema(name = "JoinRequest", description = "회원가입 요청 DTO")
   public record Join(
-      @Schema(description = "이메일")
+      @Schema(description = "이메일", example = "daejangjangi@email.com")
 
       @Email(message = "이메일 형식이 맞지 않습니다.")
       @NotBlank(message = "이메일을 입력하세요.")
       @Size(max = 50, message = "이메일은 최대 {max}자리 이하이어야 합니다.")
       String email,
 
-      @Schema(description = "비밀번호")
+      @Schema(description = "비밀번호", example = "asdf1234!@#$")
 
       @NotBlank(message = "비밀번호를 입력하세요.")
       @Size(min = 8, max = 16, message = "비밀번호는 최소 {min}자리 이상, 최대 {max}자리 이하이어야 합니다.")
@@ -29,14 +29,14 @@ public class MemberRequestDto {
       @Pattern(regexp = "(?=.*[!@#$%^&*()\\[\\]{}]).+", message = "비밀번호에 특수문자(!,@,#,$,%,^,&,*,(,),[,])가 포함되어야 합니다.")
       String password,
 
-      @Schema(description = "닉네임")
+      @Schema(description = "닉네임", example = "nick")
 
       @NotBlank(message = "닉네임을 입력하세요.")
       @Size(max = 5, message = "닉네임은 최대 {max}자 이하이어야 합니다.")
       @Pattern(regexp = "^[A-Za-z가-힣0-9]+$", message = "닉네임은 영문자,한글,숫자로만 입력해야 합니다.")
       String nickname,
 
-      @Schema(description = "성별")
+      @Schema(description = "성별", allowableValues = {"m", "w"})
 
       @NotBlank(message = "성별을 입력하세요.")
       @Size(max = 1, message = "성별은 최대 {max}자 이하이어야 합니다.")
@@ -71,13 +71,13 @@ public class MemberRequestDto {
   @Schema(name = "LoginRequest", description = "로그인 요청 DTO")
   public record Login(
 
-      @Schema(description = "이메일")
+      @Schema(description = "이메일", example = "daejangjangi@email.com")
 
       @Email(message = "이메일 형식이 맞지 않습니다.")
       @NotBlank(message = "이메일을 입력해주세요.")
       String email,
 
-      @Schema(description = "비밀번호")
+      @Schema(description = "비밀번호", example = "asdf1234!@#$")
 
       @NotBlank(message = "비밀번호를 입력해주세요.")
       String password
@@ -87,6 +87,8 @@ public class MemberRequestDto {
 
   @Schema(name = "MemberModifyRequest", description = "회원 수정 요청 DTO")
   public record Modify(
+      @Schema(description = "닉네임", example = "nick")
+
       @Size(max = 5, message = "닉네임은 최대 {max}자 이하이어야 합니다.")
       @Pattern(regexp = "^[A-Za-z가-힣0-9]+$", message = "닉네임은 영문자,한글,숫자로만 입력해야 합니다.")
       String nickname,

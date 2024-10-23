@@ -21,7 +21,7 @@ public class SocialRequestDto {
       @NotBlank(message = "소셜 계정 고유값을 입력하세요.")
       String snsId,
 
-      @Schema(description = "소셜 계정 제공자", enumAsRef = true)
+      @Schema(description = "소셜 계정 제공자", allowableValues = {"KAKAO"})
 
       @NotBlank(message = "소셜 계정 제공자를 입력하세요.")
       @ValidEnum(enumClass = SocialAccountProvider.class, message = "지원하지 않는 제공자 입니다.")

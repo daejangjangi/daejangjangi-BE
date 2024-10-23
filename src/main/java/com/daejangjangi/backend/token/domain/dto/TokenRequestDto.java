@@ -8,7 +8,7 @@ public class TokenRequestDto {
   @Schema(name = "ReissueRequest", description = "재발급 요청 DTO")
   public record Reissue(
 
-      @Schema(description = "리프레쉬 토큰")
+      @Schema(description = "리프레쉬 토큰", example = "A!f13s4df1%&sdf7AA5fH35RTds...")
 
       @NotBlank(message = "리프레쉬 토큰을 입력하세요.") String refreshToken
   ) {
