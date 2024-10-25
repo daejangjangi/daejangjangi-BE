@@ -15,6 +15,6 @@ public class NotFoundPostException extends ClientDataException {
 
   public NotFoundPostException(String message) {
     super(message);
-    this.code = PostErrorType.NOT_FOUND_POST.getMessage();
+    this.code = PostErrorType.NOT_FOUND_POST.name();
   }
 }

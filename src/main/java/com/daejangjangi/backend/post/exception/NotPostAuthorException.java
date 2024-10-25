@@ -1,11 +1,11 @@
 package com.daejangjangi.backend.post.exception;
 
-import com.daejangjangi.backend.global.exception.ForbiddenException;
+import com.daejangjangi.backend.global.exception.ClientDataException;
 import com.daejangjangi.backend.post.exception.type.PostErrorType;
 import lombok.Getter;
 
 @Getter
-public class NotPostAuthorException extends ForbiddenException {
+public class NotPostAuthorException extends ClientDataException {
 
   private final String code;
 
@@ -15,6 +15,6 @@ public class NotPostAuthorException extends ForbiddenException {
 
   public NotPostAuthorException(String message) {
     super(message);
-    this.code = PostErrorType.NOT_POST_AUTHOR.getMessage();
+    this.code = PostErrorType.NOT_POST_AUTHOR.name();
   }
 }
