@@ -7,6 +7,8 @@ import com.daejangjangi.backend.token.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -34,6 +36,11 @@ public class SecurityConfig {
   public WebSecurityCustomizer webSecurityCustomizer() {
     return web -> web.ignoring() // Security ignore
         .requestMatchers("/h2-console/**", "/favicon.ico");
+  }
+
+  @Bean
+  public RoleHierarchy roleHierarchy() {
+    return RoleHierarchyImpl.fromHierarchy("ADMIN > MEMBER");
   }
 
   @Bean
