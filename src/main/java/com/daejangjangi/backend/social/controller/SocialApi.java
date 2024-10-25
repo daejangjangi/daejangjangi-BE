@@ -2,7 +2,9 @@ package com.daejangjangi.backend.social.controller;
 
 import com.daejangjangi.backend.global.annotation.swagger.ResponseCommonWithSwagger;
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
+import com.daejangjangi.backend.member.domain.dto.MemberResponseDto;
 import com.daejangjangi.backend.social.domain.dto.SocialRequestDto;
+import com.daejangjangi.backend.social.domain.dto.SocialResponseDto;
 import com.daejangjangi.backend.token.domain.dto.TokenResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -20,6 +22,8 @@ public interface SocialApi {
 
   @Operation(summary = "소셜 로그인", tags = {"Social (소셜) API"})
   @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "OK",
+          content = @Content(schema = @Schema(implementation = SocialResponseDto.SocialLogin.class))),
       @ApiResponse(responseCode = "400", description = "잘못된 요청",
           content = @Content(
               mediaType = "application/json",
@@ -86,6 +90,6 @@ public interface SocialApi {
           )
       )
   })
-  ApiGlobalResponse<TokenResponseDto> socialLogin(
+  ApiGlobalResponse<SocialResponseDto.SocialLogin> socialLogin(
       @RequestBody SocialRequestDto.SocialLogin request);
 }

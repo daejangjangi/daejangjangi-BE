@@ -9,8 +9,8 @@ import lombok.Getter;
 @Schema(name = "ReissueResponse", description = "재발급 응답 DTO")
 public class TokenResponseDto {
 
-  @Schema(description = "액세스 토큰", example = "A!f13s4df1%&sdf7AA5fH35RTds...")
+  @Schema(description = "액세스 토큰", example = "xxxx.xxxx.xxxx")
   private String accessToken;
-  @Schema(description = "리프레쉬 토큰", example = "A!f13s4df1%&sdf7AA5fH35RTds...")
+  @Schema(description = "리프레쉬 토큰", example = "xxxx.xxxx.xxxx")
   private String refreshToken;
 }

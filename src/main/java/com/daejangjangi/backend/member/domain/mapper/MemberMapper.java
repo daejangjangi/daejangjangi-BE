@@ -3,6 +3,7 @@ package com.daejangjangi.backend.member.domain.mapper;
 import com.daejangjangi.backend.member.domain.dto.MemberRequestDto;
 import com.daejangjangi.backend.member.domain.dto.MemberResponseDto;
 import com.daejangjangi.backend.member.domain.entity.Member;
+import com.daejangjangi.backend.token.domain.dto.TokenResponseDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -30,4 +31,8 @@ public interface MemberMapper {
   @Mapping(target = "birth", source = "modifyRequest.birth")
   @Mapping(target = "gender", source = "modifyRequest.gender")
   Member modifyRequestToEntity(MemberRequestDto.Modify modifyRequest);
+
+  @Mapping(target = "accessToken", source = "tokenDto.accessToken")
+  @Mapping(target = "refreshToken", source = "tokenDto.refreshToken")
+  MemberResponseDto.Login dtoToResponse(TokenResponseDto tokenDto);
 }

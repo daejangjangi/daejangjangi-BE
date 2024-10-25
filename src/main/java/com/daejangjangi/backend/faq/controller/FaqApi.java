@@ -2,6 +2,7 @@ package com.daejangjangi.backend.faq.controller;
 
 import com.daejangjangi.backend.faq.domain.dto.FaqRequestDto;
 import com.daejangjangi.backend.faq.domain.dto.FaqResponseDto;
+import com.daejangjangi.backend.global.annotation.swagger.Response200WithSwagger;
 import com.daejangjangi.backend.global.annotation.swagger.Response401WithSwagger;
 import com.daejangjangi.backend.global.annotation.swagger.Response403WithSwagger;
 import com.daejangjangi.backend.global.annotation.swagger.ResponseCommonWithSwagger;
@@ -23,6 +24,7 @@ import org.apache.commons.lang3.ObjectUtils.Null;
 public interface FaqApi {
 
   @Operation(summary = "자주 묻는 질문 등록", tags = {"FAQ (자주 묻는 질문) API"})
+  @Response200WithSwagger
   @Response401WithSwagger
   @Response403WithSwagger
   @ApiResponses(value = {
@@ -94,11 +96,14 @@ public interface FaqApi {
   ApiGlobalResponse<Null> register(@RequestBody FaqRequestDto.Register request);
 
   @Operation(summary = "자주 묻는 질문 목록 조회", tags = {"FAQ (자주 묻는 질문) API"})
+  @ApiResponse(responseCode = "200", description = "OK",
+      content = @Content(array = @ArraySchema(schema = @Schema(implementation = FaqResponseDto.Faqs.class))))
   @Response401WithSwagger
   @Response403WithSwagger
   ApiGlobalResponse<List<FaqResponseDto.Faqs>> faqs();
 
   @Operation(summary = "답변 등록", tags = {"FAQ (자주 묻는 질문) API"})
+  @Response200WithSwagger
   @Response401WithSwagger
   @Response403WithSwagger
   ApiGlobalResponse<Null> answer(

@@ -4,6 +4,7 @@ import com.daejangjangi.backend.global.annotation.swagger.Response401WithSwagger
 import com.daejangjangi.backend.global.annotation.swagger.Response403WithSwagger;
 import com.daejangjangi.backend.global.annotation.swagger.ResponseCommonWithSwagger;
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
+import com.daejangjangi.backend.social.domain.dto.SocialResponseDto;
 import com.daejangjangi.backend.token.domain.dto.TokenRequestDto;
 import com.daejangjangi.backend.token.domain.dto.TokenResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,6 +24,8 @@ public interface TokenApi {
   @Response401WithSwagger
   @Response403WithSwagger
   @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "OK",
+          content = @Content(schema = @Schema(implementation = TokenResponseDto.class))),
       @ApiResponse(responseCode = "400", description = "잘못된 요청",
           content = @Content(
               mediaType = "application/json",

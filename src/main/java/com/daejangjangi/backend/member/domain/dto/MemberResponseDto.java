@@ -6,6 +6,16 @@ import java.util.List;
 
 public class MemberResponseDto {
 
+  @Schema(name = "LoginResponse", description = "로그인 응답 DTO")
+  public record Login(
+      @Schema(description = "액세스 토큰", example = "xxxx.xxxx.xxxx")
+      String accessToken,
+      @Schema(description = "리프레쉬 토큰", example = "xxxx.xxxx.xxxx")
+      String refreshToken
+  ) {
+
+  }
+
   @Schema(name = "MemberInfoResponse", description = "회원정보 응답 DTO")
   public record Info(
       @Schema(description = "닉네임", example = "nick")
