@@ -16,7 +16,7 @@ public class AuthProvider {
   /**
    * JWT Claim 기반 Authentication 발급
    *
-   * @param claims
+   * @param claims claims
    * @return Authentication
    */
   public Authentication getAuthentication(Claims claims) {
@@ -28,8 +28,8 @@ public class AuthProvider {
   /**
    * Member 정보 기반 Authentication 발급
    *
-   * @param member
-   * @return
+   * @param member 회원
+   * @return Authentication
    */
   public Authentication getAuthentication(Member member) {
     List<SimpleGrantedAuthority> authorities = getAuthorities(member);
@@ -42,8 +42,8 @@ public class AuthProvider {
   /**
    * Claim 에서 권한 추출
    *
-   * @param claims
-   * @return
+   * @param claims claims
+   * @return List<SimpleGrantedAuthority>
    */
   private List<SimpleGrantedAuthority> getAuthorities(Claims claims) {
     return Collections.singletonList(
@@ -53,8 +53,8 @@ public class AuthProvider {
   /**
    * Member 에서 권한 추출
    *
-   * @param member
-   * @return
+   * @param member 회원
+   * @return List<SimpleGrantedAuthority>
    */
   private List<SimpleGrantedAuthority> getAuthorities(Member member) {
     return Collections.singletonList(

@@ -2,13 +2,14 @@ package com.daejangjangi.backend.global.config.token;
 
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
 import com.daejangjangi.backend.member.domain.dto.MemberRequestDto;
+import com.daejangjangi.backend.member.domain.dto.MemberResponseDto;
+import com.daejangjangi.backend.member.domain.mapper.MemberMapper;
 import com.daejangjangi.backend.member.exception.type.MemberErrorType;
 import com.daejangjangi.backend.token.domain.dto.TokenResponseDto;
 import com.daejangjangi.backend.token.service.TokenService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -49,7 +50,7 @@ public class TokenAuthenticationFilter extends UsernamePasswordAuthenticationFil
    * @param response the response, which may be needed if the implementation has to do a redirect as
    *                 part of a multi-stage authentication process (such as OIDC).
    * @return Authentication
-   * @throws AuthenticationException
+   * @throws AuthenticationException 인증오류
    */
   @Override
   public Authentication attemptAuthentication(HttpServletRequest request,
@@ -71,27 +72,25 @@ public class TokenAuthenticationFilter extends UsernamePasswordAuthenticationFil
   /**
    * 3-1. 인증 후처리 - 로그인 성공 시 처리 로직
    *
-   * @param request
-   * @param response
-   * @param chain
+   * @param request    Http 요청
+   * @param response   Http 응답
+   * @param chain      필터 체인
    * @param authResult the object returned from the <tt>attemptAuthentication</tt> method.
-   * @throws IOException
-   * @throws ServletException
    */
   @Override
   protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
       FilterChain chain, Authentication authResult) {
     TokenResponseDto tokenResponseDto = tokenService.getToken(authResult);
-    writeResponse(response, HttpStatus.OK.value(), ApiGlobalResponse.ok(tokenResponseDto));
+    MemberResponseDto.Login responseDto = MemberMapper.INSTANCE.dtoToResponse(tokenResponseDto);
+    writeResponse(response, HttpStatus.OK.value(), ApiGlobalResponse.ok(responseDto));
   }
 
   /**
    * 3-2. 인증 후처리 - 로그인 실패 시 처리 로직
    *
-   * @param request
-   * @param response
-   * @param failed
-   * @throws IOException
+   * @param request  Http 요청
+   * @param response Http 응답
+   * @param failed   실패 예외
    */
   @Override
   protected void unsuccessfulAuthentication(HttpServletRequest request,

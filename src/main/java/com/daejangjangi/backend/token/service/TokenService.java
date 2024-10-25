@@ -29,7 +29,7 @@ public class TokenService {
   /**
    * accessToken & refreshToken 발급 by Authentication
    *
-   * @param authentication
+   * @param authentication authentication
    * @return TokenDto
    */
   @Transactional
@@ -40,8 +40,8 @@ public class TokenService {
   /**
    * accessToken & refreshToken 발급 by Member
    *
-   * @param member
-   * @return
+   * @param member 회원
+   * @return TokenResponseDto
    */
   public TokenResponseDto getToken(Member member) {
     Authentication authentication = authProvider.getAuthentication(member);
@@ -51,7 +51,7 @@ public class TokenService {
   /**
    * AuthorizationHeader 내에서 accessToken 추출
    *
-   * @param request
+   * @param request HttpServletRequest
    * @return String - accessToken
    */
   public String extractFromAuthorizationHeader(HttpServletRequest request) {
@@ -65,7 +65,7 @@ public class TokenService {
   /**
    * 액세스 토큰 검증
    *
-   * @param accessToken
+   * @param accessToken 액세스 토큰
    */
   public void validateToken(String accessToken) {
     tokenValidator.validateAccessToken(accessToken);
@@ -74,7 +74,7 @@ public class TokenService {
   /**
    * 액세스 토큰 기반 Authentication 발급
    *
-   * @param accessToken
+   * @param accessToken 액세스 토큰
    * @return Authentication
    */
   public Authentication getAuthentication(String accessToken) {
@@ -85,7 +85,7 @@ public class TokenService {
   /**
    * 액세스 토큰 재발급
    *
-   * @param request
+   * @param request 토큰 재발급 요청
    * @return TokenDto
    */
   @Transactional
@@ -110,8 +110,8 @@ public class TokenService {
   /**
    * 토큰 생성 및 저장
    *
-   * @param authentication
-   * @return
+   * @param authentication authentication
+   * @return TokenResponseDto
    */
   private TokenResponseDto generateToken(Authentication authentication) {
     String accessToken = tokenProvider.generateAccessToken(authentication);
@@ -126,12 +126,9 @@ public class TokenService {
 
   /**
    * 토큰 저장
-   * <p>
-   * 요구사항 : 토큰이 null 인 경우, 새로운 객체를 만들어서, memberId와 refreshToken을 초기화한 뒤 저장해주고, null이 아닌 경우,
-   * refreshToken 만 업데이트하도록 구현.
    *
-   * @param memberId
-   * @param refreshToken
+   * @param memberId     회원 id
+   * @param refreshToken 리프레쉬 토큰
    */
   private void save(Long memberId, String refreshToken) {
     Token token = tokenRepository.findByMemberId(memberId).orElseGet(() -> Token.builder()
@@ -144,8 +141,8 @@ public class TokenService {
   /**
    * 토큰 업데이트
    *
-   * @param oldRefreshToken
-   * @param newRefreshToken
+   * @param oldRefreshToken 이전 리프레쉬 토큰
+   * @param newRefreshToken 새로운 리프레쉬 토큰
    */
   private void update(String oldRefreshToken, String newRefreshToken) {
     Token token = tokenRepository.findByRefreshToken(oldRefreshToken)

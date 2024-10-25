@@ -1,4 +1,4 @@
-package com.daejangjangi.backend.global.annotation;
+package com.daejangjangi.backend.global.annotation.swagger;
 
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
 import io.swagger.v3.oas.annotations.media.Content;

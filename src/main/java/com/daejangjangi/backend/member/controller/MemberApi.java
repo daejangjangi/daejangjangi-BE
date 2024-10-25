@@ -1,11 +1,14 @@
 package com.daejangjangi.backend.member.controller;
 
-import com.daejangjangi.backend.global.annotation.Response401WithSwagger;
-import com.daejangjangi.backend.global.annotation.Response403WithSwagger;
-import com.daejangjangi.backend.global.annotation.ResponseCommonWithSwagger;
+import com.daejangjangi.backend.faq.domain.dto.FaqResponseDto;
+import com.daejangjangi.backend.global.annotation.swagger.Response200WithSwagger;
+import com.daejangjangi.backend.global.annotation.swagger.Response401WithSwagger;
+import com.daejangjangi.backend.global.annotation.swagger.Response403WithSwagger;
+import com.daejangjangi.backend.global.annotation.swagger.ResponseCommonWithSwagger;
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
 import com.daejangjangi.backend.member.domain.dto.MemberRequestDto;
 import com.daejangjangi.backend.member.domain.dto.MemberResponseDto;
+import com.daejangjangi.backend.token.domain.dto.TokenResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -27,6 +30,7 @@ import org.apache.commons.lang3.ObjectUtils.Null;
 public interface MemberApi {
 
   @Operation(summary = "이메일 중복 확인", tags = {"Member (회원) API"})
+  @Response200WithSwagger
   @ApiResponses(value = {
       @ApiResponse(responseCode = "400", description = "이메일 중복",
           content = @Content(
@@ -48,6 +52,7 @@ public interface MemberApi {
   );
 
   @Operation(summary = "닉네임 중복 확인", tags = {"Member (회원) API"})
+  @Response200WithSwagger
   @ApiResponses(value = {
       @ApiResponse(responseCode = "400", description = "닉네임 중복",
           content = @Content(
@@ -69,6 +74,7 @@ public interface MemberApi {
   );
 
   @Operation(summary = "회원가입", tags = {"Member (회원) API"})
+  @Response200WithSwagger
   @ApiResponses(value = {
       @ApiResponse(responseCode = "400", description = "잘못된 요청",
           content = @Content(
@@ -320,6 +326,8 @@ public interface MemberApi {
 
   @Operation(summary = "로그인", tags = {"Member (회원) API"})
   @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "OK",
+          content = @Content(schema = @Schema(implementation = MemberResponseDto.Login.class))),
       @ApiResponse(responseCode = "400", description = "잘못된 요청",
           content = @Content(
               mediaType = "application/json",
@@ -360,11 +368,14 @@ public interface MemberApi {
   ) throws ServletException, IOException;
 
   @Operation(summary = "회원 정보 조회", tags = {"Member (회원) API"})
+  @ApiResponse(responseCode = "200", description = "OK",
+      content = @Content(schema = @Schema(implementation = MemberResponseDto.Info.class)))
   @Response401WithSwagger
   @Response403WithSwagger
   ApiGlobalResponse<MemberResponseDto.Info> info();
 
   @Operation(summary = "회원 정보 수정", tags = {"Member (회원) API"})
+  @Response200WithSwagger
   @Response401WithSwagger
   @Response403WithSwagger
   @ApiResponses(value = {
@@ -415,6 +426,7 @@ public interface MemberApi {
   );
 
   @Operation(summary = "로그아웃", tags = {"Member (회원) API"})
+  @Response200WithSwagger
   @Response401WithSwagger
   @Response403WithSwagger
   ApiGlobalResponse<Null> logout();

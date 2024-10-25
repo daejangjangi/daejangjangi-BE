@@ -28,7 +28,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseEntity {
 
-
   @Builder
   public Member(
       String email,
@@ -98,7 +97,7 @@ public class Member extends BaseEntity {
   /**
    * 회원 장건강 질환 등록
    *
-   * @param diseases
+   * @param diseases 회원 장건강 질환 목록
    */
   public void addDiseases(List<MemberDisease> diseases) {
     if (Objects.isNull(this.diseases)) {
@@ -115,7 +114,7 @@ public class Member extends BaseEntity {
   /**
    * 회원 관심 상품 카테고리 등록
    *
-   * @param categories
+   * @param categories 회원 관심 상품 카테고리 목록
    */
   public void addCategories(List<MemberCategory> categories) {
     if (Objects.isNull(this.categories)) {
@@ -132,7 +131,7 @@ public class Member extends BaseEntity {
   /**
    * 비밀번호 암호화
    *
-   * @param encodedPassword
+   * @param encodedPassword 암호화된 비밀번호
    */
   public void encodePassword(String encodedPassword) {
     this.password = encodedPassword;
@@ -141,7 +140,7 @@ public class Member extends BaseEntity {
   /**
    * 회원 정보 수정
    *
-   * @param member
+   * @param member 회원
    */
   public void updateMember(Member member) {
     if (!Objects.equals(this.nickname, member.nickname)) {

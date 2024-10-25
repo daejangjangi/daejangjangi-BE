@@ -2,8 +2,10 @@ package com.daejangjangi.backend.faq.controller;
 
 import com.daejangjangi.backend.faq.domain.dto.FaqRequestDto;
 import com.daejangjangi.backend.faq.domain.dto.FaqResponseDto;
-import com.daejangjangi.backend.global.annotation.Response401WithSwagger;
-import com.daejangjangi.backend.global.annotation.Response403WithSwagger;
+import com.daejangjangi.backend.global.annotation.swagger.Response200WithSwagger;
+import com.daejangjangi.backend.global.annotation.swagger.Response401WithSwagger;
+import com.daejangjangi.backend.global.annotation.swagger.Response403WithSwagger;
+import com.daejangjangi.backend.global.annotation.swagger.ResponseCommonWithSwagger;
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -18,39 +20,11 @@ import java.util.List;
 import org.apache.commons.lang3.ObjectUtils.Null;
 
 @Tag(name = "FAQ (자주 묻는 질문) API", description = "자주 묻는 질문 관련 API")
-@ApiResponses(value = {
-    @ApiResponse(responseCode = "200", description = "OK",
-        content = @Content(
-            mediaType = "application/json",
-            schema = @Schema(implementation = ApiGlobalResponse.class),
-            examples = @ExampleObject(
-                value = """
-                    {
-                      "code": "OK",
-                      "message": "OK",
-                      "data": null
-                    }"""
-            )
-        )
-    ),
-    @ApiResponse(responseCode = "500", description = "서버 내부 오류",
-        content = @Content(
-            mediaType = "application/json",
-            schema = @Schema(implementation = ApiGlobalResponse.class),
-            examples = @ExampleObject(
-                value = """
-                    {
-                      "code": "INTERNAL_SERVER_ERROR",
-                      "message": "서버 내부 오류 입니다.",
-                      "data": null
-                    }"""
-            )
-        )
-    )
-})
+@ResponseCommonWithSwagger
 public interface FaqApi {
 
   @Operation(summary = "자주 묻는 질문 등록", tags = {"FAQ (자주 묻는 질문) API"})
+  @Response200WithSwagger
   @Response401WithSwagger
   @Response403WithSwagger
   @ApiResponses(value = {
@@ -122,11 +96,14 @@ public interface FaqApi {
   ApiGlobalResponse<Null> register(@RequestBody FaqRequestDto.Register request);
 
   @Operation(summary = "자주 묻는 질문 목록 조회", tags = {"FAQ (자주 묻는 질문) API"})
+  @ApiResponse(responseCode = "200", description = "OK",
+      content = @Content(array = @ArraySchema(schema = @Schema(implementation = FaqResponseDto.Faqs.class))))
   @Response401WithSwagger
   @Response403WithSwagger
   ApiGlobalResponse<List<FaqResponseDto.Faqs>> faqs();
 
   @Operation(summary = "답변 등록", tags = {"FAQ (자주 묻는 질문) API"})
+  @Response200WithSwagger
   @Response401WithSwagger
   @Response403WithSwagger
   ApiGlobalResponse<Null> answer(

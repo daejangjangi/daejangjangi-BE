@@ -13,6 +13,12 @@ public class DiseaseService {
 
   private final DiseaseRepository diseaseRepository;
 
+  /**
+   * 질병 조회 by 질병명 목록
+   *
+   * @param names 질병명 목록
+   * @return List<Disease>
+   */
   public List<Disease> findByNames(List<String> names) {
     List<Disease> diseases = diseaseRepository.findByNameIn(names);
     if (names.size() != diseases.size()) {

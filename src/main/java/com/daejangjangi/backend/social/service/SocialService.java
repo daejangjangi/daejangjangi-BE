@@ -18,6 +18,13 @@ public class SocialService {
   private final SocialRepository socialRepository;
   private final TokenService tokenService;
 
+  /**
+   * 소셜 계정 연동 확인
+   *
+   * @param snsId    소셜 계정 고유값
+   * @param provider 소셜 계정 제공자
+   * @return TokenResponseDto
+   */
   @Transactional
   public TokenResponseDto checkSocialAccountLinkage(String snsId, String provider) {
     Optional<SocialAccount> optional = socialRepository.findBySnsIdAndProvider(snsId,
@@ -30,6 +37,14 @@ public class SocialService {
     return null;
   }
 
+  /**
+   * 소셜 계정 연동
+   *
+   * @param snsId    소셜 계정 고유값
+   * @param provider 소셜 계정 제공자
+   * @param member   회원
+   * @return TokenResponseDto
+   */
   @Transactional
   public TokenResponseDto linkAccount(String snsId, String provider, Member member) {
     SocialAccount socialAccount = SocialAccount.builder()
