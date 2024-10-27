@@ -20,8 +20,7 @@ spring:
     defer-datasource-initialization: true
   sql:
     init:
-      mode: always
-      data-locations: classpath:init.sql
+      mode: never
   data:
     redis:
       host: redis
