@@ -315,6 +315,42 @@ public interface MemberApi {
                               "categories : 관심 상품을 최소 1개 이상 선택 바랍니다."
                             ]
                           }"""
+                  ),
+                  @ExampleObject(
+                      name = "BAD_REQUEST_SERVICE_USAGE_AGREE",
+                      summary = "대장장이 서비스 이용 약관 미동의",
+                      value = """
+                          {
+                            "code": "BAD_REQUEST",
+                            "message": "잘못된 요청입니다.",
+                            "data": [
+                              "serviceUsage : 대장장이 이용약관에 동의해주세요."
+                            ]
+                          }"""
+                  ),
+                  @ExampleObject(
+                      name = "BAD_REQUEST_PERSONNEL_INFO_AGREE",
+                      summary = "개인정보 수집 및 이용 약관 미동의",
+                      value = """
+                          {
+                            "code": "BAD_REQUEST",
+                            "message": "잘못된 요청입니다.",
+                            "data": [
+                              "personnelInfo : 개인정보 수집 및 이용에 동의해주세요."
+                            ]
+                          }"""
+                  ),
+                  @ExampleObject(
+                      name = "BAD_REQUEST_SENSITIVE_INFO_AGREE",
+                      summary = "민감정보 수집 및 이용 약관 미동의",
+                      value = """
+                          {
+                            "code": "BAD_REQUEST",
+                            "message": "잘못된 요청입니다.",
+                            "data": [
+                              "sensitiveInfo : 민감정보 수집 및 이용에 동의해주세요."
+                            ]
+                          }"""
                   )
               }
           )

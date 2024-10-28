@@ -1,6 +1,7 @@
 package com.daejangjangi.backend.member.domain.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -47,6 +48,22 @@ public class MemberRequestDto {
 
       @NotNull(message = "생일을 입력하세요.")
       LocalDate birth,
+
+      @Schema(description = "대장장이 이용약관", example = "true")
+      @AssertTrue(message = "대장장이 이용약관에 동의해주세요.")
+      boolean serviceUsage,
+
+      @Schema(description = "개인정보 수집 및 이용 동의", example = "true")
+      @AssertTrue(message = "개인정보 수집 및 이용에 동의해주세요.")
+      boolean personnelInfo,
+
+      @Schema(description = "민감정보 수집 및 이용 동의", example = "true")
+      @AssertTrue(message = "민감정보 수집 및 이용에 동의해주세요.")
+      boolean sensitiveInfo,
+
+      @Schema(description = "이벤트/홍보 수신 동의", example = "false")
+
+      boolean promotionReception,
 
       @Schema(description = "회원 장질환", allowableValues = {
           "변비", "과민성장증후군_설사형", "과민성장증후군_변비형", "치질", "치핵", "치열", "변실금", "항문소양증",

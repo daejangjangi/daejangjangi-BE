@@ -35,7 +35,11 @@ public class Member extends BaseEntity {
       String nickname,
       String gender,
       String profile,
-      LocalDate birth
+      LocalDate birth,
+      boolean serviceUsage,
+      boolean personnelInfo,
+      boolean sensitiveInfo,
+      boolean promotionReception
   ) {
     this.email = email;
     this.password = password;
@@ -43,6 +47,10 @@ public class Member extends BaseEntity {
     this.gender = gender;
     this.profile = profile;
     this.birth = birth;
+    this.serviceUsage = serviceUsage;
+    this.personnelInfo = personnelInfo;
+    this.sensitiveInfo = sensitiveInfo;
+    this.promotionReception = promotionReception;
     this.role = Role.MEMBER;
 
     this.diseases = new ArrayList<>();
@@ -78,6 +86,18 @@ public class Member extends BaseEntity {
   @Enumerated(EnumType.STRING)
   @Column(name = "member_role", nullable = false)
   private Role role;
+
+  @Column(name = "member_agree_service_usage", nullable = false)
+  private boolean serviceUsage;
+
+  @Column(name = "member_agree_personnel_info", nullable = false)
+  private boolean personnelInfo;
+
+  @Column(name = "member_agree_sensitive_info", nullable = false)
+  private boolean sensitiveInfo;
+
+  @Column(name = "member_agree_promotion_reception")
+  private boolean promotionReception;
 
   @OneToMany(mappedBy = "member", orphanRemoval = true, cascade = CascadeType.ALL)
   private List<MemberDisease> diseases;

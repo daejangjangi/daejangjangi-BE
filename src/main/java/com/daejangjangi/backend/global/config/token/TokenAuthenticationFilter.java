@@ -81,7 +81,8 @@ public class TokenAuthenticationFilter extends UsernamePasswordAuthenticationFil
   protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
       FilterChain chain, Authentication authResult) {
     TokenResponseDto tokenResponseDto = tokenService.getToken(authResult);
-    MemberResponseDto.Login responseDto = MemberMapper.INSTANCE.dtoToResponse(tokenResponseDto);
+    MemberResponseDto.Login responseDto =
+        MemberMapper.INSTANCE.dtoToLoginResponse(tokenResponseDto);
     writeResponse(response, HttpStatus.OK.value(), ApiGlobalResponse.ok(responseDto));
   }
 
