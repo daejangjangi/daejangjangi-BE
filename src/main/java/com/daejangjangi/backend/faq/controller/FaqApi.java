@@ -102,7 +102,29 @@ public interface FaqApi {
   @Response403WithSwagger
   ApiGlobalResponse<List<FaqResponseDto.Faqs>> faqs();
 
-  @Operation(summary = "답변 등록", tags = {"FAQ (자주 묻는 질문) API"})
+  @Operation(summary = "답변 등록", tags = {"FAQ (자주 묻는 질문) API"},
+      responses = @ApiResponse(
+          responseCode = "400",
+          description = "잘못된 요청",
+          content = @Content(
+              array = @ArraySchema(schema = @Schema(implementation = ApiGlobalResponse.class)),
+              examples = {
+                  @ExampleObject(
+                      value = """
+                          {
+                          "code": "BAD_REQUEST",
+                          "message": "잘못된 요청입니다.",
+                          "data" : [
+                            "id : FAQ 아이디를 입력하세요",
+                            "answer : 답변을 입력하세요.",
+                            "answer : 답변은 최대 500자 이하 입니다."
+                          ]
+                          }
+                          """
+                  )
+              }
+          )
+      ))
   @Response200WithSwagger
   @Response401WithSwagger
   @Response403WithSwagger
