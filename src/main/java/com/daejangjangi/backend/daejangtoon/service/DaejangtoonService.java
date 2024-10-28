@@ -38,7 +38,7 @@ public class DaejangtoonService {
   }
 
   public List<Daejangtoon> daejangtoons() {
-    return daejangtoonRepository.findAll();
+    return daejangtoonRepository.findAllByOrderByIdDesc();
   }
 
   /*--------------Private----------------------------Private----------------------------Private---*/
