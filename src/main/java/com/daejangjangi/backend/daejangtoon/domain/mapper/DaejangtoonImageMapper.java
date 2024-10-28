@@ -14,5 +14,6 @@ public interface DaejangtoonImageMapper {
 
   @Mapping(target = "order", source = "dtoList.order")
   @Mapping(target = "image", source = "dtoList.image")
+  @Mapping(target = "key", source = "dtoList.key")
   List<DaejangtoonImage> dtoToEntity(List<DaejangtoonImageDto> dtoList);
 }

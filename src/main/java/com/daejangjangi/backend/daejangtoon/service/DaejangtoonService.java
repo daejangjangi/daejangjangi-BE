@@ -4,6 +4,7 @@ import com.daejangjangi.backend.daejangtoon.domain.dto.DaejangtoonImageDto;
 import com.daejangjangi.backend.daejangtoon.domain.entity.Daejangtoon;
 import com.daejangjangi.backend.daejangtoon.domain.entity.DaejangtoonImage;
 import com.daejangjangi.backend.daejangtoon.domain.mapper.DaejangtoonImageMapper;
+import com.daejangjangi.backend.daejangtoon.exception.NotFoundToonException;
 import com.daejangjangi.backend.daejangtoon.repository.DaejangtoonImageRepository;
 import com.daejangjangi.backend.daejangtoon.repository.DaejangtoonRepository;
 import com.daejangjangi.backend.file.service.FileValidator;
@@ -18,6 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class DaejangtoonService {
 
+  private final String DAEJANGTOON_ROOT_DIRECTORY = "대장툰/";
+
   private final DaejangtoonRepository daejangtoonRepository;
   private final DaejangtoonImageRepository daejangtoonImageRepository;
   private final FileValidator fileValidator;
@@ -30,7 +33,7 @@ public class DaejangtoonService {
     fileValidator.validate(toonImages);
     String profileUrl = s3Manager.upload(profileImage);
     List<DaejangtoonImageDto> images =
-        s3Manager.upload("대장툰/" + daejangtoon.getChapter(), toonImages);
+        s3Manager.upload(DAEJANGTOON_ROOT_DIRECTORY + daejangtoon.getChapter(), toonImages);
     List<DaejangtoonImage> daejangtoonImages = DaejangtoonImageMapper.INSTANCE.dtoToEntity(images);
     daejangtoon.updateProfile(profileUrl);
     daejangtoon.addImages(daejangtoonImages);
@@ -39,6 +42,18 @@ public class DaejangtoonService {
 
   public List<Daejangtoon> daejangtoons() {
     return daejangtoonRepository.findAllByOrderByIdDesc();
+  }
+
+  @Transactional
+  public void remove(Integer chapter) {
+    Daejangtoon daejangtoon = daejangtoonRepository.findByChapter(chapter)
+        .orElseThrow(NotFoundToonException::new);
+    String profile = daejangtoon.getProfile();
+    List<String> imageKeys = daejangtoon.getToonImages().stream()
+        .map(DaejangtoonImage::getKey).toList();
+    s3Manager.deleteImages(imageKeys);
+    s3Manager.deleteProfile(profile);
+    daejangtoonRepository.delete(daejangtoon);
   }
 
   /*--------------Private----------------------------Private----------------------------Private---*/

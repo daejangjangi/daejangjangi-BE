@@ -22,9 +22,11 @@ public class DaejangtoonImage {
 
   @Builder
   public DaejangtoonImage(
+      String key,
       Integer order,
       String image
   ) {
+    this.key = key;
     this.order = order;
     this.image = image;
   }
@@ -37,6 +39,9 @@ public class DaejangtoonImage {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "daejangtoon_id", nullable = false)
   private Daejangtoon daejangtoon;
+
+  @Column(name = "daejang_image_key", length = 100, nullable = false)
+  private String key;
 
   @Column(name = "daejangtoon_image_order", columnDefinition = "tinyint", nullable = false)
   private Integer order;
