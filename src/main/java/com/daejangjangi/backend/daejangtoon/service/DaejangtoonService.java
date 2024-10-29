@@ -44,10 +44,14 @@ public class DaejangtoonService {
     return daejangtoonRepository.findAllByOrderByIdDesc();
   }
 
+  public Daejangtoon daejangtoon(Integer chapter) {
+    return daejangtoonRepository.findByChapter(chapter)
+        .orElseThrow(NotFoundToonException::new);
+  }
+
   @Transactional
   public void remove(Integer chapter) {
-    Daejangtoon daejangtoon = daejangtoonRepository.findByChapter(chapter)
-        .orElseThrow(NotFoundToonException::new);
+    Daejangtoon daejangtoon = daejangtoon(chapter);
     String profile = daejangtoon.getProfile();
     List<String> imageKeys = daejangtoon.getToonImages().stream()
         .map(DaejangtoonImage::getKey).toList();

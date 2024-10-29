@@ -3,6 +3,9 @@ package com.daejangjangi.backend.daejangtoon.domain.mapper;
 import com.daejangjangi.backend.daejangtoon.domain.dto.DaejangtoonRequestDto;
 import com.daejangjangi.backend.daejangtoon.domain.dto.DaejangtoonResponseDto;
 import com.daejangjangi.backend.daejangtoon.domain.entity.Daejangtoon;
+import com.daejangjangi.backend.daejangtoon.domain.entity.DaejangtoonImage;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -25,4 +28,15 @@ public interface DaejangtoonMapper {
   @Mapping(target = "yoil", source = "daejangtoons.yoil")
   List<DaejangtoonResponseDto.Daejangtoons> entityToDaejangtoonsResponse(
       List<Daejangtoon> daejangtoons);
+
+  @Mapping(target = "title", source = "daejangtoon.title")
+  @Mapping(target = "chapter", source = "daejangtoon.chapter")
+  @Mapping(target = "toonImages", expression = "java(sortToonImages(daejangtoon))")
+  DaejangtoonResponseDto.Daejangtoon entityToDaejangtoonResponse(Daejangtoon daejangtoon);
+
+  default List<String> sortToonImages(Daejangtoon daejangtoon) {
+    List<DaejangtoonImage> toonImages = daejangtoon.getToonImages();
+    toonImages.sort(Comparator.comparing(DaejangtoonImage::getOrder));
+    return toonImages.stream().map(DaejangtoonImage::getImage).toList();
+  }
 }
