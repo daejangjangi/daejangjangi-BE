@@ -6,6 +6,7 @@ import com.daejangjangi.backend.member.domain.entity.Member;
 import com.daejangjangi.backend.member.domain.entity.MemberCategory;
 import com.daejangjangi.backend.member.domain.entity.MemberDisease;
 import com.daejangjangi.backend.member.exception.EmailDuplicationException;
+import com.daejangjangi.backend.member.exception.EssentialItemsException;
 import com.daejangjangi.backend.member.exception.NicknameDuplicationException;
 import com.daejangjangi.backend.member.exception.NotFoundMemberException;
 import com.daejangjangi.backend.member.repository.MemberCategoryRepository;
@@ -95,6 +96,7 @@ public class MemberService implements UserDetailsService {
   public void save(Member member, List<Disease> diseases, List<Category> categories) {
     checkEmail(member.getEmail());
     checkNickname(member.getNickname());
+    checkAgrees(member);
     String encodedPassword = passwordEncoder.encode(member.getPassword());
     member.encodePassword(encodedPassword);
     member = memberRepository.save(member);
@@ -305,5 +307,16 @@ public class MemberService implements UserDetailsService {
     return member.getCategories().stream()
         .map(MemberCategory::getCategory)
         .toList();
+  }
+
+  /**
+   * 필수 동의사항 동의 여부 확인
+   *
+   * @param member 회원
+   */
+  private void checkAgrees(Member member) {
+    if (!member.isServiceUsage() || !member.isPersonnelInfo() || !member.isSensitiveInfo()) {
+      throw new EssentialItemsException();
+    }
   }
 }

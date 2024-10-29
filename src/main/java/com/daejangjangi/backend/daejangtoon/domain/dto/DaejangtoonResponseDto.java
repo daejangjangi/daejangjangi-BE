@@ -17,7 +17,7 @@ public class DaejangtoonResponseDto {
 
       @Schema(description = "대장툰 조회수", example = "350")
       Long hit,
-      
+
       @Schema(description = "대장툰 좋아요 갯수", example = "120")
       Integer likeCount
   ) {

@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class DaejangtoonImageDto {
 
+  private String key;
   private Integer order;
   private String image;
 }

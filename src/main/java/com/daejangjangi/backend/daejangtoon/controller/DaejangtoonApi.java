@@ -8,6 +8,7 @@ import com.daejangjangi.backend.global.annotation.swagger.Response403WithSwagger
 import com.daejangjangi.backend.global.annotation.swagger.ResponseCommonWithSwagger;
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -69,4 +70,29 @@ public interface DaejangtoonApi {
   @Response401WithSwagger
   @Response403WithSwagger
   ApiGlobalResponse<List<DaejangtoonResponseDto.Daejangtoons>> daejangtoons();
+
+  @Operation(summary = "대장툰 제거", tags = {"Daejangtoon (대장툰) API"},
+      responses = {
+          @ApiResponse(
+              responseCode = "400",
+              description = "잘못된 요청입니다.",
+              content = @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = ApiGlobalResponse.class),
+                  examples = {@ExampleObject(
+                      value = """
+                          {
+                          "code" : "NOT_FOUND_TOON",
+                          "message": "존재하지 않는 회차입니다.",
+                          "data": null
+                          }
+                          """
+                  )}
+              )
+          )
+      })
+  @Response200WithSwagger
+  @Response401WithSwagger
+  @Response403WithSwagger
+  ApiGlobalResponse<Null> remove(@Parameter Integer chapter);
 }

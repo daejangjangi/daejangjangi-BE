@@ -32,7 +32,14 @@ public class MemberMapperTest extends ServiceTest {
     LocalDate birth = LocalDate.now();
 
     MemberRequestDto.Join joinRequest =
-        new Join(email, password, nickname, gender, birth, null, null);
+        new Join(
+            email,
+            password,
+            nickname,
+            gender,
+            birth,
+            true, true, true, false,
+            null, null);
 
     // when
     Member member = MemberMapper.INSTANCE.joinRequestToEntity(joinRequest);

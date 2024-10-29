@@ -12,7 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils.Null;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -45,5 +47,12 @@ public class DaejangtoonController implements DaejangtoonApi {
     List<DaejangtoonResponseDto.Daejangtoons> response
         = DaejangtoonMapper.INSTANCE.entityToDaejangtoonsResponse(daejangtoons);
     return ApiGlobalResponse.ok(response);
+  }
+
+  @PreAuthorize("hasAuthority('ADMIN')")
+  @DeleteMapping("/{chapter}")
+  public ApiGlobalResponse<Null> remove(@PathVariable("chapter") Integer chapter) {
+    daejangtoonService.remove(chapter);
+    return ApiGlobalResponse.ok();
   }
 }

@@ -5,6 +5,7 @@ import lombok.Getter;
 @Getter
 public enum MemberErrorType {
 
+  ESSENTIAL_ITEMS_ERROR("필수 항목 동의 바랍니다."),
   EMAIL_DUPLICATION_ERROR("중복되는 메일 주소입니다."),
   NICKNAME_DUPLICATION_ERROR("중복되는 닉네임입니다."),
   NOT_FOUND_MEMBER("존재하지 않는 회원입니다."),

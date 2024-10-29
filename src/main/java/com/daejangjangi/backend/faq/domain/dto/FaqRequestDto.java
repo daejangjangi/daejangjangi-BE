@@ -40,7 +40,7 @@ public class FaqRequestDto {
       @Schema(description = "FAQ 답변", example = "대장항문질환 환자들에게 바른 정보를 전달하고, 자가 건강관리를 실현할 수 있는 시스템입니다.")
 
       @NotBlank(message = "답변을 입력하세요.")
-      @Size(max = 10000, message = "답변은 최대 {max}자 이하 입니다.")
+      @Size(max = 500, message = "답변은 최대 {max}자 이하 입니다.")
       String answer
   ) {
 

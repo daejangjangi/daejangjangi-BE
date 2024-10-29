@@ -18,6 +18,10 @@ public interface MemberMapper {
   @Mapping(target = "nickname", source = "joinRequest.nickname")
   @Mapping(target = "gender", source = "joinRequest.gender")
   @Mapping(target = "birth", source = "joinRequest.birth")
+  @Mapping(target = "serviceUsage", source = "joinRequest.serviceUsage")
+  @Mapping(target = "personnelInfo", source = "joinRequest.personnelInfo")
+  @Mapping(target = "sensitiveInfo", source = "joinRequest.sensitiveInfo")
+  @Mapping(target = "promotionReception", source = "joinRequest.promotionReception")
   Member joinRequestToEntity(MemberRequestDto.Join joinRequest);
 
   @Mapping(target = "birth", source = "member.birth")
@@ -34,5 +38,5 @@ public interface MemberMapper {
 
   @Mapping(target = "accessToken", source = "tokenDto.accessToken")
   @Mapping(target = "refreshToken", source = "tokenDto.refreshToken")
-  MemberResponseDto.Login dtoToResponse(TokenResponseDto tokenDto);
+  MemberResponseDto.Login dtoToLoginResponse(TokenResponseDto tokenDto);
 }

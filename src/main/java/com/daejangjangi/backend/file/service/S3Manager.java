@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.services.s3.S3Client;
 
 @Component
 @Slf4j
@@ -23,9 +24,12 @@ import org.springframework.web.multipart.MultipartFile;
 public class S3Manager {
 
   private final S3Template s3Template;
+  private final S3Client s3Client;
 
   @Value("${spring.cloud.aws.s3.bucket}")
   private String bucketName;
+  @Value("${spring.cloud.aws.region.static}")
+  private String region;
 
   public String upload(MultipartFile file) {
     try {
@@ -53,6 +57,7 @@ public class S3Manager {
             ObjectMetadata.builder().contentType(file.getContentType()).build());
         uploadedKeys.add(key); // 업로드된 이미지 key 저장
         DaejangtoonImageDto imageDto = DaejangtoonImageDto.builder()
+            .key(key)
             .order(OrderConverter.getOrder(originFileName))
             .image(s3Resource.getURL().toString())
             .build();
@@ -66,11 +71,30 @@ public class S3Manager {
     }
   }
 
+  public void deleteProfile(String profile) {
+    String s3Url = "https://" + bucketName + ".s3." + region + ".amazonaws.com/";
+    try {
+      String profileKey = profile.replace(s3Url, "");
+      s3Template.deleteObject(bucketName, profileKey);
+    } catch (Exception e) {
+      log.error("Error deleting file:", e);
+    }
+  }
+
+  public void deleteImages(List<String> imageKeys) {
+    try {
+      imageKeys.forEach(key -> s3Template.deleteObject(bucketName, key));
+    } catch (Exception e) {
+      log.error("Error deleting file:", e);
+    }
+  }
+
+  /*--------------Private----------------------------Private----------------------------Private---*/
+
   private void deleteUploadedFiles(List<String> keys) {
     for (String key : keys) {
       try {
         s3Template.deleteObject(bucketName, key);
-        log.info("Deleted file: {}", key);
       } catch (Exception e) {
         log.error("Error deleting file: {}", key, e);
       }
