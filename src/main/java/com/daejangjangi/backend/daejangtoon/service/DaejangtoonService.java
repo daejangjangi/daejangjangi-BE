@@ -26,6 +26,15 @@ public class DaejangtoonService {
   private final FileValidator fileValidator;
   private final S3Manager s3Manager;
 
+  /**
+   * 대장툰 등록
+   * <p>
+   * note : 이미지 - DB 데이터 동기화 관련 고민해보기
+   *
+   * @param daejangtoon  대장툰
+   * @param profileImage 프로필 이미지
+   * @param toonImages   컷 이미지 목록
+   */
   @Transactional
   public void save(Daejangtoon daejangtoon, MultipartFile profileImage,
       List<MultipartFile> toonImages) {
@@ -40,19 +49,40 @@ public class DaejangtoonService {
     daejangtoonRepository.save(daejangtoon);
   }
 
+  /**
+   * 대장툰 목록 조회 - 대장툰 메인
+   *
+   * @return List Daejangtoon
+   */
   public List<Daejangtoon> daejangtoons() {
     return daejangtoonRepository.findAllByOrderByIdDesc();
   }
 
+  /**
+   * 대장툰 조회 - 회차별 조회
+   *
+   * @param chapter 회차
+   * @return Daejangtoon
+   */
   public Daejangtoon daejangtoon(Integer chapter) {
     return daejangtoonRepository.findByChapter(chapter)
         .orElseThrow(NotFoundToonException::new);
   }
 
+  /**
+   * 최신 대장툰 조회
+   *
+   * @return Daejangtoon
+   */
   public Daejangtoon recent() {
     return daejangtoonRepository.findRecent();
   }
 
+  /**
+   * 대장툰 삭제
+   *
+   * @param chapter 회차
+   */
   @Transactional
   public void remove(Integer chapter) {
     Daejangtoon daejangtoon = daejangtoon(chapter);
@@ -66,6 +96,11 @@ public class DaejangtoonService {
 
   /*--------------Private----------------------------Private----------------------------Private---*/
 
+  /**
+   * 이미지 저장
+   *
+   * @param images 회차 이미지 목록
+   */
   private void saveImages(List<DaejangtoonImage> images) {
     daejangtoonImageRepository.saveAll(images);
   }
