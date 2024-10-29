@@ -107,6 +107,31 @@ public interface DaejangtoonApi {
       @Parameter Integer chapter
   );
 
+  @Operation(summary = "최신 대장툰 조회", tags = {"Daejangtoon (대장툰) API"},
+      responses = {
+          @ApiResponse(
+              responseCode = "200",
+              description = "OK",
+              content = @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = DaejangtoonResponseDto.Daejangtoon.class),
+                  examples = @ExampleObject(
+                      value = """
+                          {
+                            "title": "우울증 해결의 비밀은 장에 있다",
+                            "chapter": 1,
+                            "likeCount": 120,
+                            "profile": "https://xxxx.s3.xxxx.amazonaws.com/"
+                          }
+                          """
+                  )
+              )
+          )
+      })
+  @Response401WithSwagger
+  @Response403WithSwagger
+  ApiGlobalResponse<DaejangtoonResponseDto.Daejangtoon> recentDaejangtoon();
+
   @Operation(summary = "대장툰 제거", tags = {"Daejangtoon (대장툰) API"},
       responses = {
           @ApiResponse(

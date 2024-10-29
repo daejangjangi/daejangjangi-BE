@@ -49,6 +49,10 @@ public class DaejangtoonService {
         .orElseThrow(NotFoundToonException::new);
   }
 
+  public Daejangtoon recent() {
+    return daejangtoonRepository.findRecent();
+  }
+
   @Transactional
   public void remove(Integer chapter) {
     Daejangtoon daejangtoon = daejangtoon(chapter);

@@ -1,5 +1,7 @@
 package com.daejangjangi.backend.daejangtoon.domain.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 
@@ -36,7 +38,11 @@ public class DaejangtoonResponseDto {
       @Schema(description = "대장툰 좋아요 갯수", example = "120")
       Integer likeCount,
 
+      @Schema(description = "대장툰 프로필", example = "https://xxxx.s3.xxxx.amazonaws.com/")
+      String profile,
+
       @Schema(description = "대장툰 이미지 목록", examples = {"https://xxxx.s3.xxxx.amazonaws.com/"})
+      @JsonInclude(Include.NON_ABSENT)
       List<String> toonImages
   ) {
 

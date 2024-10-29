@@ -60,6 +60,15 @@ public class DaejangtoonController implements DaejangtoonApi {
     return ApiGlobalResponse.ok(response);
   }
 
+  @PreAuthorize("hasAuthority('MEMBER')")
+  @GetMapping("/recent")
+  public ApiGlobalResponse<DaejangtoonResponseDto.Daejangtoon> recentDaejangtoon() {
+    Daejangtoon daejangtoon = daejangtoonService.recent();
+    DaejangtoonResponseDto.Daejangtoon response
+        = DaejangtoonMapper.INSTANCE.entityToRecentDaejangtoonResponse(daejangtoon);
+    return ApiGlobalResponse.ok(response);
+  }
+
   @PreAuthorize("hasAuthority('ADMIN')")
   @DeleteMapping("/{chapter}")
   public ApiGlobalResponse<Null> remove(@PathVariable("chapter") Integer chapter) {

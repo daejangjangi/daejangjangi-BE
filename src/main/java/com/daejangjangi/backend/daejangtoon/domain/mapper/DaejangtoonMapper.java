@@ -31,6 +31,7 @@ public interface DaejangtoonMapper {
 
   @Mapping(target = "title", source = "daejangtoon.title")
   @Mapping(target = "chapter", source = "daejangtoon.chapter")
+  @Mapping(target = "profile", source = "daejangtoon.profile")
   @Mapping(target = "toonImages", expression = "java(sortToonImages(daejangtoon))")
   DaejangtoonResponseDto.Daejangtoon entityToDaejangtoonResponse(Daejangtoon daejangtoon);
 
@@ -39,4 +40,10 @@ public interface DaejangtoonMapper {
     toonImages.sort(Comparator.comparing(DaejangtoonImage::getOrder));
     return toonImages.stream().map(DaejangtoonImage::getImage).toList();
   }
+
+  @Mapping(target = "title", source = "daejangtoon.title")
+  @Mapping(target = "chapter", source = "daejangtoon.chapter")
+  @Mapping(target = "profile", source = "daejangtoon.profile")
+  @Mapping(ignore = true, target = "toonImages")
+  DaejangtoonResponseDto.Daejangtoon entityToRecentDaejangtoonResponse(Daejangtoon daejangtoon);
 }
