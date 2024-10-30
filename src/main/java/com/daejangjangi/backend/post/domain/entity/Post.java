@@ -1,6 +1,7 @@
 package com.daejangjangi.backend.post.domain.entity;
 
 import com.daejangjangi.backend.board.domain.entity.BoardPost;
+import com.daejangjangi.backend.comment.domain.entity.PostComment;
 import com.daejangjangi.backend.global.common.BaseEntity;
 import com.daejangjangi.backend.like.domain.entity.PostLike;
 import com.daejangjangi.backend.member.domain.entity.Member;
@@ -24,9 +25,10 @@ public class Post extends BaseEntity {
     this.title = title;
     this.content = content;
     this.hit = 0L;
-    this.likeCount = 0;
+    this.likeCount = 0L;
     this.boards = new ArrayList<>();
     this.likes = new ArrayList<>();
+    this.comments = new ArrayList<>();
   }
 
   public Post(
@@ -58,13 +60,16 @@ public class Post extends BaseEntity {
   private Long hit;
 
   @Column(name = "post_like_count")
-  private int likeCount;
+  private Long likeCount;
 
   @OneToMany(mappedBy = "post", orphanRemoval = true, cascade = CascadeType.ALL)
   private List<BoardPost> boards;
 
   @OneToMany(mappedBy = "post", orphanRemoval = true, cascade = CascadeType.ALL)
   private List<PostLike> likes;
+
+  @OneToMany(mappedBy = "post", orphanRemoval = true, cascade = CascadeType.ALL)
+  private List<PostComment> comments;
 
   public void updateMember(Member member) {
     this.member = member;
@@ -74,7 +79,7 @@ public class Post extends BaseEntity {
     this.likeCount += likeCount;
 
     if (this.likeCount < 0) {
-      this.likeCount = 0;
+      this.likeCount = 0L;
     }
   }
 

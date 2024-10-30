@@ -60,4 +60,40 @@ public class PostRequestDto {
 
   }
 
+  @Schema(description = "게시글 댓글 생성 DTO")
+  public record CreatePostComment(
+
+      @NotNull(message = "게시글 아이디를 입력하세요.")
+      @Schema(description = "게시글 id")
+      Long postId,
+
+      @Schema(description = "최상위 부모 댓글 id (선택 사항)")
+      Long parentCommentId,
+
+      @Schema(description = "내용")
+      @Size(max = 400, message = "내용은 최대 {max}자리 이하이어야 합니다.")
+      @NotBlank(message = "내용을 입력해주세요.")
+      String content
+
+  ) {
+
+  }
+
+  @Schema(description = "게시글 댓글 수정 DTO")
+  public record ModifyPostComment(
+
+      @NotNull(message = "댓글 아이디를 입력하세요.")
+      @Schema(description = "댓글 id")
+      Long id,
+
+      @Schema(description = "내용")
+      @Size(max = 400, message = "내용은 최대 {max}자리 이하이어야 합니다.")
+      @NotBlank(message = "내용을 입력해주세요.")
+      String content
+
+  ) {
+
+  }
+
+
 }

@@ -1,7 +1,11 @@
 package com.daejangjangi.backend.post.controller;
 
+import com.daejangjangi.backend.global.annotation.swagger.Response200WithSwagger;
+import com.daejangjangi.backend.global.annotation.swagger.Response401WithSwagger;
+import com.daejangjangi.backend.global.annotation.swagger.ResponseCommonWithSwagger;
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
 import com.daejangjangi.backend.post.domain.dto.PostRequestDto;
+import com.daejangjangi.backend.post.domain.dto.PostResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -10,107 +14,19 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import org.apache.commons.lang3.ObjectUtils.Null;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @Tag(name = "Post (게시글) API", description = "게시글 관련 API")
-@ApiResponses(value = {
-    @ApiResponse(responseCode = "200", description = "OK",
-        content = @Content(
-            mediaType = "application/json",
-            schema = @Schema(implementation = ApiGlobalResponse.class),
-            examples = @ExampleObject(
-                value = """
-                    {
-                      "code": "OK",
-                      "message": "OK",
-                      "data": null
-                    }"""
-            )
-        )
-    ),
-    @ApiResponse(responseCode = "500", description = "서버 내부 오류",
-        content = @Content(
-            mediaType = "application/json",
-            schema = @Schema(implementation = ApiGlobalResponse.class),
-            examples = @ExampleObject(
-                value = """
-                    {
-                      "code": "INTERNAL_SERVER_ERROR",
-                      "message": "서버 내부 오류 입니다.",
-                      "data": null
-                    }"""
-            )
-        )
-    )
-})
+@ResponseCommonWithSwagger
 public interface PostApi {
 
   @Operation(summary = "게시글 생성", tags = {"Post (게시글) API"})
+  @Response200WithSwagger
+  @Response401WithSwagger
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "401", description = "미인증",
-          content = @Content(
-              mediaType = "application/json",
-              array = @ArraySchema(schema = @Schema(implementation = ApiGlobalResponse.class)),
-              examples = {
-                  @ExampleObject(
-                      name = "NOT_AUTHENTICATED_ACCESS",
-                      summary = "인증되지 않은 접근",
-                      value = """
-                          {
-                            "code": "UNAUTHENTICATED",
-                            "message": "로그인 후 이용 바랍니다.",
-                            "data": null
-                          }
-                          """
-                  ),
-                  @ExampleObject(
-                      name = "EXPIRED_TOKEN",
-                      summary = "만료된 토큰",
-                      value = """
-                          {
-                            "code": "EXPIRED_TOKEN",
-                            "message": "만료된 토큰입니다.",
-                            "data": null
-                          }
-                          """
-                  ),
-                  @ExampleObject(
-                      name = "INVALID_JWT_SIGNATURE",
-                      summary = "유효하지 않은 서명",
-                      value = """
-                          {
-                            "code": "INVALID_JWT_SIGNATURE",
-                            "message": "유효하지 않은 서명입니다.",
-                            "data": null
-                          }
-                          """
-                  ),
-                  @ExampleObject(
-                      name = "UNAUTHENTICATED",
-                      summary = "인증되지 않음",
-                      value = """
-                          {
-                            "code": "UNAUTHENTICATED",
-                            "message": "로그인 후 이용 바랍니다.",
-                            "data": null
-                          }
-                          """
-                  ),
-                  @ExampleObject(
-                      name = "INVALID_TOKEN_ERROR",
-                      summary = "유효하지 않은 토큰",
-                      value = """
-                          {
-                            "code": "INVALID_TOKEN_ERROR",
-                            "message": "유효하지 않는 토큰입니다.",
-                            "data": null
-                          }
-                          """
-                  )
-              }
-          )
-      ),
       @ApiResponse(responseCode = "400", description = "잘못된 요청",
           content = @Content(
               mediaType = "application/json",
@@ -118,8 +34,8 @@ public interface PostApi {
               examples = {
                   // Title
                   @ExampleObject(
-                      name = "BAD_REQUEST_TITLE_BLANK",
-                      summary = "제목 미입력",
+                      name = "BAD_REQUEST_POST_ID_BLANK",
+                      summary = "게시글 아이디 미입력",
                       value = """
                           {
                             "code": "BAD_REQUEST",
@@ -206,76 +122,15 @@ public interface PostApi {
           )
       )
   })
-  ApiGlobalResponse<?> createPost(
+  ApiGlobalResponse<Null> createPost(
       @RequestBody PostRequestDto.CreatePost request
   );
 
 
   @Operation(summary = "게시글 수정", tags = {"Post (게시글) API"})
+  @Response200WithSwagger
+  @Response401WithSwagger
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "401", description = "미인증",
-          content = @Content(
-              mediaType = "application/json",
-              array = @ArraySchema(schema = @Schema(implementation = ApiGlobalResponse.class)),
-              examples = {
-                  @ExampleObject(
-                      name = "NOT_AUTHENTICATED_ACCESS",
-                      summary = "인증되지 않은 접근",
-                      value = """
-                          {
-                            "code": "UNAUTHENTICATED",
-                            "message": "로그인 후 이용 바랍니다.",
-                            "data": null
-                          }
-                          """
-                  ),
-                  @ExampleObject(
-                      name = "EXPIRED_TOKEN",
-                      summary = "만료된 토큰",
-                      value = """
-                          {
-                            "code": "EXPIRED_TOKEN",
-                            "message": "만료된 토큰입니다.",
-                            "data": null
-                          }
-                          """
-                  ),
-                  @ExampleObject(
-                      name = "INVALID_JWT_SIGNATURE",
-                      summary = "유효하지 않은 서명",
-                      value = """
-                          {
-                            "code": "INVALID_JWT_SIGNATURE",
-                            "message": "유효하지 않은 서명입니다.",
-                            "data": null
-                          }
-                          """
-                  ),
-                  @ExampleObject(
-                      name = "UNAUTHENTICATED",
-                      summary = "인증되지 않음",
-                      value = """
-                          {
-                            "code": "UNAUTHENTICATED",
-                            "message": "로그인 후 이용 바랍니다.",
-                            "data": null
-                          }
-                          """
-                  ),
-                  @ExampleObject(
-                      name = "INVALID_TOKEN_ERROR",
-                      summary = "유효하지 않은 토큰",
-                      value = """
-                          {
-                            "code": "INVALID_TOKEN_ERROR",
-                            "message": "유효하지 않는 토큰입니다.",
-                            "data": null
-                          }
-                          """
-                  )
-              }
-          )
-      ),
       @ApiResponse(responseCode = "400", description = "잘못된 요청",
           content = @Content(
               mediaType = "application/json",
@@ -406,75 +261,14 @@ public interface PostApi {
           )
       )
   })
-  ApiGlobalResponse<?> modifyPost(
+  ApiGlobalResponse<Null> modifyPost(
       @RequestBody PostRequestDto.ModifyPost request
   );
 
   @Operation(summary = "게시글 좋아요", tags = {"Post (게시글) API"})
+  @Response200WithSwagger
+  @Response401WithSwagger
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "401", description = "미인증",
-          content = @Content(
-              mediaType = "application/json",
-              array = @ArraySchema(schema = @Schema(implementation = ApiGlobalResponse.class)),
-              examples = {
-                  @ExampleObject(
-                      name = "NOT_AUTHENTICATED_ACCESS",
-                      summary = "인증되지 않은 접근",
-                      value = """
-                          {
-                            "code": "UNAUTHENTICATED",
-                            "message": "로그인 후 이용 바랍니다.",
-                            "data": null
-                          }
-                          """
-                  ),
-                  @ExampleObject(
-                      name = "EXPIRED_TOKEN",
-                      summary = "만료된 토큰",
-                      value = """
-                          {
-                            "code": "EXPIRED_TOKEN",
-                            "message": "만료된 토큰입니다.",
-                            "data": null
-                          }
-                          """
-                  ),
-                  @ExampleObject(
-                      name = "INVALID_JWT_SIGNATURE",
-                      summary = "유효하지 않은 서명",
-                      value = """
-                          {
-                            "code": "INVALID_JWT_SIGNATURE",
-                            "message": "유효하지 않은 서명입니다.",
-                            "data": null
-                          }
-                          """
-                  ),
-                  @ExampleObject(
-                      name = "UNAUTHENTICATED",
-                      summary = "인증되지 않음",
-                      value = """
-                          {
-                            "code": "UNAUTHENTICATED",
-                            "message": "로그인 후 이용 바랍니다.",
-                            "data": null
-                          }
-                          """
-                  ),
-                  @ExampleObject(
-                      name = "INVALID_TOKEN_ERROR",
-                      summary = "유효하지 않은 토큰",
-                      value = """
-                          {
-                            "code": "INVALID_TOKEN_ERROR",
-                            "message": "유효하지 않는 토큰입니다.",
-                            "data": null
-                          }
-                          """
-                  )
-              }
-          )
-      ),
       @ApiResponse(responseCode = "400", description = "잘못된 요청",
           content = @Content(
               mediaType = "application/json",
@@ -490,79 +284,18 @@ public interface PostApi {
                             "data": null
                           }
                           """
-                  )
+                  ),
+
               }
           )
       )
   })
-  ApiGlobalResponse<?> LikePost(@PathVariable("postId") Long postId);
+  ApiGlobalResponse<Null> LikePost(@PathVariable("postId") Long postId);
 
 
   @Operation(summary = "게시글 상세 조회", tags = {"Post (게시글) API"})
+  @Response401WithSwagger
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "401", description = "미인증",
-          content = @Content(
-              mediaType = "application/json",
-              array = @ArraySchema(schema = @Schema(implementation = ApiGlobalResponse.class)),
-              examples = {
-                  @ExampleObject(
-                      name = "NOT_AUTHENTICATED_ACCESS",
-                      summary = "인증되지 않은 접근",
-                      value = """
-                          {
-                            "code": "UNAUTHENTICATED",
-                            "message": "로그인 후 이용 바랍니다.",
-                            "data": null
-                          }
-                          """
-                  ),
-                  @ExampleObject(
-                      name = "EXPIRED_TOKEN",
-                      summary = "만료된 토큰",
-                      value = """
-                          {
-                            "code": "EXPIRED_TOKEN",
-                            "message": "만료된 토큰입니다.",
-                            "data": null
-                          }
-                          """
-                  ),
-                  @ExampleObject(
-                      name = "INVALID_JWT_SIGNATURE",
-                      summary = "유효하지 않은 서명",
-                      value = """
-                          {
-                            "code": "INVALID_JWT_SIGNATURE",
-                            "message": "유효하지 않은 서명입니다.",
-                            "data": null
-                          }
-                          """
-                  ),
-                  @ExampleObject(
-                      name = "UNAUTHENTICATED",
-                      summary = "인증되지 않음",
-                      value = """
-                          {
-                            "code": "UNAUTHENTICATED",
-                            "message": "로그인 후 이용 바랍니다.",
-                            "data": null
-                          }
-                          """
-                  ),
-                  @ExampleObject(
-                      name = "INVALID_TOKEN_ERROR",
-                      summary = "유효하지 않은 토큰",
-                      value = """
-                          {
-                            "code": "INVALID_TOKEN_ERROR",
-                            "message": "유효하지 않는 토큰입니다.",
-                            "data": null
-                          }
-                          """
-                  )
-              }
-          )
-      ),
       @ApiResponse(responseCode = "400", description = "잘못된 요청",
           content = @Content(
               mediaType = "application/json",
@@ -583,5 +316,184 @@ public interface PostApi {
           )
       )
   })
-  ApiGlobalResponse<?> info(@PathVariable("postId") Long postId);
+  ApiGlobalResponse<PostResponseDto.Info> info(@PathVariable("postId") Long postId);
+
+
+  @Operation(summary = "댓글 삭제", tags = {"Post (게시글) API"})
+  @Response200WithSwagger
+  @Response401WithSwagger
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "400", description = "잘못된 요청",
+          content = @Content(
+              mediaType = "application/json",
+              array = @ArraySchema(schema = @Schema(implementation = ApiGlobalResponse.class)),
+              examples = {
+                  @ExampleObject(
+                      name = "NOT_FOUND_COMMENT",
+                      summary = "존재하지 않는 게시글",
+                      value = """
+                          {
+                            "code": "NOT_FOUND_COMMENT",
+                            "message": "존재하지 않는 게시글입니다.",
+                            "data": null
+                          }
+                          """
+                  ),
+                  @ExampleObject(
+                      name = "NOT_COMMENT_AUTHOR",
+                      summary = "삭제 권한 없는 댓글",
+                      value = """
+                          {
+                            "code": "NOT_COMMENT_AUTHOR",
+                            "message": "삭제 권한이 없는 댓글입니다.",
+                            "data": null
+                          }
+                          """
+                  )
+              }
+          )
+      )
+  })
+  ApiGlobalResponse<Null> deletePostComment(@PathVariable Long commentId);
+
+  @Operation(summary = "댓글 수정", tags = {"Post (게시글) API"})
+  @Response200WithSwagger
+  @Response401WithSwagger
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "400", description = "잘못된 요청",
+          content = @Content(
+              mediaType = "application/json",
+              array = @ArraySchema(schema = @Schema(implementation = ApiGlobalResponse.class)),
+              examples = {
+                  // Comment id
+                  @ExampleObject(
+                      name = "BAD_REQUEST_COMMENT_ID_BLANK",
+                      summary = "댓글 아이디 미입력",
+                      value = """
+                          {
+                            "code": "BAD_REQUEST",
+                            "message": "잘못된 요청입니다.",
+                            "data": [
+                              "id : 댓글 아이디를 입력하세요."
+                            ]
+                          }"""
+                  ),
+                  // Content
+                  @ExampleObject(
+                      name = "BAD_REQUEST_CONTENT_BLANK",
+                      summary = "내용 미입력",
+                      value = """
+                          {
+                            "code": "BAD_REQUEST",
+                            "message": "잘못된 요청입니다.",
+                            "data": [
+                              "content : 내용을 입력하세요."
+                            ]
+                          }"""
+                  ),
+                  @ExampleObject(
+                      name = "BAD_REQUEST_CONTENT_SIZE",
+                      summary = "내용 사이즈 오류",
+                      value = """
+                          {
+                            "code": "BAD_REQUEST",
+                            "message": "잘못된 요청입니다.",
+                            "data": [
+                              "content : 내용은 최대 400자리 이하이어야 합니다."
+                            ]
+                          }"""
+                  ),
+                  @ExampleObject(
+                      name = "NOT_FOUND_COMMENT",
+                      summary = "존재하지 않는 게시글",
+                      value = """
+                          {
+                            "code": "NOT_FOUND_COMMENT",
+                            "message": "존재하지 않는 게시글입니다.",
+                            "data": null
+                          }
+                          """
+                  ),
+                  @ExampleObject(
+                      name = "NOT_COMMENT_AUTHOR",
+                      summary = "수정 권한 없는 댓글",
+                      value = """
+                          {
+                            "code": "NOT_COMMENT_AUTHOR",
+                            "message": "수정 권한이 없는 댓글입니다.",
+                            "data": null
+                          }
+                          """
+                  )
+              }
+          )
+      )
+  })
+  ApiGlobalResponse<Null> modifyPostComment(
+      @Valid @RequestBody PostRequestDto.ModifyPostComment request);
+
+  @Operation(summary = "댓글 생성", tags = {"Post (게시글) API"})
+  @Response200WithSwagger
+  @Response401WithSwagger
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "400", description = "잘못된 요청",
+          content = @Content(
+              mediaType = "application/json",
+              array = @ArraySchema(schema = @Schema(implementation = ApiGlobalResponse.class)),
+              examples = {
+                  // Post id
+                  @ExampleObject(
+                      name = "BAD_REQUEST_POST_ID_BLANK",
+                      summary = "게시글 아이디 미입력",
+                      value = """
+                          {
+                            "code": "BAD_REQUEST",
+                            "message": "잘못된 요청입니다.",
+                            "data": [
+                              "postId : 게시글 아이디를 입력하세요."
+                            ]
+                          }"""
+                  ),
+                  // Content
+                  @ExampleObject(
+                      name = "BAD_REQUEST_CONTENT_BLANK",
+                      summary = "내용 미입력",
+                      value = """
+                          {
+                            "code": "BAD_REQUEST",
+                            "message": "잘못된 요청입니다.",
+                            "data": [
+                              "content : 내용을 입력하세요."
+                            ]
+                          }"""
+                  ),
+                  @ExampleObject(
+                      name = "BAD_REQUEST_CONTENT_SIZE",
+                      summary = "내용 사이즈 오류",
+                      value = """
+                          {
+                            "code": "BAD_REQUEST",
+                            "message": "잘못된 요청입니다.",
+                            "data": [
+                              "content : 내용은 최대 400자리 이하이어야 합니다."
+                            ]
+                          }"""
+                  ),
+                  @ExampleObject(
+                      name = "NOT_FOUND_COMMENT",
+                      summary = "존재하지 않는 게시글",
+                      value = """
+                          {
+                            "code": "NOT_FOUND_COMMENT",
+                            "message": "존재하지 않는 게시글입니다.",
+                            "data": null
+                          }
+                          """
+                  )
+              }
+          )
+      )
+  })
+  ApiGlobalResponse<Null> creatPostComment(
+      @Valid @RequestBody PostRequestDto.CreatePostComment request);
 }
