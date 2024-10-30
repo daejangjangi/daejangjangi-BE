@@ -113,7 +113,6 @@ public class PostService {
    * @param postId 게시글 Id
    * @return Post
    */
-  @Transactional
   public Post findById(Long postId) {
     return postRepository.findById(postId).orElseThrow(NotFoundPostException::new);
   }
