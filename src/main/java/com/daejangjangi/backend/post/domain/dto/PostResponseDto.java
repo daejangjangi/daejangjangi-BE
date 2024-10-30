@@ -29,10 +29,10 @@ public class PostResponseDto {
       boolean isAuthor,
 
       @Schema(description = "조회 수")
-      int hit,
+      Long hit,
 
       @Schema(description = "좋아요 수")
-      int likeCount,
+      Long likeCount,
 
       @Schema(description = "좋아요 여부")
       boolean isLiked

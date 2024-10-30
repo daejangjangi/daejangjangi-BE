@@ -24,7 +24,7 @@ public class PostRequestDto {
 
       @NotNull(message = "게시판을 선택해주세요.")
       @Schema(description = "게시판 주제",
-          allowableValues = {"자유", "변비", "과민성장증후군_설사형", "과민성장증후군변비형", "치질", "치핵",
+          allowableValues = {"자유", "변비", "과민성장증후군_설사형", "과민성장증후군_변비형", "치질", "치핵",
               "변실금", "항문소양증", "대장암", "크론병", "궤양성대장염", "복부팽만", "기타"})
       @Size(min = 1, max = 2, message = "게시판 주제를 최소 {min}개 이상, 최대 {max}개 이하 선택 바랍니다")
       List<String> boards
@@ -51,7 +51,7 @@ public class PostRequestDto {
 
       @NotNull(message = "게시판을 선택해주세요.")
       @Schema(description = "게시판 주제",
-          allowableValues = {"자유", "변비", "과민성장증후군_설사형", "과민성장증후군변비형", "치질", "치핵",
+          allowableValues = {"자유", "변비", "과민성장증후군_설사형", "과민성장증후군_변비형", "치질", "치핵",
               "변실금", "항문소양증", "대장암", "크론병", "궤양성대장염", "복부팽만", "기타"})
       @Size(min = 1, max = 2, message = "게시판 주제를 최소 {min}개 이상, 최대 {max}개 이하 선택 바랍니다")
       List<String> boards
