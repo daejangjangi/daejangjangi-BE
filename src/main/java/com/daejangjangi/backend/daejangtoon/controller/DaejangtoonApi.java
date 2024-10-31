@@ -71,6 +71,67 @@ public interface DaejangtoonApi {
   @Response403WithSwagger
   ApiGlobalResponse<List<DaejangtoonResponseDto.Daejangtoons>> daejangtoons();
 
+  @Operation(
+      summary = "대장툰 조회", tags = {"Daejangtoon (대장툰) API"},
+      responses = {
+          @ApiResponse(
+              responseCode = "200",
+              description = "OK",
+              content = @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = DaejangtoonResponseDto.Daejangtoon.class)
+              )
+          ),
+          @ApiResponse(
+              responseCode = "400",
+              description = "없는 회차",
+              content = @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = ApiGlobalResponse.class),
+                  examples = {@ExampleObject(
+                      value = """
+                          {
+                          "code" : "NOT_FOUND_TOON",
+                          "message" : "존재하지 않는 회차입니다.",
+                          "data" : null
+                          }
+                          """
+                  )}
+              )
+          )
+      }
+  )
+  @Response401WithSwagger
+  @Response403WithSwagger
+  ApiGlobalResponse<DaejangtoonResponseDto.Daejangtoon> daejangtoon(
+      @Parameter Integer chapter
+  );
+
+  @Operation(summary = "최신 대장툰 조회", tags = {"Daejangtoon (대장툰) API"},
+      responses = {
+          @ApiResponse(
+              responseCode = "200",
+              description = "OK",
+              content = @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = DaejangtoonResponseDto.Daejangtoon.class),
+                  examples = @ExampleObject(
+                      value = """
+                          {
+                            "title": "우울증 해결의 비밀은 장에 있다",
+                            "chapter": 1,
+                            "likeCount": 120,
+                            "profile": "https://xxxx.s3.xxxx.amazonaws.com/"
+                          }
+                          """
+                  )
+              )
+          )
+      })
+  @Response401WithSwagger
+  @Response403WithSwagger
+  ApiGlobalResponse<DaejangtoonResponseDto.Daejangtoon> recentDaejangtoon();
+
   @Operation(summary = "대장툰 제거", tags = {"Daejangtoon (대장툰) API"},
       responses = {
           @ApiResponse(
