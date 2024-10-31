@@ -1,4 +1,4 @@
-package com.daejangjangi.backend.like.repository;
+package com.daejangjangi.backend.post.repository;
 
 import com.daejangjangi.backend.like.domain.entity.PostLike;
 import com.daejangjangi.backend.member.domain.entity.Member;

@@ -1,7 +1,7 @@
-package com.daejangjangi.backend.like.service;
+package com.daejangjangi.backend.post.service;
 
 import com.daejangjangi.backend.like.domain.entity.PostLike;
-import com.daejangjangi.backend.like.repository.PostLikeRepository;
+import com.daejangjangi.backend.post.repository.PostLikeRepository;
 import com.daejangjangi.backend.member.domain.entity.Member;
 import com.daejangjangi.backend.post.domain.entity.Post;
 import com.daejangjangi.backend.post.repository.PostLockRepository;

@@ -1,4 +1,4 @@
-package com.daejangjangi.backend.comment.repository;
+package com.daejangjangi.backend.post.repository;
 
 import com.daejangjangi.backend.comment.domain.entity.PostComment;
 import org.springframework.data.jpa.repository.JpaRepository;
