@@ -3,7 +3,9 @@ package com.daejangjangi.backend.daejangtoon.controller;
 import com.daejangjangi.backend.daejangtoon.domain.dto.DaejangtoonRequestDto;
 import com.daejangjangi.backend.daejangtoon.domain.dto.DaejangtoonResponseDto;
 import com.daejangjangi.backend.daejangtoon.domain.entity.Daejangtoon;
+import com.daejangjangi.backend.daejangtoon.domain.entity.DaejangtoonChapter;
 import com.daejangjangi.backend.daejangtoon.domain.mapper.DaejangtoonMapper;
+import com.daejangjangi.backend.daejangtoon.service.DaejangtoonChapterService;
 import com.daejangjangi.backend.daejangtoon.service.DaejangtoonService;
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
 import jakarta.validation.Valid;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,52 +30,77 @@ import org.springframework.web.multipart.MultipartFile;
 public class DaejangtoonController implements DaejangtoonApi {
 
   private final DaejangtoonService daejangtoonService;
+  private final DaejangtoonChapterService daejangtoonChapterService;
 
   @PreAuthorize("hasAuthority('ADMIN')")
-  @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-  public ApiGlobalResponse<Null> register(
-      @Valid @RequestPart DaejangtoonRequestDto.Register request,
+  @PostMapping
+  public ApiGlobalResponse<Long> register(
+      @Valid @RequestBody DaejangtoonRequestDto.Register request
+  ) {
+    Daejangtoon daejangtoon = DaejangtoonMapper.INSTANCE.registerToEntity(request);
+    return ApiGlobalResponse.ok(daejangtoonService.save(daejangtoon));
+  }
+
+  @PreAuthorize("hasAuthority('ADMIN')")
+  @PostMapping(value = "/{daejangtoonId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+  public ApiGlobalResponse<Null> registerChapter(
+      @PathVariable("daejangtoonId") Long daejangtoonId,
+      @Valid @RequestPart DaejangtoonRequestDto.RegisterChapter request,
       @RequestPart MultipartFile profileImage,
       @RequestPart List<MultipartFile> toonImages
   ) {
-    Daejangtoon daejangtoon = DaejangtoonMapper.INSTANCE.registerToEntity(request);
-    daejangtoonService.save(daejangtoon, profileImage, toonImages);
+    Daejangtoon daejangtoon = daejangtoonService.findById(daejangtoonId);
+    DaejangtoonChapter chapter = DaejangtoonMapper.INSTANCE.registerChapterToEntity(request);
+    daejangtoonChapterService.save(daejangtoon, chapter, profileImage, toonImages);
+    return ApiGlobalResponse.ok();
+  }
+
+  @PreAuthorize("hasAuthority('ADMIN')")
+  @DeleteMapping("/{daejangtoonId}/{chapter}")
+  public ApiGlobalResponse<Null> remove(
+      @PathVariable("daejangtoonId") Long daejangtoonId,
+      @PathVariable("chapter") Integer chapter
+  ) {
+    Daejangtoon daejangtoon = daejangtoonService.findById(daejangtoonId);
+    DaejangtoonChapter daejangtoonChapter =
+        daejangtoonChapterService.getChapter(daejangtoon, chapter);
+    daejangtoonChapterService.remove(daejangtoonChapter);
     return ApiGlobalResponse.ok();
   }
 
   @PreAuthorize("hasAuthority('MEMBER')")
-  @GetMapping
-  public ApiGlobalResponse<List<DaejangtoonResponseDto.Daejangtoons>> daejangtoons() {
-    List<Daejangtoon> daejangtoons = daejangtoonService.daejangtoons();
-    List<DaejangtoonResponseDto.Daejangtoons> response
-        = DaejangtoonMapper.INSTANCE.entityToDaejangtoonsResponse(daejangtoons);
-    return ApiGlobalResponse.ok(response);
-  }
-
-  @PreAuthorize("hasAuthority('MEMBER')")
   @GetMapping("/{daejangtoonId}")
-  public ApiGlobalResponse<DaejangtoonResponseDto.Daejangtoon> daejangtoon(
-      @PathVariable("daejangtoonId") Long daejangtoonId
+  public ApiGlobalResponse<DaejangtoonResponseDto.Daejangtoon> info(
+      @PathVariable Long daejangtoonId
   ) {
-    Daejangtoon daejangtoon = daejangtoonService.daejangtoon(daejangtoonId);
+    Daejangtoon daejangtoon = daejangtoonService.findById(daejangtoonId);
     DaejangtoonResponseDto.Daejangtoon response
         = DaejangtoonMapper.INSTANCE.entityToDaejangtoonResponse(daejangtoon);
     return ApiGlobalResponse.ok(response);
   }
 
   @PreAuthorize("hasAuthority('MEMBER')")
-  @GetMapping("/recent")
-  public ApiGlobalResponse<DaejangtoonResponseDto.Daejangtoon> recentDaejangtoon() {
-    Daejangtoon daejangtoon = daejangtoonService.recent();
-    DaejangtoonResponseDto.Daejangtoon response
-        = DaejangtoonMapper.INSTANCE.entityToRecentDaejangtoonResponse(daejangtoon);
+  @GetMapping("/{daejangtoonId}/recent")
+  public ApiGlobalResponse<DaejangtoonResponseDto.DaejangtoonChapters> recentDaejangtoon(
+      @PathVariable("daejangtoonId") Long daejangtoonId
+  ) {
+    DaejangtoonChapter chapter = daejangtoonChapterService.recent(daejangtoonId);
+    DaejangtoonResponseDto.DaejangtoonChapters response
+        = DaejangtoonMapper.INSTANCE.entityToChaptersResponse(chapter);
     return ApiGlobalResponse.ok(response);
   }
 
-  @PreAuthorize("hasAuthority('ADMIN')")
-  @DeleteMapping("/{daejangtoonId}")
-  public ApiGlobalResponse<Null> remove(@PathVariable("daejangtoonId") Long daejangtoonId) {
-    daejangtoonService.remove(daejangtoonId);
-    return ApiGlobalResponse.ok();
+  @PreAuthorize("hasAuthority('MEMBER')")
+  @GetMapping("/{daejangtoonId}/{chapter}")
+  public ApiGlobalResponse<DaejangtoonResponseDto.DaejangtoonChapter> chapter(
+      @PathVariable("daejangtoonId") Long daejangtoonId,
+      @PathVariable("chapter") Integer chapter
+  ) {
+    Daejangtoon daejangtoon = daejangtoonService.findById(daejangtoonId);
+    DaejangtoonChapter daejangtoonChapter =
+        daejangtoonChapterService.getChapter(daejangtoon, chapter);
+    DaejangtoonResponseDto.DaejangtoonChapter response
+        = DaejangtoonMapper.INSTANCE.entityToChapterResponse(daejangtoonChapter);
+    return ApiGlobalResponse.ok(response);
   }
 }

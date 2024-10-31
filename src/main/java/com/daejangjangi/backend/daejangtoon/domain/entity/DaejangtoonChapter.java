@@ -1,12 +1,16 @@
 package com.daejangjangi.backend.daejangtoon.domain.entity;
 
 import com.daejangjangi.backend.global.common.BaseEntity;
+import com.daejangjangi.backend.like.domain.entity.DaejangtoonLike;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
@@ -40,8 +44,15 @@ public class DaejangtoonChapter extends BaseEntity {
   @Column(name = "daejangtoon_chapter_hit", nullable = false)
   private Long hit;
 
-  @OneToMany(mappedBy = "daejangtoon", orphanRemoval = true, cascade = CascadeType.ALL)
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "daejangtoon_id", nullable = false)
+  private Daejangtoon daejangtoon;
+
+  @OneToMany(mappedBy = "chapter", orphanRemoval = true, cascade = CascadeType.ALL)
   private List<DaejangtoonImage> toonImages;
+
+  @OneToMany(mappedBy = "chapter", orphanRemoval = true, cascade = CascadeType.ALL)
+  private List<DaejangtoonLike> toonLikes;
 
   @Builder
   public DaejangtoonChapter(
@@ -55,6 +66,7 @@ public class DaejangtoonChapter extends BaseEntity {
     this.hit = 0L;
 
     this.toonImages = new ArrayList<>();
+    this.toonLikes = new ArrayList<>();
   }
 
   /*-------------Business Logic---------------------------Business Logic--------------------------*/
@@ -83,5 +95,14 @@ public class DaejangtoonChapter extends BaseEntity {
         toonImage.updateParent(this);
       }
     }
+  }
+
+  /**
+   * 대장툰 갱신
+   *
+   * @param daejangtoon 대장툰
+   */
+  public void updateParent(Daejangtoon daejangtoon) {
+    this.daejangtoon = daejangtoon;
   }
 }
