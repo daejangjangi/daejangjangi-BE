@@ -2,7 +2,7 @@ package com.daejangjangi.backend.post.service;
 
 import com.daejangjangi.backend.comment.domain.entity.PostComment;
 import com.daejangjangi.backend.comment.exception.NotCommentAuthor;
-import com.daejangjangi.backend.comment.repository.PostCommentRepository;
+import com.daejangjangi.backend.post.repository.PostCommentRepository;
 import com.daejangjangi.backend.member.domain.entity.Member;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
@@ -53,9 +53,9 @@ public class PostCommentService {
     validateAuthor(postComment, member);
 
     if (postComment.getParent() == null) {
-      deleteParentComment(postComment);
+      deleteRootComment(postComment);
     } else {
-      deleteChildComment(postComment);
+      deleteComment(postComment);
     }
   }
 
@@ -64,7 +64,7 @@ public class PostCommentService {
    *
    * @param postComment 삭제할 게시글 댓글 정보
    */
-  protected void deleteChildComment(PostComment postComment) {
+  protected void deleteComment(PostComment postComment) {
     PostComment parent = postComment.getParent();
     parent.getChildren().remove(postComment);
     postComment.updateParent(null);
@@ -79,11 +79,11 @@ public class PostCommentService {
    *
    * @param postComment 삭제할 게시글 댓글 정보
    */
-  private void deleteParentComment(PostComment postComment) {
+  private void deleteRootComment(PostComment postComment) {
     if (postComment.getChildren().isEmpty()) {
       postCommentRepository.delete(postComment);
     } else {
-      postComment.updatedDeleted();
+      postComment.updateDeleted();
     }
   }
 
@@ -93,7 +93,7 @@ public class PostCommentService {
    * @param postComment 댓글 정보
    * @param member      로그인한 사용자 정보
    */
-  public void validateAuthor(PostComment postComment, Member member) {
+  private void validateAuthor(PostComment postComment, Member member) {
     if (!Objects.equals(postComment.getMember(), member)) {
       throw new NotCommentAuthor();
     }
