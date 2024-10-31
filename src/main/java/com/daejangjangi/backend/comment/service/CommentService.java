@@ -2,7 +2,7 @@ package com.daejangjangi.backend.comment.service;
 
 import com.daejangjangi.backend.comment.domain.entity.PostComment;
 import com.daejangjangi.backend.comment.exception.NotFoundComment;
-import com.daejangjangi.backend.comment.repository.PostCommentRepository;
+import com.daejangjangi.backend.post.repository.PostCommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

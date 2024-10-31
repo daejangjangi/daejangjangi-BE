@@ -4,9 +4,10 @@ import com.daejangjangi.backend.board.domain.entity.Board;
 import com.daejangjangi.backend.board.service.BoardService;
 import com.daejangjangi.backend.comment.domain.entity.PostComment;
 import com.daejangjangi.backend.comment.service.CommentService;
+import com.daejangjangi.backend.post.service.PostCommentLikeService;
 import com.daejangjangi.backend.post.service.PostCommentService;
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
-import com.daejangjangi.backend.like.service.PostLikeService;
+import com.daejangjangi.backend.post.service.PostLikeService;
 import com.daejangjangi.backend.member.domain.entity.Member;
 import com.daejangjangi.backend.member.service.MemberService;
 import com.daejangjangi.backend.post.domain.dto.PostRequestDto;
@@ -34,6 +35,7 @@ public class PostController implements PostApi {
   private final PostLikeService postLikeService;
   private final CommentService commentService;
   private final PostCommentService postCommentService;
+  private final PostCommentLikeService postCommentLikeService;
 
   @PostMapping
   @PreAuthorize("hasAuthority('MEMBER')")
@@ -107,5 +109,13 @@ public class PostController implements PostApi {
     return ApiGlobalResponse.ok();
   }
 
+  @PostMapping("/comments/{commentId}/likes")
+  @PreAuthorize("hasAuthority('MEMBER')")
+  public ApiGlobalResponse<Null> LikeCommentPost(@PathVariable("commentId") Long commentId) {
+    Member member = memberService.info();
+    PostComment postComment = commentService.findById(commentId);
+    postCommentLikeService.like(member, postComment);
+    return ApiGlobalResponse.ok();
+  }
 
 }

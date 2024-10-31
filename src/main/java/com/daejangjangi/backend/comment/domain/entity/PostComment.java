@@ -1,6 +1,7 @@
 package com.daejangjangi.backend.comment.domain.entity;
 
 import com.daejangjangi.backend.global.common.BaseEntity;
+import com.daejangjangi.backend.like.domain.entity.PostCommentLike;
 import com.daejangjangi.backend.member.domain.entity.Member;
 import com.daejangjangi.backend.post.domain.entity.Post;
 import jakarta.persistence.CascadeType;
@@ -41,6 +42,7 @@ public class PostComment extends BaseEntity {
     this.parent = parent;
     this.isDeleted = false;
     this.children = new ArrayList<>();
+    this.likes = new ArrayList<>();
   }
 
   @Id
@@ -69,6 +71,9 @@ public class PostComment extends BaseEntity {
   @Column(name = "comment_deleted")
   private boolean isDeleted;
 
+  @OneToMany(mappedBy = "postComment", orphanRemoval = true, cascade = CascadeType.ALL)
+  private List<PostCommentLike> likes;
+
   public void updateParent(PostComment parent) {
     this.parent = parent;
   }
@@ -79,8 +84,22 @@ public class PostComment extends BaseEntity {
     }
   }
 
-  public void updatedDeleted() {
+  public void updateDeleted() {
     this.isDeleted = true;
+  }
+
+  public void addPostCommentLike(PostCommentLike postCommentLike) {
+    if (Objects.isNull(this.likes)) {
+      this.likes = new ArrayList<>();
+    }
+    this.likes.add(postCommentLike);
+  }
+
+  public void removePostCommentLike(PostCommentLike postCommentLike) {
+    if (Objects.isNull(this.likes)) {
+      this.likes = new ArrayList<>();
+    }
+    this.likes.remove(postCommentLike);
   }
 
   public void addChildComment(PostComment child) {

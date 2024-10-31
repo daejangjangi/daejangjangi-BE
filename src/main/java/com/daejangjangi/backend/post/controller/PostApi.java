@@ -496,4 +496,31 @@ public interface PostApi {
   })
   ApiGlobalResponse<Null> creatPostComment(
       @Valid @RequestBody PostRequestDto.CreatePostComment request);
+
+  @Operation(summary = "게시글 댓글 좋아요", tags = {"Post (게시글) API"})
+  @Response200WithSwagger
+  @Response401WithSwagger
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "400", description = "잘못된 요청",
+          content = @Content(
+              mediaType = "application/json",
+              array = @ArraySchema(schema = @Schema(implementation = ApiGlobalResponse.class)),
+              examples = {
+                  @ExampleObject(
+                      name = "NOT_FOUND_COMMENT",
+                      summary = "존재하지 않는 게시글 댓글",
+                      value = """
+                          {
+                            "code": "NOT_FOUND_COMMENT",
+                            "message": "존재하지 않는 댓글입니다.",
+                            "data": null
+                          }
+                          """
+                  ),
+
+              }
+          )
+      )
+  })
+  ApiGlobalResponse<Null> LikeCommentPost(@PathVariable("commentId") Long commentId);
 }
