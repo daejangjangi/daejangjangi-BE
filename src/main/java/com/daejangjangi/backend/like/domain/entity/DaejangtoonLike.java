@@ -1,5 +1,6 @@
-package com.daejangjangi.backend.daejangtoon.domain.entity;
+package com.daejangjangi.backend.like.domain.entity;
 
+import com.daejangjangi.backend.daejangtoon.domain.entity.DaejangtoonChapter;
 import com.daejangjangi.backend.member.domain.entity.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,6 +12,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -19,14 +21,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class DaejangtoonLike {
-
-  public DaejangtoonLike(
-      Member member,
-      Daejangtoon daejangtoon
-  ) {
-    this.member = member;
-    this.daejangtoon = daejangtoon;
-  }
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,6 +32,15 @@ public class DaejangtoonLike {
   private Member member;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "daejangtoon_id")
-  private Daejangtoon daejangtoon;
+  @JoinColumn(name = "daejangtoon_chapter_id")
+  private DaejangtoonChapter chapter;
+
+  @Builder
+  public DaejangtoonLike(
+      Member member,
+      DaejangtoonChapter chapter
+  ) {
+    this.member = member;
+    this.chapter = chapter;
+  }
 }

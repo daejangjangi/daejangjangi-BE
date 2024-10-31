@@ -37,8 +37,8 @@ public class DaejangtoonImage {
   private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "daejangtoon_id", nullable = false)
-  private Daejangtoon daejangtoon;
+  @JoinColumn(name = "daejangtoon_chapter_id", nullable = false)
+  private DaejangtoonChapter chapter;
 
   @Column(name = "daejang_image_key", length = 100, nullable = false)
   private String key;
@@ -63,9 +63,9 @@ public class DaejangtoonImage {
   /**
    * 대장툰 갱신
    *
-   * @param daejangtoon 대장툰
+   * @param chapter 대장툰 회차
    */
-  public void updateParent(Daejangtoon daejangtoon) {
-    this.daejangtoon = daejangtoon;
+  public void updateParent(DaejangtoonChapter chapter) {
+    this.chapter = chapter;
   }
 }

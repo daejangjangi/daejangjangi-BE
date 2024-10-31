@@ -10,17 +10,12 @@ import jakarta.validation.constraints.Size;
 
 public class DaejangtoonRequestDto {
 
-  @Schema(name = "CartoonRegisterRequest", description = "대장툰 등록 요청 DTO")
+
+  @Schema(name = "DaejangtoonRegisterRequest", description = "대장툰 등록 요청 DTO")
   public record Register(
 
-      @Schema(description = "대장툰 회차", type = "Integer", example = "1")
-      @NotNull(message = "회차를 입력해주세요.")
-      @Min(value = 1, message = "회차는 최소 {value} 이상이어야 합니다.")
-      Integer chapter,
-
-      @Schema(description = "대장툰 제목", example = "치핵이 뭔데?")
+      @Schema(description = "대장툰 제목", example = "대장툰")
       @NotBlank(message = "제목을 입력해주세요.")
-      @Size()
       String title,
 
       @Schema(description = "대장툰 개요", example = "어쩌구 저쩌구")
@@ -32,6 +27,22 @@ public class DaejangtoonRequestDto {
       @NotBlank(message = "연재 요일을 입력하세요")
       @ValidEnum(enumClass = Yoil.class, message = "지원하지 않는 연재 요일입니다.")
       String yoil
+  ) {
+
+  }
+
+  @Schema(name = "DaejangtoonChapterRegisterRequest", description = "대장툰 회차 등록 요청 DTO")
+  public record RegisterChapter(
+
+      @Schema(description = "대장툰 회차", type = "Integer", example = "1")
+      @NotNull(message = "회차를 입력해주세요.")
+      @Min(value = 1, message = "회차는 최소 {value} 이상이어야 합니다.")
+      Integer chapter,
+
+      @Schema(description = "대장툰 제목", example = "치핵이 뭔데?")
+      @NotBlank(message = "제목을 입력해주세요.")
+      @Size(max = 20, message = "제목은 최대 {max} 이하이어야 합니다.")
+      String title
   ) {
 
   }

@@ -26,74 +26,51 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Daejangtoon extends BaseEntity {
 
-  @Builder
-  public Daejangtoon(
-      Integer chapter,
-      String title,
-      String overview,
-      Yoil yoil
-  ) {
-    this.chapter = chapter;
-    this.title = title;
-    this.overview = overview;
-    this.hit = 0L;
-    this.yoil = yoil;
-
-    toonImages = new ArrayList<>();
-  }
-
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "daejangtoon_id")
   private Long id;
 
-  @Column(name = "daejangtoon_chapter", columnDefinition = "smallint", nullable = false)
-  private Integer chapter;
-
   @Column(name = "daejangtoon_title", nullable = false)
   private String title;
 
-  @Column(name = "daejangtoon_profile", nullable = false)
-  private String profile;
-
   @Column(name = "daejangtoon_overview", length = 250, nullable = false)
   private String overview;
-
-  @Column(name = "daejangtoon_hit", nullable = false)
-  private Long hit;
 
   @Column(name = "daejangtoon_yoil", nullable = false)
   @Enumerated(EnumType.STRING)
   private Yoil yoil;
 
   @OneToMany(mappedBy = "daejangtoon", orphanRemoval = true, cascade = CascadeType.ALL)
-  private List<DaejangtoonImage> toonImages;
+  private List<DaejangtoonChapter> chapters;
+
+  @Builder
+  public Daejangtoon(
+      String title,
+      String overview,
+      Yoil yoil
+  ) {
+    this.title = title;
+    this.overview = overview;
+    this.yoil = yoil;
+
+    this.chapters = new ArrayList<>();
+  }
 
   /*-------------Business Logic---------------------------Business Logic--------------------------*/
 
   /**
-   * 이미지 업데이트
+   * 대장툰 회차 등록
    *
-   * @param profile 프로필 이미지
+   * @param chapter 대장툰 회차
    */
-  public void updateProfile(String profile) {
-    this.profile = profile;
-  }
-
-  /**
-   * 대장툰 이미지 등록
-   *
-   * @param toonImages 대장툰 이미지 목록
-   */
-  public void addImages(List<DaejangtoonImage> toonImages) {
-    if (Objects.isNull(this.toonImages)) {
-      this.toonImages = new ArrayList<>();
+  public void addChapter(DaejangtoonChapter chapter) {
+    if (Objects.isNull(this.chapters)) {
+      this.chapters = new ArrayList<>();
     }
-    for (DaejangtoonImage toonImage : toonImages) {
-      if (toonImage != null && !this.toonImages.contains(toonImage)) {
-        this.toonImages.add(toonImage);
-        toonImage.updateParent(this);
-      }
+    if (chapter != null && !this.chapters.contains(chapter)) {
+      this.chapters.add(chapter);
+      chapter.updateParent(this);
     }
   }
 }

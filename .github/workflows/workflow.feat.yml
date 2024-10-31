@@ -5,6 +5,7 @@ on:
     branches:
       - feat/*
       - docs/*
+      - hotfix/*
 
 jobs:
   gradle:
