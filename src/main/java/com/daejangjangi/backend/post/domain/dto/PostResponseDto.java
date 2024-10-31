@@ -34,6 +34,9 @@ public class PostResponseDto {
       @Schema(description = "좋아요 수")
       Long likeCount,
 
+      @Schema(description = "댓글 수")
+      Long commentCount,
+
       @Schema(description = "좋아요 여부")
       boolean isLiked
   ) {

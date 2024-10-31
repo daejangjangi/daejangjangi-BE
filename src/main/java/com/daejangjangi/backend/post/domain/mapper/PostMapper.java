@@ -8,7 +8,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-@Mapper(uses = {BoardPostMapper.class})
+@Mapper(uses = {BoardPostMapper.class, CommentMapper.class})
 public interface PostMapper {
 
   PostMapper INSTANCE = Mappers.getMapper(PostMapper.class);
@@ -31,6 +31,7 @@ public interface PostMapper {
   @Mapping(target = "boards", source = "post.boards")
   @Mapping(target = "isAuthor", expression = "java(isAuthor(post, member))")
   @Mapping(target = "isLiked", expression = "java(isLikedByMember(post, member))")
+  @Mapping(target = "commentCount", source = "post.comments")
   PostResponseDto.Info entityToResponseDto(Post post, Member member);
 
   default boolean isLikedByMember(Post post, Member member) {
