@@ -37,7 +37,7 @@ public class DaejangtoonController implements DaejangtoonApi {
   private final DaejangtoonChapterService daejangtoonChapterService;
   private final DaejangtoonLikeService daejangtoonLikeService;
 
-  @PreAuthorize("hasAuthority('ADMIN')")
+  //  @PreAuthorize("hasAuthority('ADMIN')")
   @PostMapping
   public ApiGlobalResponse<Long> register(
       @Valid @RequestBody DaejangtoonRequestDto.Register request
@@ -103,7 +103,7 @@ public class DaejangtoonController implements DaejangtoonApi {
   ) {
     Daejangtoon daejangtoon = daejangtoonService.findById(daejangtoonId);
     DaejangtoonChapter daejangtoonChapter =
-        daejangtoonChapterService.getChapter(daejangtoon, chapter);
+        daejangtoonChapterService.getChapterWithHit(daejangtoon, chapter);
     DaejangtoonResponseDto.DaejangtoonChapter response
         = DaejangtoonMapper.INSTANCE.entityToChapterResponse(daejangtoonChapter);
     return ApiGlobalResponse.ok(response);

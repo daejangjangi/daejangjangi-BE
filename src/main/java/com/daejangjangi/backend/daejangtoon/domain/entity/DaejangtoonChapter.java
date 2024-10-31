@@ -129,5 +129,4 @@ public class DaejangtoonChapter extends BaseEntity {
     }
     this.toonLikes.remove(like);
   }
-
 }

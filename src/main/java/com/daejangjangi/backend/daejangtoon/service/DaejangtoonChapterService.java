@@ -56,12 +56,27 @@ public class DaejangtoonChapterService {
    * 회차 조회 by 대장툰, chapter
    *
    * @param daejangtoon 대장툰
-   * @param chapter     챕터
+   * @param chapter     회차
    * @return DaejangtoonChapter
    */
   public DaejangtoonChapter getChapter(Daejangtoon daejangtoon, Integer chapter) {
     return daejangtoonChapterRepository.findByDaejangtoonAndChapter(daejangtoon, chapter)
         .orElseThrow(NotFoundChapterException::new);
+  }
+
+  /**
+   * 회차 조회 by 대장툰, chapter with hit
+   *
+   * @param daejangtoon 대장툰
+   * @param chapter     회차
+   * @return DaejangtoonChapter
+   */
+  @Transactional
+  public DaejangtoonChapter getChapterWithHit(Daejangtoon daejangtoon, Integer chapter) {
+    // 중복 조회 불가능하도록 처리하기 - 레디스 캐싱 이용
+    DaejangtoonChapter daejangtoonChapter = getChapter(daejangtoon, chapter);
+    daejangtoonChapterRepository.updateHit(daejangtoonChapter.getId());
+    return daejangtoonChapter;
   }
 
   /**
