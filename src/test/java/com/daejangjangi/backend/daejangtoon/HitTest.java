@@ -1,7 +1,6 @@
 package com.daejangjangi.backend.daejangtoon;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
 
 import com.daejangjangi.backend.daejangtoon.domain.entity.Daejangtoon;
 import com.daejangjangi.backend.daejangtoon.domain.entity.DaejangtoonChapter;
@@ -16,14 +15,13 @@ import java.util.concurrent.Executors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.test.context.support.WithMockUser;
 
+@Disabled
 @SpringBootTest
+@WithMockUser(username = "testUser")
 @SuppressWarnings("NonAsciiCharacters")
 public class HitTest {
 
@@ -36,16 +34,8 @@ public class HitTest {
   @Autowired
   private DaejangtoonChapterRepository chapterRepository;
 
-  @Disabled
   @BeforeEach
   void init() {
-    String memberId = "";
-    Authentication authentication = Mockito.mock(Authentication.class);
-    when(authentication.getName()).thenReturn(memberId);
-    SecurityContext context = Mockito.mock(SecurityContext.class);
-    Mockito.when(context.getAuthentication()).thenReturn(authentication);
-    SecurityContextHolder.setContext(context);
-
     Daejangtoon daejangtoon = Daejangtoon.builder()
         .title("대장툰")
         .overview("어쩌구 저쩌구")
@@ -64,7 +54,6 @@ public class HitTest {
     chapterRepository.save(daejangtoonChapter);
   }
 
-  @Disabled
   @Test
   void 동시에_100개_요청() throws InterruptedException {
     Daejangtoon daejangtoon = daejangtoonService.findById(1L);

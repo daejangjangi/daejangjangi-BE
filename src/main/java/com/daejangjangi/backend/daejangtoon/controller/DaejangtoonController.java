@@ -37,7 +37,7 @@ public class DaejangtoonController implements DaejangtoonApi {
   private final DaejangtoonChapterService daejangtoonChapterService;
   private final DaejangtoonLikeService daejangtoonLikeService;
 
-  //  @PreAuthorize("hasAuthority('ADMIN')")
+  @PreAuthorize("hasAuthority('ADMIN')")
   @PostMapping
   public ApiGlobalResponse<Long> register(
       @Valid @RequestBody DaejangtoonRequestDto.Register request

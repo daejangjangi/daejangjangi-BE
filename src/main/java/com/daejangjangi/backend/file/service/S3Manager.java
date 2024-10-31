@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
-import software.amazon.awssdk.services.s3.S3Client;
 
 @Component
 @Slf4j
@@ -24,7 +23,6 @@ import software.amazon.awssdk.services.s3.S3Client;
 public class S3Manager {
 
   private final S3Template s3Template;
-  private final S3Client s3Client;
 
   @Value("${spring.cloud.aws.s3.bucket}")
   private String bucketName;
