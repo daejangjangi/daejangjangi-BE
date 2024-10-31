@@ -104,7 +104,7 @@ public interface DaejangtoonApi {
   @Response401WithSwagger
   @Response403WithSwagger
   ApiGlobalResponse<DaejangtoonResponseDto.Daejangtoon> daejangtoon(
-      @Parameter Integer chapter
+      @Parameter Long daejangtoonId
   );
 
   @Operation(summary = "최신 대장툰 조회", tags = {"Daejangtoon (대장툰) API"},
@@ -155,5 +155,5 @@ public interface DaejangtoonApi {
   @Response200WithSwagger
   @Response401WithSwagger
   @Response403WithSwagger
-  ApiGlobalResponse<Null> remove(@Parameter Integer chapter);
+  ApiGlobalResponse<Null> remove(@Parameter Long daejangtoonId);
 }

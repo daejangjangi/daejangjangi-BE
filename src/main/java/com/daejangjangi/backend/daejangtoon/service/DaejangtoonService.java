@@ -61,11 +61,11 @@ public class DaejangtoonService {
   /**
    * 대장툰 조회 - 회차별 조회
    *
-   * @param chapter 회차
+   * @param daejangtoonId id
    * @return Daejangtoon
    */
-  public Daejangtoon daejangtoon(Integer chapter) {
-    return daejangtoonRepository.findByChapter(chapter)
+  public Daejangtoon daejangtoon(Long daejangtoonId) {
+    return daejangtoonRepository.findById(daejangtoonId)
         .orElseThrow(NotFoundToonException::new);
   }
 
@@ -81,11 +81,11 @@ public class DaejangtoonService {
   /**
    * 대장툰 삭제
    *
-   * @param chapter 회차
+   * @param daejangtoonId id
    */
   @Transactional
-  public void remove(Integer chapter) {
-    Daejangtoon daejangtoon = daejangtoon(chapter);
+  public void remove(Long daejangtoonId) {
+    Daejangtoon daejangtoon = daejangtoon(daejangtoonId);
     String profile = daejangtoon.getProfile();
     List<String> imageKeys = daejangtoon.getToonImages().stream()
         .map(DaejangtoonImage::getKey).toList();

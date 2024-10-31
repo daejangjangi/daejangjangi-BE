@@ -22,9 +22,10 @@ public interface DaejangtoonMapper {
   @Mapping(target = "yoil", source = "registerRequest.yoil")
   Daejangtoon registerToEntity(DaejangtoonRequestDto.Register registerRequest);
 
-  @Mapping(target = "chapter", source = "daejangtoons.chapter")
+  @Mapping(target = "profile", source = "daejangtoons.profile")
   @Mapping(target = "title", source = "daejangtoons.title")
-  @Mapping(target = "overview", source = "daejangtoons.overview")
+  @Mapping(target = "chapter", source = "daejangtoons.chapter")
+  @Mapping(target = "hit", source = "daejangtoons.hit")
   @Mapping(target = "yoil", source = "daejangtoons.yoil")
   List<DaejangtoonResponseDto.Daejangtoons> entityToDaejangtoonsResponse(
       List<Daejangtoon> daejangtoons);

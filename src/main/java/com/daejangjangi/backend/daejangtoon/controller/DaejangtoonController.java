@@ -50,11 +50,11 @@ public class DaejangtoonController implements DaejangtoonApi {
   }
 
   @PreAuthorize("hasAuthority('MEMBER')")
-  @GetMapping("/{chapter}")
+  @GetMapping("/{daejangtoonId}")
   public ApiGlobalResponse<DaejangtoonResponseDto.Daejangtoon> daejangtoon(
-      @PathVariable("chapter") Integer chapter
+      @PathVariable("daejangtoonId") Long daejangtoonId
   ) {
-    Daejangtoon daejangtoon = daejangtoonService.daejangtoon(chapter);
+    Daejangtoon daejangtoon = daejangtoonService.daejangtoon(daejangtoonId);
     DaejangtoonResponseDto.Daejangtoon response
         = DaejangtoonMapper.INSTANCE.entityToDaejangtoonResponse(daejangtoon);
     return ApiGlobalResponse.ok(response);
@@ -70,9 +70,9 @@ public class DaejangtoonController implements DaejangtoonApi {
   }
 
   @PreAuthorize("hasAuthority('ADMIN')")
-  @DeleteMapping("/{chapter}")
-  public ApiGlobalResponse<Null> remove(@PathVariable("chapter") Integer chapter) {
-    daejangtoonService.remove(chapter);
+  @DeleteMapping("/{daejangtoonId}")
+  public ApiGlobalResponse<Null> remove(@PathVariable("daejangtoonId") Long daejangtoonId) {
+    daejangtoonService.remove(daejangtoonId);
     return ApiGlobalResponse.ok();
   }
 }

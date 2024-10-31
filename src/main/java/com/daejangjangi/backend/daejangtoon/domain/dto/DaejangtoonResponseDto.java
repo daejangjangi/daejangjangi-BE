@@ -9,6 +9,9 @@ public class DaejangtoonResponseDto {
 
   @Schema(name = "DaejangtoonsResponse", description = "대장툰 목록 응답 DTO")
   public record Daejangtoons(
+      @Schema(description = "대장툰 id", examples = "1")
+      Long id,
+
       @Schema(description = "대장툰 프로필 이미지", example = "이미지 링크")
       String profile,
 
