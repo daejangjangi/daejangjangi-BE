@@ -5,6 +5,8 @@ import com.daejangjangi.backend.global.annotation.swagger.ResponseCommonWithSwag
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
 import com.daejangjangi.backend.post.domain.dto.PostResponseDto.Info;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -13,9 +15,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Tag(name = "Board (게시판) API", description = "게시판 관련 API")
@@ -23,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface BoardApi {
 
   @Operation(summary = "게시판별로 게시글 조회", tags = {"Board (게시판) API"},
+      description = "게시판별로 게시글 id 내림차순으로 조회합니다.",
       responses = {
           @ApiResponse(
               responseCode = "200",
@@ -46,7 +46,7 @@ public interface BoardApi {
                                   "boards": [
                                     "자유"
                                   ],
-                                  "isAuthor": true,
+                                  "isAuthor": false,
                                   "hit": 0,
                                   "likeCount": 0,
                                   "commentCount": 0,
@@ -86,6 +86,11 @@ public interface BoardApi {
           )
       })
   @Response401WithSwagger
+  @Parameters({
+      @Parameter(name = "size", description = "한 페이지에 노출할 데이터 수", required = true),
+      @Parameter(name = "page", description = "페이지 수", required = true),
+      @Parameter(name = "board", description = "게시판", required = true)
+  })
   @ApiResponses(value = {
       @ApiResponse(responseCode = "400", description = "잘못된 요청",
           content = @Content(
@@ -108,8 +113,7 @@ public interface BoardApi {
           )
       )
   })
-  ApiGlobalResponse<Page<Info>> getPostsByBoard(
-      @PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable,
-      @RequestParam String board);
+  ApiGlobalResponse<Page<Info>> getPostsByBoard(@RequestParam(defaultValue = "0") int page,
+      @RequestParam(defaultValue = "10") int size, @RequestParam String board);
 
 }

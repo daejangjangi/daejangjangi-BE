@@ -12,9 +12,9 @@ import com.daejangjangi.backend.post.domain.mapper.PostMapper;
 import com.daejangjangi.backend.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,15 +32,14 @@ public class BoardController implements BoardApi {
 
   @GetMapping
   @PreAuthorize("hasAuthority('MEMBER')")
-  public ApiGlobalResponse<Page<Info>> getPostsByBoard(
-      @PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable,
-      @RequestParam String board) {
+  public ApiGlobalResponse<Page<Info>> getPostsByBoard(@RequestParam(defaultValue = "0") int page,
+      @RequestParam(defaultValue = "10") int size, @RequestParam String board) {
     Member member = memberService.info();
     Board getBoard = boardService.findByName(board);
+    Pageable pageable = PageRequest.of(page, size, Direction.DESC, "id");
     Page<Post> posts = postService.getPostByBoard(getBoard, pageable);
     Page<PostResponseDto.Info> response = posts.map(
         post -> PostMapper.INSTANCE.entityToResponseDto(post, member));
     return ApiGlobalResponse.ok(response);
   }
-
 }
