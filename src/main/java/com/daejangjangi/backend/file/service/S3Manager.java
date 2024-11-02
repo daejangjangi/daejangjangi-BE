@@ -50,7 +50,7 @@ public class S3Manager {
       for (MultipartFile file : files) {
         String originFileName = file.getOriginalFilename();
         String fileName = UUID.randomUUID() + "_" + originFileName;
-        String key = directory + "/" + fileName;
+        String key = directory + fileName;
         S3Resource s3Resource = s3Template.upload(bucketName, key, file.getInputStream(),
             ObjectMetadata.builder().contentType(file.getContentType()).build());
         uploadedKeys.add(key); // 업로드된 이미지 key 저장

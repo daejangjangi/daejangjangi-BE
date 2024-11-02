@@ -44,7 +44,7 @@ public class DaejangtoonChapterService {
     fileValidator.validate(toonImages);
     String profileUrl = s3Manager.upload(profileImage);
     List<ImageInfoDto> images =
-        s3Manager.upload(DAEJANGTOON_ROOT_DIRECTORY + chapter.getChapter(), toonImages);
+        s3Manager.upload(DAEJANGTOON_ROOT_DIRECTORY + chapter.getChapter() + "/", toonImages);
     List<DaejangtoonImage> daejangtoonImages = DaejangtoonImageMapper.INSTANCE.dtoToEntity(images);
     chapter.updateProfile(profileUrl);
     chapter.addImages(daejangtoonImages);
