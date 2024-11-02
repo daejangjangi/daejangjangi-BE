@@ -30,7 +30,11 @@ public class CardnewsService {
    * @param profileImage 프로픨 이미지
    * @param newsImages   뉴스 이미지 목록
    */
-  public void save(Cardnews cardnews, MultipartFile profileImage, List<MultipartFile> newsImages) {
+  public void save(
+      Cardnews cardnews,
+      MultipartFile profileImage,
+      List<MultipartFile> newsImages
+  ) {
     fileValidator.validate(profileImage);
     fileValidator.validate(newsImages);
     String profileUrl = s3Manager.upload(profileImage);
@@ -46,9 +50,12 @@ public class CardnewsService {
    *
    * @param cardnews 카드 뉴스
    */
-  public void remove(Cardnews cardnews) {
+  public void remove(
+      Cardnews cardnews
+  ) {
     String profile = cardnews.getProfile();
-    List<String> imageKeys = cardnews.getNewsImages().stream().map(CardnewsImage::getKey).toList();
+    List<String> imageKeys = cardnews.getNewsImages().stream()
+        .map(CardnewsImage::getKey).toList();
     s3Manager.deleteImages(imageKeys);
     s3Manager.deleteProfile(profile);
     cardnewsRepository.delete(cardnews);
@@ -62,5 +69,18 @@ public class CardnewsService {
    */
   public Cardnews findById(Long cardnewsId) {
     return cardnewsRepository.findById(cardnewsId).orElseThrow(NotFoundCardnewsException::new);
+  }
+
+  /**
+   * 카드뉴스 전체 조회
+   *
+   * @return List Cardnews
+   */
+  public List<Cardnews> findAll() {
+    return cardnewsRepository.findAll();
+  }
+
+  public Cardnews recent() {
+    return cardnewsRepository.findRecent();
   }
 }
