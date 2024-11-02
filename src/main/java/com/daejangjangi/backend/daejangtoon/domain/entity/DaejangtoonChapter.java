@@ -105,4 +105,28 @@ public class DaejangtoonChapter extends BaseEntity {
   public void updateParent(Daejangtoon daejangtoon) {
     this.daejangtoon = daejangtoon;
   }
+
+  /**
+   * 좋아요 증가
+   *
+   * @param like 좋아요
+   */
+  public void addLike(DaejangtoonLike like) {
+    if (Objects.isNull(this.toonLikes)) {
+      this.toonLikes = new ArrayList<>();
+    }
+    this.toonLikes.add(like);
+  }
+
+  /**
+   * 좋아요 감소
+   *
+   * @param like 좋아요
+   */
+  public void removeLike(DaejangtoonLike like) {
+    if (Objects.isNull(this.toonLikes)) {
+      this.toonLikes = new ArrayList<>();
+    }
+    this.toonLikes.remove(like);
+  }
 }

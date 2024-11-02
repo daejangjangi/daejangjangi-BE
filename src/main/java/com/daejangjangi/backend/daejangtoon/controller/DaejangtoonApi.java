@@ -266,4 +266,44 @@ public interface DaejangtoonApi {
       @Parameter Long daejangtoonId,
       @Parameter Integer chapter
   );
+
+  @Operation(summary = "대장툰 좋아요", tags = {"Daejangtoon (대장툰) API"},
+      responses = {
+          @ApiResponse(
+              responseCode = "400",
+              description = "잘못된 요청",
+              content = @Content(
+                  mediaType = "application/json",
+                  array = @ArraySchema(schema = @Schema(implementation = ApiGlobalResponse.class)),
+                  examples = {
+                      @ExampleObject(
+                          name = "NOT_FOUND_TOON",
+                          value = """
+                              {
+                              "code" : "NOT_FOUND_TOON",
+                              "message" : "존재하지 않는 툰입니다.",
+                              "data" : null
+                              }
+                              """
+                      ),
+                      @ExampleObject(
+                          name = "NOT_FOUND_CHAPTER",
+                          value = """
+                              {
+                              "code" : "NOT_FOUND_CHAPTER",
+                              "message" : "존재하지 않는 회차입니다.",
+                              "data" : null
+                              }
+                              """
+                      )}
+              )
+          )
+      })
+  @Response200WithSwagger
+  @Response401WithSwagger
+  @Response403WithSwagger
+  ApiGlobalResponse<Null> LikeDaejangtoon(
+      @Parameter Long daejangtoonId,
+      @Parameter Integer chapter
+  );
 }
