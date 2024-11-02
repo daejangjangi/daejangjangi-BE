@@ -1,7 +1,7 @@
 package com.daejangjangi.backend.daejangtoon.domain.mapper;
 
-import com.daejangjangi.backend.daejangtoon.domain.dto.DaejangtoonImageDto;
 import com.daejangjangi.backend.daejangtoon.domain.entity.DaejangtoonImage;
+import com.daejangjangi.backend.file.domain.ImageInfoDto;
 import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -15,5 +15,5 @@ public interface DaejangtoonImageMapper {
   @Mapping(target = "order", source = "dtoList.order")
   @Mapping(target = "image", source = "dtoList.image")
   @Mapping(target = "key", source = "dtoList.key")
-  List<DaejangtoonImage> dtoToEntity(List<DaejangtoonImageDto> dtoList);
+  List<DaejangtoonImage> dtoToEntity(List<ImageInfoDto> dtoList);
 }

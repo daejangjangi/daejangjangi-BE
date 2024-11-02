@@ -1,12 +1,12 @@
 package com.daejangjangi.backend.daejangtoon.service;
 
-import com.daejangjangi.backend.daejangtoon.domain.dto.DaejangtoonImageDto;
 import com.daejangjangi.backend.daejangtoon.domain.entity.Daejangtoon;
 import com.daejangjangi.backend.daejangtoon.domain.entity.DaejangtoonChapter;
 import com.daejangjangi.backend.daejangtoon.domain.entity.DaejangtoonImage;
 import com.daejangjangi.backend.daejangtoon.domain.mapper.DaejangtoonImageMapper;
 import com.daejangjangi.backend.daejangtoon.exception.NotFoundChapterException;
 import com.daejangjangi.backend.daejangtoon.repository.DaejangtoonChapterRepository;
+import com.daejangjangi.backend.file.domain.ImageInfoDto;
 import com.daejangjangi.backend.file.service.FileValidator;
 import com.daejangjangi.backend.file.service.S3Manager;
 import java.util.List;
@@ -43,7 +43,7 @@ public class DaejangtoonChapterService {
     fileValidator.validate(profileImage);
     fileValidator.validate(toonImages);
     String profileUrl = s3Manager.upload(profileImage);
-    List<DaejangtoonImageDto> images =
+    List<ImageInfoDto> images =
         s3Manager.upload(DAEJANGTOON_ROOT_DIRECTORY + chapter.getChapter(), toonImages);
     List<DaejangtoonImage> daejangtoonImages = DaejangtoonImageMapper.INSTANCE.dtoToEntity(images);
     chapter.updateProfile(profileUrl);

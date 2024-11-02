@@ -1,4 +1,4 @@
-package com.daejangjangi.backend.daejangtoon.domain.dto;
+package com.daejangjangi.backend.file.domain;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class DaejangtoonImageDto {
+public class ImageInfoDto {
 
   private String key;
   private Integer order;

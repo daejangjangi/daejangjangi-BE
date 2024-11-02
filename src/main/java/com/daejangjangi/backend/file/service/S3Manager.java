@@ -1,6 +1,6 @@
 package com.daejangjangi.backend.file.service;
 
-import com.daejangjangi.backend.daejangtoon.domain.dto.DaejangtoonImageDto;
+import com.daejangjangi.backend.file.domain.ImageInfoDto;
 import com.daejangjangi.backend.file.util.OrderConverter;
 import com.daejangjangi.backend.global.exception.ServerDataException;
 import io.awspring.cloud.s3.ObjectMetadata;
@@ -43,8 +43,8 @@ public class S3Manager {
     }
   }
 
-  public List<DaejangtoonImageDto> upload(String directory, List<MultipartFile> files) {
-    List<DaejangtoonImageDto> imageUrls = new ArrayList<>();
+  public List<ImageInfoDto> upload(String directory, List<MultipartFile> files) {
+    List<ImageInfoDto> imageUrls = new ArrayList<>();
     List<String> uploadedKeys = new ArrayList<>();
     try {
       for (MultipartFile file : files) {
@@ -54,7 +54,7 @@ public class S3Manager {
         S3Resource s3Resource = s3Template.upload(bucketName, key, file.getInputStream(),
             ObjectMetadata.builder().contentType(file.getContentType()).build());
         uploadedKeys.add(key); // 업로드된 이미지 key 저장
-        DaejangtoonImageDto imageDto = DaejangtoonImageDto.builder()
+        ImageInfoDto imageDto = ImageInfoDto.builder()
             .key(key)
             .order(OrderConverter.getOrder(originFileName))
             .image(s3Resource.getURL().toString())
