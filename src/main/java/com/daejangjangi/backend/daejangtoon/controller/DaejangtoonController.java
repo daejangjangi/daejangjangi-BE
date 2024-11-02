@@ -8,6 +8,9 @@ import com.daejangjangi.backend.daejangtoon.domain.mapper.DaejangtoonMapper;
 import com.daejangjangi.backend.daejangtoon.service.DaejangtoonChapterService;
 import com.daejangjangi.backend.daejangtoon.service.DaejangtoonService;
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
+import com.daejangjangi.backend.like.service.DaejangtoonLikeService;
+import com.daejangjangi.backend.member.domain.entity.Member;
+import com.daejangjangi.backend.member.service.MemberService;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -29,8 +32,10 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class DaejangtoonController implements DaejangtoonApi {
 
+  private final MemberService memberService;
   private final DaejangtoonService daejangtoonService;
   private final DaejangtoonChapterService daejangtoonChapterService;
+  private final DaejangtoonLikeService daejangtoonLikeService;
 
   @PreAuthorize("hasAuthority('ADMIN')")
   @PostMapping
@@ -98,9 +103,23 @@ public class DaejangtoonController implements DaejangtoonApi {
   ) {
     Daejangtoon daejangtoon = daejangtoonService.findById(daejangtoonId);
     DaejangtoonChapter daejangtoonChapter =
-        daejangtoonChapterService.getChapter(daejangtoon, chapter);
+        daejangtoonChapterService.getChapterWithHit(daejangtoon, chapter);
     DaejangtoonResponseDto.DaejangtoonChapter response
         = DaejangtoonMapper.INSTANCE.entityToChapterResponse(daejangtoonChapter);
     return ApiGlobalResponse.ok(response);
+  }
+
+  @PreAuthorize("hasAuthority('MEMBER')")
+  @PostMapping("/{daejangtoonId}/{chapter}/likes")
+  public ApiGlobalResponse<Null> LikeDaejangtoon(
+      @PathVariable Long daejangtoonId,
+      @PathVariable Integer chapter
+  ) {
+    Member member = memberService.info();
+    Daejangtoon daejangtoon = daejangtoonService.findById(daejangtoonId);
+    DaejangtoonChapter daejangtoonChapter =
+        daejangtoonChapterService.getChapter(daejangtoon, chapter);
+    daejangtoonLikeService.like(member, daejangtoonChapter);
+    return ApiGlobalResponse.ok();
   }
 }
