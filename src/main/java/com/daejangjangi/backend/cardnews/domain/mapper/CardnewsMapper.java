@@ -28,6 +28,7 @@ public interface CardnewsMapper {
     return images.stream().map(CardnewsImage::getImage).toList();
   }
 
+  @Mapping(target = "id", source = "cardnews.id")
   @Mapping(target = "profile", source = "cardnews.profile")
   @Mapping(target = "title", source = "cardnews.title")
   List<CardnewsResponseDto.CardnewsItem> entityToDto(List<Cardnews> cardnews);

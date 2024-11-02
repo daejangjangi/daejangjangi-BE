@@ -12,6 +12,7 @@ public class CardnewsResponseDto {
   }
 
   public record CardnewsItem(
+      Long id,
       String profile,
       String title
   ) {
