@@ -7,6 +7,10 @@ import java.util.List;
 public class PostResponseDto {
 
   public record Info(
+
+      @Schema(description = "게시글 아이디")
+      Long id,
+
       @Schema(description = "제목")
       String title,
 

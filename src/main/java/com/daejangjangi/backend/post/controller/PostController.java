@@ -4,6 +4,7 @@ import com.daejangjangi.backend.board.domain.entity.Board;
 import com.daejangjangi.backend.board.service.BoardService;
 import com.daejangjangi.backend.comment.domain.entity.PostComment;
 import com.daejangjangi.backend.comment.service.CommentService;
+import com.daejangjangi.backend.post.domain.dto.PostResponseDto.Info;
 import com.daejangjangi.backend.post.service.PostCommentLikeService;
 import com.daejangjangi.backend.post.service.PostCommentService;
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
@@ -21,6 +22,10 @@ import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils.Null;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -111,11 +116,46 @@ public class PostController implements PostApi {
 
   @PostMapping("/comments/{commentId}/likes")
   @PreAuthorize("hasAuthority('MEMBER')")
-  public ApiGlobalResponse<Null> LikeCommentPost(@PathVariable("commentId") Long commentId) {
+  public ApiGlobalResponse<Null> likeCommentPost(@PathVariable("commentId") Long commentId) {
     Member member = memberService.info();
     PostComment postComment = commentService.findById(commentId);
     postCommentLikeService.like(member, postComment);
     return ApiGlobalResponse.ok();
   }
+
+  @GetMapping("/my-posts")
+  @PreAuthorize("hasAuthority('MEMBER')")
+  public ApiGlobalResponse<Page<Info>> findPostsByMember(
+      @PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable) {
+    Member member = memberService.info();
+    Page<Post> posts = postService.findPostsByMember(member, pageable);
+    Page<PostResponseDto.Info> response = posts.map(
+        post -> PostMapper.INSTANCE.entityToResponseDto(post, member));
+    return ApiGlobalResponse.ok(response);
+  }
+
+  @GetMapping("/commented-posts")
+  @PreAuthorize("hasAuthority('MEMBER')")
+  public ApiGlobalResponse<Page<PostResponseDto.Info>> findPostsCommentedByMember(
+      @PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable) {
+    Member member = memberService.info();
+    Page<Post> posts = postCommentService.findPostsCommentedByMember(member, pageable);
+    Page<PostResponseDto.Info> response = posts.map(
+        post -> PostMapper.INSTANCE.entityToResponseDto(post, member));
+    return ApiGlobalResponse.ok(response);
+  }
+
+  @GetMapping("/search")
+  @PreAuthorize("hasAuthority('MEMBER')")
+  public ApiGlobalResponse<Page<Info>> findPostsByKeyword(
+      @PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable,
+      @RequestParam String keyword) {
+    Member member = memberService.info();
+    Page<Post> posts = postService.findPostsByKeyword(keyword, pageable);
+    Page<PostResponseDto.Info> response = posts.map(
+        post -> PostMapper.INSTANCE.entityToResponseDto(post, member));
+    return ApiGlobalResponse.ok(response);
+  }
+
 
 }

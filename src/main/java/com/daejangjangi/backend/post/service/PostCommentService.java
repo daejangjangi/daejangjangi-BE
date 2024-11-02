@@ -2,10 +2,13 @@ package com.daejangjangi.backend.post.service;
 
 import com.daejangjangi.backend.comment.domain.entity.PostComment;
 import com.daejangjangi.backend.comment.exception.NotCommentAuthor;
+import com.daejangjangi.backend.post.domain.entity.Post;
 import com.daejangjangi.backend.post.repository.PostCommentRepository;
 import com.daejangjangi.backend.member.domain.entity.Member;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -97,5 +100,16 @@ public class PostCommentService {
     if (!Objects.equals(postComment.getMember(), member)) {
       throw new NotCommentAuthor();
     }
+  }
+
+  /**
+   * 댓글 단 게시글 조회
+   *
+   * @param member   회원 정보
+   * @param pageable 페이징 정보
+   * @return Page<Post>
+   */
+  public Page<Post> findPostsCommentedByMember(Member member, Pageable pageable) {
+    return postCommentRepository.findPostsByMember(member, pageable);
   }
 }

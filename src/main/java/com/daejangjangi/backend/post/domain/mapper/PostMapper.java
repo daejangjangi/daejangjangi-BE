@@ -21,6 +21,7 @@ public interface PostMapper {
     return new Post(modifyRequest.id(), modifyRequest.title(), modifyRequest.content());
   }
 
+  @Mapping(target = "id", source = "post.id")
   @Mapping(target = "nickname", source = "post.member.nickname")
   @Mapping(target = "title", source = "post.title")
   @Mapping(target = "content", source = "post.content")
