@@ -8,6 +8,8 @@ import com.daejangjangi.backend.post.domain.dto.PostRequestDto;
 import com.daejangjangi.backend.post.domain.dto.PostResponseDto;
 import com.daejangjangi.backend.post.domain.dto.PostResponseDto.Info;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -18,9 +20,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.apache.commons.lang3.ObjectUtils.Null;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -593,9 +592,13 @@ public interface PostApi {
               )
           )
       })
+  @Parameters({
+      @Parameter(name = "size", description = "한 페이지에 노출할 데이터 수", required = true),
+      @Parameter(name = "page", description = "페이지 수", required = true)
+  })
   @Response401WithSwagger
   ApiGlobalResponse<Page<Info>> findPostsByMember(
-      @PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable);
+      @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size);
 
   @Operation(summary = "댓글 단 게시글 조회", tags = {"Post (게시글) API"},
       responses = {
@@ -660,9 +663,13 @@ public interface PostApi {
               )
           )
       })
+  @Parameters({
+      @Parameter(name = "size", description = "한 페이지에 노출할 데이터 수", required = true),
+      @Parameter(name = "page", description = "페이지 수", required = true)
+  })
   @Response401WithSwagger
   ApiGlobalResponse<Page<PostResponseDto.Info>> findPostsCommentedByMember(
-      @PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable);
+      @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size);
 
   @Operation(summary = "게시글 검색", tags = {"Post (게시글) API"},
       responses = {
@@ -727,8 +734,13 @@ public interface PostApi {
               )
           )
       })
+  @Parameters({
+      @Parameter(name = "size", description = "한 페이지에 노출할 데이터 수", required = true),
+      @Parameter(name = "page", description = "페이지 수", required = true),
+      @Parameter(name = "keyword", description = "검색 키워드", required = true)
+  })
   @Response401WithSwagger
   ApiGlobalResponse<Page<Info>> findPostsByKeyword(
-      @PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable,
+      @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size,
       @RequestParam String keyword);
 }

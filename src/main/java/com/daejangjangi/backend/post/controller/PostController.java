@@ -23,9 +23,9 @@ import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils.Null;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -126,8 +126,9 @@ public class PostController implements PostApi {
   @GetMapping("/my-posts")
   @PreAuthorize("hasAuthority('MEMBER')")
   public ApiGlobalResponse<Page<Info>> findPostsByMember(
-      @PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable) {
+      @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
     Member member = memberService.info();
+    Pageable pageable = PageRequest.of(page, size, Direction.DESC, "id");
     Page<Post> posts = postService.findPostsByMember(member, pageable);
     Page<PostResponseDto.Info> response = posts.map(
         post -> PostMapper.INSTANCE.entityToResponseDto(post, member));
@@ -137,8 +138,9 @@ public class PostController implements PostApi {
   @GetMapping("/commented-posts")
   @PreAuthorize("hasAuthority('MEMBER')")
   public ApiGlobalResponse<Page<PostResponseDto.Info>> findPostsCommentedByMember(
-      @PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable) {
+      @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
     Member member = memberService.info();
+    Pageable pageable = PageRequest.of(page, size, Direction.DESC, "id");
     Page<Post> posts = postCommentService.findPostsCommentedByMember(member, pageable);
     Page<PostResponseDto.Info> response = posts.map(
         post -> PostMapper.INSTANCE.entityToResponseDto(post, member));
@@ -148,9 +150,10 @@ public class PostController implements PostApi {
   @GetMapping("/search")
   @PreAuthorize("hasAuthority('MEMBER')")
   public ApiGlobalResponse<Page<Info>> findPostsByKeyword(
-      @PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable,
+      @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size,
       @RequestParam String keyword) {
     Member member = memberService.info();
+    Pageable pageable = PageRequest.of(page, size, Direction.DESC, "id");
     Page<Post> posts = postService.findPostsByKeyword(keyword, pageable);
     Page<PostResponseDto.Info> response = posts.map(
         post -> PostMapper.INSTANCE.entityToResponseDto(post, member));
