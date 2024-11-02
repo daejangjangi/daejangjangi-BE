@@ -9,7 +9,7 @@ public enum DiseaseErrorType {
 
   private final String message;
 
-  DiseaseErrorType(String message) {
+  DiseaseErrorType(final String message) {
     this.message = message;
   }
 }

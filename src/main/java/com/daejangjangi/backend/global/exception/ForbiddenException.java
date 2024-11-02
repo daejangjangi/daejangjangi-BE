@@ -13,7 +13,7 @@ public class ForbiddenException extends AccessDeniedException {
     this(ApiGlobalErrorType.FORBIDDEN.getMessage());
   }
 
-  public ForbiddenException(String message) {
+  public ForbiddenException(final String message) {
     super(message);
     this.code = ApiGlobalErrorType.FORBIDDEN.name();
   }

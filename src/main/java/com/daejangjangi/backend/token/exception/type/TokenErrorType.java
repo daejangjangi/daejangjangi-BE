@@ -13,7 +13,7 @@ public enum TokenErrorType {
 
   private final String message;
 
-  TokenErrorType(String message) {
+  TokenErrorType(final String message) {
     this.message = message;
   }
 }

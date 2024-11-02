@@ -1,4 +1,4 @@
-package com.daejangjangi.backend.daejangtoon.exception;
+package com.daejangjangi.backend.daejangtoon.exception.type;
 
 import lombok.Getter;
 
@@ -11,7 +11,7 @@ public enum DaejangtoonErrorType {
 
   private final String message;
 
-  DaejangtoonErrorType(String message) {
+  DaejangtoonErrorType(final String message) {
     this.message = message;
   }
 }

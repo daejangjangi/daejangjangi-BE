@@ -13,7 +13,7 @@ public class NotFoundFaqException extends ClientDataException {
     this(FaqErrorType.NOT_FOUND_FAQ.getMessage());
   }
 
-  public NotFoundFaqException(String message) {
+  public NotFoundFaqException(final String message) {
     super(message);
     this.code = FaqErrorType.NOT_FOUND_FAQ.name();
   }

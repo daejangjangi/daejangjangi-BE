@@ -13,7 +13,7 @@ public enum MemberErrorType {
 
   private final String message;
 
-  MemberErrorType(String message) {
+  MemberErrorType(final String message) {
     this.message = message;
   }
 }

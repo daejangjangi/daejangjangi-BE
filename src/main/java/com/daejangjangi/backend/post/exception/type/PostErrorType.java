@@ -11,7 +11,7 @@ public enum PostErrorType {
 
   private final String message;
 
-  PostErrorType(String message) {
+  PostErrorType(final String message) {
     this.message = message;
   }
 

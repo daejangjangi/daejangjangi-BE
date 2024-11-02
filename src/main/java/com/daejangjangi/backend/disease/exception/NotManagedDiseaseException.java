@@ -13,7 +13,7 @@ public class NotManagedDiseaseException extends ClientDataException {
     this(DiseaseErrorType.NOT_MANAGED_DISEASE.getMessage());
   }
 
-  public NotManagedDiseaseException(String message) {
+  public NotManagedDiseaseException(final String message) {
     super(message);
     this.code = DiseaseErrorType.NOT_MANAGED_DISEASE.name();
   }

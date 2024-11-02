@@ -13,7 +13,7 @@ public class EmptyFileException extends ClientDataException {
     this(FileErrorType.EMPTY_FILE_ERROR.getMessage());
   }
 
-  public EmptyFileException(String message) {
+  public EmptyFileException(final String message) {
     super(message);
     this.code = FileErrorType.EMPTY_FILE_ERROR.name();
   }

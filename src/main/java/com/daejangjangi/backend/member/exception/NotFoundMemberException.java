@@ -13,7 +13,7 @@ public class NotFoundMemberException extends ClientDataException {
     this(MemberErrorType.NOT_FOUND_MEMBER.getMessage());
   }
 
-  public NotFoundMemberException(String message) {
+  public NotFoundMemberException(final String message) {
     super(message);
     this.code = MemberErrorType.NOT_FOUND_MEMBER.name();
   }
