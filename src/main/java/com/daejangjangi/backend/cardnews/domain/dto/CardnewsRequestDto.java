@@ -11,7 +11,7 @@ public class CardnewsRequestDto {
 
       @Schema(description = "카드뉴스 제목", example = "장염과 식중독의 차이?")
       @NotBlank(message = "제목을 입력해주세요.")
-      @Size(max = 20, message = "제목은 최대 {max} 이하이어야 합니다.")
+      @Size(max = 20, message = "제목은 최대 {max}자 이하이어야 합니다.")
       String title
   ) {
 

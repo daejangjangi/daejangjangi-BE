@@ -24,7 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping("/api/v1/cardnews")
 @RequiredArgsConstructor
-public class CardnewsController {
+public class CardnewsController implements CardnewsApi {
 
   private final CardnewsService cardnewsService;
 
