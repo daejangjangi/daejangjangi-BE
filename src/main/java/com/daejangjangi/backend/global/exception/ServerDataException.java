@@ -12,7 +12,7 @@ public class ServerDataException extends RuntimeException {
     this(ApiGlobalErrorType.INTERNAL_SERVER_ERROR.getMessage());
   }
 
-  public ServerDataException(String message) {
+  public ServerDataException(final String message) {
     super(message);
     this.code = ApiGlobalErrorType.INTERNAL_SERVER_ERROR.name();
   }

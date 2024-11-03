@@ -13,7 +13,7 @@ public enum ApiGlobalErrorType {
 
   private final String message;
 
-  ApiGlobalErrorType(String message) {
+  ApiGlobalErrorType(final String message) {
     this.message = message;
   }
 }

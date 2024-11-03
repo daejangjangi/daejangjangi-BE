@@ -1,6 +1,6 @@
-package com.daejangjangi.backend.daejangtoon.domain.mapper;
+package com.daejangjangi.backend.cardnews.domain.mapper;
 
-import com.daejangjangi.backend.daejangtoon.domain.entity.DaejangtoonImage;
+import com.daejangjangi.backend.cardnews.domain.entity.CardnewsImage;
 import com.daejangjangi.backend.file.domain.ImageInfoDto;
 import java.util.List;
 import org.mapstruct.Mapper;
@@ -8,12 +8,12 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 @Mapper
-public interface DaejangtoonImageMapper {
+public interface CardnewsImageMapper {
 
-  DaejangtoonImageMapper INSTANCE = Mappers.getMapper(DaejangtoonImageMapper.class);
+  CardnewsImageMapper INSTANCE = Mappers.getMapper(CardnewsImageMapper.class);
 
   @Mapping(target = "order", source = "dtoList.order")
   @Mapping(target = "image", source = "dtoList.image")
   @Mapping(target = "key", source = "dtoList.key")
-  List<DaejangtoonImage> dtoToEntity(List<ImageInfoDto> dtoList);
+  List<CardnewsImage> dtoToEntity(List<ImageInfoDto> dtoList);
 }

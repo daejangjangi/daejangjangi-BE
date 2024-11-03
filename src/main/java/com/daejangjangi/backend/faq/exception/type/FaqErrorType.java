@@ -9,7 +9,7 @@ public enum FaqErrorType {
 
   private final String message;
 
-  FaqErrorType(String message) {
+  FaqErrorType(final String message) {
     this.message = message;
   }
 }

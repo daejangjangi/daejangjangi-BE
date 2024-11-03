@@ -8,7 +8,7 @@ public enum CommentErrorType {
   NOT_COMMENT_AUTHOR("댓글의 작성자가 아니므로 수정할 수 없습니다.");
   private final String message;
 
-  CommentErrorType(String message) {
+  CommentErrorType(final String message) {
     this.message = message;
   }
 

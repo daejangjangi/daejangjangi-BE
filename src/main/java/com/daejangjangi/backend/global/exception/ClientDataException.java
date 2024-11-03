@@ -12,7 +12,7 @@ public class ClientDataException extends RuntimeException {
     this(ApiGlobalErrorType.BAD_REQUEST.getMessage());
   }
 
-  public ClientDataException(String message) {
+  public ClientDataException(final String message) {
     super(message);
     this.code = ApiGlobalErrorType.BAD_REQUEST.name();
   }

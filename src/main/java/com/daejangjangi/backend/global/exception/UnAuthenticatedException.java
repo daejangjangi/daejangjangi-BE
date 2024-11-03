@@ -12,7 +12,7 @@ public class UnAuthenticatedException extends RuntimeException {
     this(ApiGlobalErrorType.UNAUTHENTICATED.getMessage());
   }
 
-  public UnAuthenticatedException(String message) {
+  public UnAuthenticatedException(final String message) {
     super(message);
     this.code = ApiGlobalErrorType.UNAUTHENTICATED.name();
   }

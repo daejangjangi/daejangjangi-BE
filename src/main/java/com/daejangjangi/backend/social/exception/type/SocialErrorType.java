@@ -9,7 +9,7 @@ public enum SocialErrorType {
 
   private final String message;
 
-  SocialErrorType(String message) {
+  SocialErrorType(final String message) {
     this.message = message;
   }
 }
