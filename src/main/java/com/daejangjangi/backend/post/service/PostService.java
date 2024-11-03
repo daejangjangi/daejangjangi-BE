@@ -151,4 +151,15 @@ public class PostService {
   public Page<Post> getPostByBoard(Board board, Pageable pageable) {
     return boardPostRepository.findPostsByBoard(board, pageable);
   }
+
+  /**
+   * 게시글 조회 수
+   *
+   * @param post 게시글
+   */
+  @Transactional
+  public Post updateHit(Post post) {
+    postRepository.updateHit(post);
+    return findById(post.getId());
+  }
 }

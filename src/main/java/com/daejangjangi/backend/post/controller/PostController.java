@@ -76,6 +76,7 @@ public class PostController implements PostApi {
   public ApiGlobalResponse<PostResponseDto.Info> info(@PathVariable("postId") Long postId) {
     Member member = memberService.info();
     Post post = postService.findById(postId);
+    post = postService.updateHit(post);
     PostResponseDto.Info response = PostMapper.INSTANCE.entityToResponseDto(post, member);
     return ApiGlobalResponse.ok(response);
   }
