@@ -23,4 +23,9 @@ public class BoardService {
     }
     return boards;
   }
+
+  @Transactional
+  public Board findByName(String name) {
+    return boardRepository.findByName(name).orElseThrow(NotManagedBoardException::new);
+  }
 }

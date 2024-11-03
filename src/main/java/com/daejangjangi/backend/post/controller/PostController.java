@@ -4,9 +4,11 @@ import com.daejangjangi.backend.board.domain.entity.Board;
 import com.daejangjangi.backend.board.service.BoardService;
 import com.daejangjangi.backend.comment.domain.entity.PostComment;
 import com.daejangjangi.backend.comment.service.CommentService;
+import com.daejangjangi.backend.post.domain.dto.PostResponseDto.Info;
+import com.daejangjangi.backend.post.service.PostCommentLikeService;
 import com.daejangjangi.backend.post.service.PostCommentService;
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
-import com.daejangjangi.backend.like.service.PostLikeService;
+import com.daejangjangi.backend.post.service.PostLikeService;
 import com.daejangjangi.backend.member.domain.entity.Member;
 import com.daejangjangi.backend.member.service.MemberService;
 import com.daejangjangi.backend.post.domain.dto.PostRequestDto;
@@ -20,6 +22,10 @@ import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils.Null;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,6 +40,7 @@ public class PostController implements PostApi {
   private final PostLikeService postLikeService;
   private final CommentService commentService;
   private final PostCommentService postCommentService;
+  private final PostCommentLikeService postCommentLikeService;
 
   @PostMapping
   @PreAuthorize("hasAuthority('MEMBER')")
@@ -105,6 +112,52 @@ public class PostController implements PostApi {
     PostComment postComment = commentService.findById(commentId);
     postCommentService.delete(member, postComment);
     return ApiGlobalResponse.ok();
+  }
+
+  @PostMapping("/comments/{commentId}/likes")
+  @PreAuthorize("hasAuthority('MEMBER')")
+  public ApiGlobalResponse<Null> likeCommentPost(@PathVariable("commentId") Long commentId) {
+    Member member = memberService.info();
+    PostComment postComment = commentService.findById(commentId);
+    postCommentLikeService.like(member, postComment);
+    return ApiGlobalResponse.ok();
+  }
+
+  @GetMapping("/my-posts")
+  @PreAuthorize("hasAuthority('MEMBER')")
+  public ApiGlobalResponse<Page<Info>> findPostsByMember(
+      @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+    Member member = memberService.info();
+    Pageable pageable = PageRequest.of(page, size, Direction.DESC, "id");
+    Page<Post> posts = postService.findPostsByMember(member, pageable);
+    Page<PostResponseDto.Info> response = posts.map(
+        post -> PostMapper.INSTANCE.entityToResponseDto(post, member));
+    return ApiGlobalResponse.ok(response);
+  }
+
+  @GetMapping("/commented-posts")
+  @PreAuthorize("hasAuthority('MEMBER')")
+  public ApiGlobalResponse<Page<PostResponseDto.Info>> findPostsCommentedByMember(
+      @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+    Member member = memberService.info();
+    Pageable pageable = PageRequest.of(page, size, Direction.DESC, "id");
+    Page<Post> posts = postCommentService.findPostsCommentedByMember(member, pageable);
+    Page<PostResponseDto.Info> response = posts.map(
+        post -> PostMapper.INSTANCE.entityToResponseDto(post, member));
+    return ApiGlobalResponse.ok(response);
+  }
+
+  @GetMapping("/search")
+  @PreAuthorize("hasAuthority('MEMBER')")
+  public ApiGlobalResponse<Page<Info>> findPostsByKeyword(
+      @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size,
+      @RequestParam String keyword) {
+    Member member = memberService.info();
+    Pageable pageable = PageRequest.of(page, size, Direction.DESC, "id");
+    Page<Post> posts = postService.findPostsByKeyword(keyword, pageable);
+    Page<PostResponseDto.Info> response = posts.map(
+        post -> PostMapper.INSTANCE.entityToResponseDto(post, member));
+    return ApiGlobalResponse.ok(response);
   }
 
 

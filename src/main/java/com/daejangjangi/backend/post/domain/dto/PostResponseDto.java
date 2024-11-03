@@ -7,6 +7,10 @@ import java.util.List;
 public class PostResponseDto {
 
   public record Info(
+
+      @Schema(description = "게시글 아이디")
+      Long id,
+
       @Schema(description = "제목")
       String title,
 
@@ -33,6 +37,9 @@ public class PostResponseDto {
 
       @Schema(description = "좋아요 수")
       Long likeCount,
+
+      @Schema(description = "댓글 수")
+      Long commentCount,
 
       @Schema(description = "좋아요 여부")
       boolean isLiked

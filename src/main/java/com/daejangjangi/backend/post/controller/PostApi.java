@@ -6,7 +6,10 @@ import com.daejangjangi.backend.global.annotation.swagger.ResponseCommonWithSwag
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
 import com.daejangjangi.backend.post.domain.dto.PostRequestDto;
 import com.daejangjangi.backend.post.domain.dto.PostResponseDto;
+import com.daejangjangi.backend.post.domain.dto.PostResponseDto.Info;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -16,8 +19,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.apache.commons.lang3.ObjectUtils.Null;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Tag(name = "Post (게시글) API", description = "게시글 관련 API")
 @ResponseCommonWithSwagger
@@ -496,4 +501,246 @@ public interface PostApi {
   })
   ApiGlobalResponse<Null> creatPostComment(
       @Valid @RequestBody PostRequestDto.CreatePostComment request);
+
+  @Operation(summary = "게시글 댓글 좋아요", tags = {"Post (게시글) API"})
+  @Response200WithSwagger
+  @Response401WithSwagger
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "400", description = "잘못된 요청",
+          content = @Content(
+              mediaType = "application/json",
+              array = @ArraySchema(schema = @Schema(implementation = ApiGlobalResponse.class)),
+              examples = {
+                  @ExampleObject(
+                      name = "NOT_FOUND_COMMENT",
+                      summary = "존재하지 않는 게시글 댓글",
+                      value = """
+                          {
+                            "code": "NOT_FOUND_COMMENT",
+                            "message": "존재하지 않는 댓글입니다.",
+                            "data": null
+                          }
+                          """
+                  ),
+
+              }
+          )
+      )
+  })
+  ApiGlobalResponse<Null> likeCommentPost(@PathVariable("commentId") Long commentId);
+
+  @Operation(summary = "내가 쓴 게시글 조회", tags = {"Post (게시글) API"},
+      responses = {
+          @ApiResponse(
+              responseCode = "200",
+              description = "OK",
+              content = @Content(
+                  mediaType = "application/json",
+                  examples = @ExampleObject(
+                      value = """
+                          {
+                            "code": "OK",
+                            "message": "OK",
+                            "data": {
+                              "content": [
+                                {
+                                  "id": 1,
+                                  "title": "게시글 제목",
+                                  "content": "게시글 내용",
+                                  "createdAt": "2024-11-01T00:54:09.399766",
+                                  "updatedAt": null,
+                                  "nickname": "nick",
+                                  "boards": [
+                                    "자유"
+                                  ],
+                                  "isAuthor": true,
+                                  "hit": 0,
+                                  "likeCount": 0,
+                                  "commentCount": 0,
+                                  "isLiked": false
+                                }
+                              ],
+                              "pageable": {
+                                "pageNumber": 0,
+                                "pageSize": 10,
+                                "sort": {
+                                  "empty": false,
+                                  "unsorted": false,
+                                  "sorted": true
+                                },
+                                "offset": 0,
+                                "unpaged": false,
+                                "paged": true
+                              },
+                              "last": true,
+                              "totalElements": 1,
+                              "totalPages": 1,
+                              "first": true,
+                              "size": 10,
+                              "number": 0,
+                              "sort": {
+                                "empty": false,
+                                "unsorted": false,
+                                "sorted": true
+                              },
+                              "numberOfElements": 1,
+                              "empty": false
+                            }
+                          }
+                          """
+                  )
+              )
+          )
+      })
+  @Parameters({
+      @Parameter(name = "size", description = "한 페이지에 노출할 데이터 수", required = true),
+      @Parameter(name = "page", description = "페이지 수", required = true)
+  })
+  @Response401WithSwagger
+  ApiGlobalResponse<Page<Info>> findPostsByMember(
+      @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size);
+
+  @Operation(summary = "댓글 단 게시글 조회", tags = {"Post (게시글) API"},
+      responses = {
+          @ApiResponse(
+              responseCode = "200",
+              description = "OK",
+              content = @Content(
+                  mediaType = "application/json",
+                  examples = @ExampleObject(
+                      value = """
+                          {
+                            "code": "OK",
+                            "message": "OK",
+                            "data": {
+                              "content": [
+                                {
+                                  "id": 1,
+                                  "title": "게시글 제목",
+                                  "content": "게시글 내용",
+                                  "createdAt": "2024-11-01T00:54:09.399766",
+                                  "updatedAt": null,
+                                  "nickname": "nick",
+                                  "boards": [
+                                    "자유"
+                                  ],
+                                  "isAuthor": true,
+                                  "hit": 0,
+                                  "likeCount": 0,
+                                  "commentCount": 0,
+                                  "isLiked": false
+                                }
+                              ],
+                              "pageable": {
+                                "pageNumber": 0,
+                                "pageSize": 10,
+                                "sort": {
+                                  "empty": false,
+                                  "unsorted": false,
+                                  "sorted": true
+                                },
+                                "offset": 0,
+                                "unpaged": false,
+                                "paged": true
+                              },
+                              "last": true,
+                              "totalElements": 1,
+                              "totalPages": 1,
+                              "first": true,
+                              "size": 10,
+                              "number": 0,
+                              "sort": {
+                                "empty": false,
+                                "unsorted": false,
+                                "sorted": true
+                              },
+                              "numberOfElements": 1,
+                              "empty": false
+                            }
+                          }
+                          """
+                  )
+              )
+          )
+      })
+  @Parameters({
+      @Parameter(name = "size", description = "한 페이지에 노출할 데이터 수", required = true),
+      @Parameter(name = "page", description = "페이지 수", required = true)
+  })
+  @Response401WithSwagger
+  ApiGlobalResponse<Page<PostResponseDto.Info>> findPostsCommentedByMember(
+      @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size);
+
+  @Operation(summary = "게시글 검색", tags = {"Post (게시글) API"},
+      responses = {
+          @ApiResponse(
+              responseCode = "200",
+              description = "OK",
+              content = @Content(
+                  mediaType = "application/json",
+                  examples = @ExampleObject(
+                      value = """
+                          {
+                            "code": "OK",
+                            "message": "OK",
+                            "data": {
+                              "content": [
+                                {
+                                  "id": 1,
+                                  "title": "게시글 제목",
+                                  "content": "게시글 내용",
+                                  "createdAt": "2024-11-01T00:54:09.399766",
+                                  "updatedAt": null,
+                                  "nickname": "nick",
+                                  "boards": [
+                                    "자유"
+                                  ],
+                                  "isAuthor": true,
+                                  "hit": 0,
+                                  "likeCount": 0,
+                                  "commentCount": 0,
+                                  "isLiked": false
+                                }
+                              ],
+                              "pageable": {
+                                "pageNumber": 0,
+                                "pageSize": 10,
+                                "sort": {
+                                  "empty": false,
+                                  "unsorted": false,
+                                  "sorted": true
+                                },
+                                "offset": 0,
+                                "unpaged": false,
+                                "paged": true
+                              },
+                              "last": true,
+                              "totalElements": 1,
+                              "totalPages": 1,
+                              "first": true,
+                              "size": 10,
+                              "number": 0,
+                              "sort": {
+                                "empty": false,
+                                "unsorted": false,
+                                "sorted": true
+                              },
+                              "numberOfElements": 1,
+                              "empty": false
+                            }
+                          }
+                          """
+                  )
+              )
+          )
+      })
+  @Parameters({
+      @Parameter(name = "size", description = "한 페이지에 노출할 데이터 수", required = true),
+      @Parameter(name = "page", description = "페이지 수", required = true),
+      @Parameter(name = "keyword", description = "검색 키워드", required = true)
+  })
+  @Response401WithSwagger
+  ApiGlobalResponse<Page<Info>> findPostsByKeyword(
+      @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size,
+      @RequestParam String keyword);
 }

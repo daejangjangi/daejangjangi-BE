@@ -11,6 +11,8 @@ import com.daejangjangi.backend.post.repository.PostRepository;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -115,5 +117,38 @@ public class PostService {
    */
   public Post findById(Long postId) {
     return postRepository.findById(postId).orElseThrow(NotFoundPostException::new);
+  }
+
+  /**
+   * 작성한 게시글 조회
+   *
+   * @param member   회원 정보
+   * @param pageable 페이징 정보
+   * @return Page<Post>
+   */
+  public Page<Post> findPostsByMember(Member member, Pageable pageable) {
+    return postRepository.findByMember(member, pageable);
+  }
+
+  /**
+   * 키워드를 포함한 게시글 조회
+   *
+   * @param keyword  키워드
+   * @param pageable 페이징 정보
+   * @return Page<Post>
+   */
+  public Page<Post> findPostsByKeyword(String keyword, Pageable pageable) {
+    return postRepository.findByTitleContainingOrContentContaining(keyword, keyword, pageable);
+  }
+
+  /**
+   * 게시판으로 게시글 조회
+   *
+   * @param board    게시판
+   * @param pageable 페이징 정보
+   * @return Page<Post>
+   */
+  public Page<Post> getPostByBoard(Board board, Pageable pageable) {
+    return boardPostRepository.findPostsByBoard(board, pageable);
   }
 }
