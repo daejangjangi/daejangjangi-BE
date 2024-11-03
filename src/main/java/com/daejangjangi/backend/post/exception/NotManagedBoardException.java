@@ -13,7 +13,7 @@ public class NotManagedBoardException extends ClientDataException {
     this(PostErrorType.NOT_MANAGED_BOARD.getMessage());
   }
 
-  public NotManagedBoardException(String message) {
+  public NotManagedBoardException(final String message) {
     super(message);
     this.code = PostErrorType.NOT_MANAGED_BOARD.name();
   }

@@ -13,7 +13,7 @@ public class NotImageFileException extends ClientDataException {
     this(FileErrorType.NOT_IMAGE_ERROR.getMessage());
   }
 
-  public NotImageFileException(String message) {
+  public NotImageFileException(final String message) {
     super(message);
     this.code = FileErrorType.NOT_IMAGE_ERROR.name();
   }

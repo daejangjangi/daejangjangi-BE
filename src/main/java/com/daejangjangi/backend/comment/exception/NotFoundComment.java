@@ -11,7 +11,7 @@ public class NotFoundComment extends ClientDataException {
     this(CommentErrorType.NOT_FOUND_COMMENT.getMessage());
   }
 
-  public NotFoundComment(String message) {
+  public NotFoundComment(final String message) {
     super(message);
     this.code = CommentErrorType.NOT_FOUND_COMMENT.name();
   }

@@ -1,5 +1,6 @@
 package com.daejangjangi.backend.daejangtoon.exception;
 
+import com.daejangjangi.backend.daejangtoon.exception.type.DaejangtoonErrorType;
 import com.daejangjangi.backend.global.exception.ClientDataException;
 import lombok.Getter;
 
@@ -12,7 +13,7 @@ public class NotFoundToonException extends ClientDataException {
     this(DaejangtoonErrorType.NOT_FOUND_TOON.getMessage());
   }
 
-  public NotFoundToonException(String message) {
+  public NotFoundToonException(final String message) {
     super(message);
     this.code = DaejangtoonErrorType.NOT_FOUND_TOON.name();
   }

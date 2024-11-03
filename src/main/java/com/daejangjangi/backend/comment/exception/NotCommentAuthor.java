@@ -11,7 +11,7 @@ public class NotCommentAuthor extends ClientDataException {
     this(CommentErrorType.NOT_COMMENT_AUTHOR.getMessage());
   }
 
-  public NotCommentAuthor(String message) {
+  public NotCommentAuthor(final String message) {
     super(message);
     this.code = CommentErrorType.NOT_COMMENT_AUTHOR.name();
   }

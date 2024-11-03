@@ -11,7 +11,7 @@ public enum FileErrorType {
 
   private final String message;
 
-  FileErrorType(String message) {
+  FileErrorType(final String message) {
     this.message = message;
   }
 }

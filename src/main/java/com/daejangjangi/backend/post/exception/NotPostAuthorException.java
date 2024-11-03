@@ -13,7 +13,7 @@ public class NotPostAuthorException extends ClientDataException {
     this(PostErrorType.NOT_POST_AUTHOR.getMessage());
   }
 
-  public NotPostAuthorException(String message) {
+  public NotPostAuthorException(final String message) {
     super(message);
     this.code = PostErrorType.NOT_POST_AUTHOR.name();
   }

@@ -13,7 +13,7 @@ public class NotManagedCategoryException extends ClientDataException {
     this(CategoryErrorType.NOT_MANAGED_CATEGORY.getMessage());
   }
 
-  public NotManagedCategoryException(String message) {
+  public NotManagedCategoryException(final String message) {
     super(message);
     this.code = CategoryErrorType.NOT_MANAGED_CATEGORY.name();
   }
