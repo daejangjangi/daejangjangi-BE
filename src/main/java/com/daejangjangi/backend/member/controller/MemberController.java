@@ -20,6 +20,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils.Null;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -90,6 +91,13 @@ public class MemberController implements MemberApi {
   @PostMapping("/logout")
   public ApiGlobalResponse<Null> logout() {
     memberService.logout();
+    return ApiGlobalResponse.ok();
+  }
+
+  @PreAuthorize("hasAuthority('MEMBER')")
+  @DeleteMapping
+  public ApiGlobalResponse<Null> withdraw() {
+    memberService.withdraw();
     return ApiGlobalResponse.ok();
   }
 }

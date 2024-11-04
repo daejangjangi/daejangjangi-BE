@@ -173,8 +173,19 @@ public class MemberService implements UserDetailsService {
    */
   public void logout() {
     Long memberId = getCurrentId();
-    Token token = tokenRepository.findByMemberId(memberId)
-        .orElseThrow(NotFoundMemberException::new);
+    Token token = getToken(memberId);
+    tokenRepository.delete(token);
+  }
+
+  /**
+   * 회원탈퇴
+   */
+  public void withdraw() {
+    Long memberId = getCurrentId();
+    Member member = findById(memberId);
+    Token token = getToken(memberId);
+    memberRepository.delete(member);
+    // TODO : token - member 연관관계 수정하여 CASCADE 로 삭제하도록 수정
     tokenRepository.delete(token);
   }
 
@@ -318,5 +329,16 @@ public class MemberService implements UserDetailsService {
     if (!member.isServiceUsage() || !member.isPersonnelInfo() || !member.isSensitiveInfo()) {
       throw new EssentialItemsException();
     }
+  }
+
+  /**
+   * 토큰 조회 by 회원 ID
+   *
+   * @param memberId 회원 ID
+   * @return Token
+   */
+  private Token getToken(Long memberId) {
+    return tokenRepository.findByMemberId(memberId)
+        .orElseThrow(NotFoundMemberException::new);
   }
 }
