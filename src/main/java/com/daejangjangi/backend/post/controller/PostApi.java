@@ -6,6 +6,7 @@ import com.daejangjangi.backend.global.annotation.swagger.ResponseCommonWithSwag
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
 import com.daejangjangi.backend.post.domain.dto.PostRequestDto;
 import com.daejangjangi.backend.post.domain.dto.PostResponseDto;
+import com.daejangjangi.backend.post.domain.dto.PostResponseDto.DetailInfo;
 import com.daejangjangi.backend.post.domain.dto.PostResponseDto.Info;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -321,7 +322,7 @@ public interface PostApi {
           )
       )
   })
-  ApiGlobalResponse<PostResponseDto.Info> info(@PathVariable("postId") Long postId);
+  ApiGlobalResponse<DetailInfo> info(@PathVariable("postId") Long postId);
 
 
   @Operation(summary = "댓글 삭제", tags = {"Post (게시글) API"})

@@ -34,12 +34,10 @@ public class BoardController implements BoardApi {
   @PreAuthorize("hasAuthority('MEMBER')")
   public ApiGlobalResponse<Page<Info>> getPostsByBoard(@RequestParam(defaultValue = "0") int page,
       @RequestParam(defaultValue = "10") int size, @RequestParam String board) {
-    Member member = memberService.info();
     Board getBoard = boardService.findByName(board);
     Pageable pageable = PageRequest.of(page, size, Direction.DESC, "id");
     Page<Post> posts = postService.getPostByBoard(getBoard, pageable);
-    Page<PostResponseDto.Info> response = posts.map(
-        post -> PostMapper.INSTANCE.entityToResponseDto(post, member));
+    Page<PostResponseDto.Info> response = posts.map(PostMapper.INSTANCE::entityToPostInfoResponse);
     return ApiGlobalResponse.ok(response);
   }
 }
