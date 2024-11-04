@@ -22,6 +22,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Getter
@@ -52,6 +54,7 @@ public class PostComment extends BaseEntity {
 
   @JoinColumn(name = "member_id")
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @OnDelete(action = OnDeleteAction.SET_NULL)
   private Member member;
 
   @JoinColumn(name = "post_id")
