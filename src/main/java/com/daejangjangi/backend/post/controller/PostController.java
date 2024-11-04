@@ -190,5 +190,14 @@ public class PostController implements PostApi {
     return ApiGlobalResponse.ok(response);
   }
 
+  @DeleteMapping("/{postId}")
+  @PreAuthorize("hasAuthority('MEMBER')")
+  public ApiGlobalResponse<Null> deletePost(@PathVariable("postId") Long postId) {
+    Member member = memberService.info();
+    Post post = postService.findById(postId);
+    postService.deletePost(member, post);
+    return ApiGlobalResponse.ok();
+  }
+
 
 }

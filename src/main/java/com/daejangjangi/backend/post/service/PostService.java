@@ -162,4 +162,10 @@ public class PostService {
     postRepository.updateHit(post);
     return findById(post.getId());
   }
+
+  @Transactional
+  public void deletePost(Member member, Post post) {
+    checkPostAuthor(member, post.getMember().getId());
+    postRepository.delete(post);
+  }
 }

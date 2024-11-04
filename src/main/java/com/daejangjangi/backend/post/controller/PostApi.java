@@ -411,11 +411,11 @@ public interface PostApi {
                   ),
                   @ExampleObject(
                       name = "NOT_FOUND_COMMENT",
-                      summary = "존재하지 않는 게시글",
+                      summary = "존재하지 않는 댓글",
                       value = """
                           {
                             "code": "NOT_FOUND_COMMENT",
-                            "message": "존재하지 않는 게시글입니다.",
+                            "message": "존재하지 않는 댓글입니다.",
                             "data": null
                           }
                           """
@@ -744,4 +744,42 @@ public interface PostApi {
   ApiGlobalResponse<Page<Info>> findPostsByKeyword(
       @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size,
       @RequestParam String keyword);
+
+
+  @Operation(summary = "게시글 삭제", tags = {"Post (게시글) API"})
+  @Response200WithSwagger
+  @Response401WithSwagger
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "400", description = "잘못된 요청",
+          content = @Content(
+              mediaType = "application/json",
+              array = @ArraySchema(schema = @Schema(implementation = ApiGlobalResponse.class)),
+              examples = {
+                  @ExampleObject(
+                      name = "NOT_FOUND_POST",
+                      summary = "존재하지 않는 게시글",
+                      value = """
+                          {
+                            "code": "NOT_FOUND_POST",
+                            "message": "존재하지 않는 게시글입니다.",
+                            "data": null
+                          }
+                          """
+                  ),
+                  @ExampleObject(
+                      name = "NOT_POST_AUTHOR",
+                      summary = "삭제 권한 없는 게시글",
+                      value = """
+                          {
+                            "code": "NOT_POST_AUTHOR",
+                            "message": "삭제 권한이 없는 게시글입니다.",
+                            "data": null
+                          }
+                          """
+                  )
+              }
+          )
+      )
+  })
+  ApiGlobalResponse<Null> deletePost(@PathVariable("postId") Long postId);
 }

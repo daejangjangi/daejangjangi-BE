@@ -47,6 +47,7 @@ public interface PostMapper {
   @Mapping(target = "views", source = "post.hit")
   @Mapping(target = "likes", source = "post.likeCount")
   @Mapping(target = "comments", source = "post.comments")
+  // TODO 인기글 여부 추후에 수정 필요
   @Mapping(target = "isPopular", expression = "java(post.getLikeCount() >= 10)")
   PostResponseDto.Info entityToPostInfoResponse(Post post);
 
