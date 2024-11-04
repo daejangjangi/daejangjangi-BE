@@ -299,7 +299,88 @@ public interface PostApi {
   ApiGlobalResponse<Null> LikePost(@PathVariable("postId") Long postId);
 
 
-  @Operation(summary = "게시글 상세 조회", tags = {"Post (게시글) API"})
+  @Operation(summary = "게시글 상세 조회", tags = {"Post (게시글) API"},
+      responses = {
+          @ApiResponse(
+              responseCode = "200",
+              description = "OK",
+              content = @Content(
+                  mediaType = "application/json",
+                  examples = @ExampleObject(
+                      value = """
+                          {
+                            "code": "OK",
+                            "message": "OK",
+                            "data": {
+                              "id": 1,
+                              "title": "게시글 제목",
+                              "content": "게시글 내용",
+                              "createdAt": "2024-11-01T00:54:09.399766",
+                              "updatedAt": "2024-11-05T00:26:17.879507",
+                              "nickname": "nick",
+                              "boards": [
+                                "자유"
+                              ],
+                              "isAuthor": true,
+                              "views": 10,
+                              "likes": 1,
+                              "comments": 3,
+                              "isLiked": true,
+                              "isPopular": false,
+                              "commentInfo": [
+                                {
+                                  "id": 1,
+                                  "content": "루트 댓글",
+                                  "nickname": "nick",
+                                  "likes": 0,
+                                  "createdAt": "2024-11-01T00:54:31.017907",
+                                  "commentInfos": [
+                                    {
+                                      "id": 2,
+                                      "content": "자식 댓글1",
+                                      "nickname": "nick",
+                                      "likes": 1,
+                                      "createdAt": "2024-11-01T00:55:16.892056",
+                                      "commentInfos": null,
+                                      "deleted": false,
+                                      "liked": true,
+                                      "author": true
+                                    },
+                                    {
+                                      "id": 3,
+                                      "content": "자식 댓글2",
+                                      "nickname": "nick",
+                                      "likes": 0,
+                                      "createdAt": "2024-11-01T00:55:24.455171",
+                                      "commentInfos": null,
+                                      "deleted": false,
+                                      "liked": false,
+                                      "author": false
+                                    }
+                                  ],
+                                  "deleted": true,
+                                  "liked": false,
+                                  "author": true
+                                },
+                                {
+                                  "id": 7,
+                                  "content": "루트 댓글2",
+                                  "nickname": "nick",
+                                  "likes": 0,
+                                  "createdAt": "2024-11-05T00:51:18.706514",
+                                  "commentInfos": null,
+                                  "deleted": false,
+                                  "liked": false,
+                                  "author": true
+                                }
+                              ]
+                            }
+                          }
+                          """
+                  )
+              )
+          )
+      })
   @Response401WithSwagger
   @ApiResponses(value = {
       @ApiResponse(responseCode = "400", description = "잘못된 요청",
