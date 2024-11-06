@@ -9,7 +9,8 @@ public enum MemberErrorType {
   EMAIL_DUPLICATION_ERROR("중복되는 메일 주소입니다."),
   NICKNAME_DUPLICATION_ERROR("중복되는 닉네임입니다."),
   NOT_FOUND_MEMBER("존재하지 않는 회원입니다."),
-  NOT_MATCH_CREDENTIAL("아이디 또는 비밀번호가 잘못 되었습니다. 아이디와 비밀번호를 정확히 입력해 주세요.");
+  NOT_MATCH_CREDENTIAL("아이디 또는 비밀번호가 잘못 되었습니다. 아이디와 비밀번호를 정확히 입력해 주세요."),
+  NOT_AUTHOR_ERROR("본 계정이 작성한 컨텐츠가 아닙니다.");
 
   private final String message;
 

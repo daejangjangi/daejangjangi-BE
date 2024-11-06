@@ -1,7 +1,6 @@
 package com.daejangjangi.backend.faq.domain.mapper;
 
-import com.daejangjangi.backend.faq.domain.dto.FaqRequestDto.Register;
-import com.daejangjangi.backend.faq.domain.dto.FaqResponseDto.Faqs;
+import com.daejangjangi.backend.faq.domain.dto.FaqResponseDto.FaqDto;
 import com.daejangjangi.backend.faq.domain.entity.Faq;
 import java.util.List;
 import org.mapstruct.Mapper;
@@ -13,12 +12,11 @@ public interface FaqMapper {
 
   FaqMapper INSTANCE = Mappers.getMapper(FaqMapper.class);
 
-  @Mapping(target = "category", source = "registerRequest.category")
-  @Mapping(target = "question", source = "registerRequest.question")
-  Faq registerRequestToEntity(Register registerRequest);
+  List<FaqDto> entityToFaqsResponse(List<Faq> faqs);
 
-  @Mapping(target = "category", source = "faqs.category")
-  @Mapping(target = "question", source = "faqs.question")
-  @Mapping(target = "answer", source = "faqs.answer")
-  List<Faqs> entityToFaqsResponse(List<Faq> faqs);
+  @Mapping(target = "id", source = "faq.id")
+  @Mapping(target = "category", expression = "java(faq.getQna().getCategory().name())")
+  @Mapping(target = "question", expression = "java(faq.getQna().getQuestion())")
+  @Mapping(target = "answer", expression = "java(faq.getQna().getAnswer())")
+  FaqDto entityToFaqDto(Faq faq);
 }

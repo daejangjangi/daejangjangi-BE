@@ -8,6 +8,7 @@ import com.daejangjangi.backend.member.domain.entity.MemberDisease;
 import com.daejangjangi.backend.member.exception.EmailDuplicationException;
 import com.daejangjangi.backend.member.exception.EssentialItemsException;
 import com.daejangjangi.backend.member.exception.NicknameDuplicationException;
+import com.daejangjangi.backend.member.exception.NotAuthorException;
 import com.daejangjangi.backend.member.exception.NotFoundMemberException;
 import com.daejangjangi.backend.member.repository.MemberCategoryRepository;
 import com.daejangjangi.backend.member.repository.MemberDiseaseRepository;
@@ -178,6 +179,17 @@ public class MemberService implements UserDetailsService {
     tokenRepository.delete(token);
   }
 
+  /**
+   * 작성자 여부 확인
+   *
+   * @param loginMember 로그인 회원
+   * @param author      작성자
+   */
+  public void isAuthor(Member loginMember, Member author) {
+    if (!Objects.equals(loginMember, author)) {
+      throw new NotAuthorException();
+    }
+  }
   /*--------------Private----------------------------Private----------------------------Private---*/
 
   /**

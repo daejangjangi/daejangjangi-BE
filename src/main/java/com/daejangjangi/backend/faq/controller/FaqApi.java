@@ -8,6 +8,7 @@ import com.daejangjangi.backend.global.annotation.swagger.Response403WithSwagger
 import com.daejangjangi.backend.global.annotation.swagger.ResponseCommonWithSwagger;
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -16,119 +17,91 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.List;
 import org.apache.commons.lang3.ObjectUtils.Null;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @Tag(name = "FAQ (자주 묻는 질문) API", description = "자주 묻는 질문 관련 API")
 @ResponseCommonWithSwagger
 public interface FaqApi {
 
-  @Operation(summary = "자주 묻는 질문 등록", tags = {"FAQ (자주 묻는 질문) API"})
+  @Operation(summary = "자주 묻는 질문 등록", tags = {"FAQ (자주 묻는 질문) API"},
+      responses = {
+          @ApiResponse(responseCode = "400", description = "잘못된 요청",
+              content = @Content(
+                  mediaType = "application/json",
+                  array = @ArraySchema(schema = @Schema(implementation = ApiGlobalResponse.class)),
+                  examples = {
+                      @ExampleObject(
+                          name = "BAD_REQUEST",
+                          summary = "잘못된 입력",
+                          value = """
+                              {
+                                "code": "BAD_REQUEST",
+                                "message": "잘못된 요청입니다.",
+                                "data": [
+                                  "id : QnA 아이디를 입력하세요."
+                                ]
+                              }"""
+                      ),
+                      @ExampleObject(
+                          name = "QNA_DUPLICATION_ERROR",
+                          summary = "QnA 중복 등록",
+                          value = """
+                                "code": "QNA_DUPLICATION_ERROR",
+                                "message": "이미 등록된 QnA 입니다.",
+                                "data": null
+                              """
+                      )
+                  }
+              )
+          )
+      }
+  )
   @Response200WithSwagger
   @Response401WithSwagger
   @Response403WithSwagger
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "400", description = "잘못된 요청",
-          content = @Content(
-              mediaType = "application/json",
-              array = @ArraySchema(schema = @Schema(implementation = ApiGlobalResponse.class)),
-              examples = {
-                  @ExampleObject(
-                      name = "INVALID_FAQ_CATEGORY_ERROR",
-                      summary = "관리되지 않는 FAQ 카테고리",
-                      value = """
-                          {
-                            "code": "INVALID_FAQ_CATEGORY_ERROR",
-                            "message": "지원하지 않는 FAQ 카테고리 입니다.",
-                            "data": null
-                          }"""
-                  ),
-                  @ExampleObject(
-                      name = "NOT_FOUND_MEMBER",
-                      summary = "미가입 회원",
-                      value = """
-                          {
-                            "code": "NOT_FOUND_MEMBER",
-                            "message": "존재하지 않는 회원입니다.",
-                            "data": null
-                          }"""
-                  ),
-                  @ExampleObject(
-                      name = "BAD_REQUEST_FAQ_CATEGORY_BLANK",
-                      summary = "카테고리 미입력",
-                      value = """
-                          {
-                            "code": "BAD_REQUEST",
-                            "message": "잘못된 요청입니다.",
-                            "data": [
-                              "category : 카테고리를 입력하세요."
-                            ]
-                          }"""
-                  ),
-                  @ExampleObject(
-                      name = "BAD_REQUEST_FAQ_CONTENT_BLANK",
-                      summary = "질문 미입력",
-                      value = """
-                          {
-                            "code": "BAD_REQUEST",
-                            "message": "잘못된 요청입니다.",
-                            "data": [
-                              "question : 질문을 입력하세요."
-                            ]
-                          }"""
-                  ),
-                  @ExampleObject(
-                      name = "BAD_REQUEST_FAQ_CONTENT_SIZE",
-                      summary = "자주 묻는 질문 사이즈 오류",
-                      value = """
-                          {
-                            "code": "BAD_REQUEST",
-                            "message": "잘못된 요청입니다.",
-                            "data": [
-                              "question : 문의 내용은 최대 500자 이하 입니다."
-                            ]
-                          }"""
-                  ),
-              }
-          )
-      )
-  })
   ApiGlobalResponse<Null> register(@RequestBody FaqRequestDto.Register request);
 
-  @Operation(summary = "자주 묻는 질문 목록 조회", tags = {"FAQ (자주 묻는 질문) API"})
-  @ApiResponse(responseCode = "200", description = "OK",
-      content = @Content(array = @ArraySchema(schema = @Schema(implementation = FaqResponseDto.Faqs.class))))
+  @Operation(summary = "자주 묻는 질문 목록 조회", tags = {"FAQ (자주 묻는 질문) API"},
+      responses = {
+          @ApiResponse(responseCode = "200", description = "OK",
+              content = @Content(
+                  mediaType = "application/json",
+                  array = @ArraySchema(
+                      schema = @Schema(implementation = FaqResponseDto.FaqList.class))))
+      }
+  )
   @Response401WithSwagger
   @Response403WithSwagger
-  ApiGlobalResponse<List<FaqResponseDto.Faqs>> faqs();
+  ApiGlobalResponse<FaqResponseDto.FaqList> faqs();
 
-  @Operation(summary = "답변 등록", tags = {"FAQ (자주 묻는 질문) API"},
-      responses = @ApiResponse(
-          responseCode = "400",
-          description = "잘못된 요청",
-          content = @Content(
-              array = @ArraySchema(schema = @Schema(implementation = ApiGlobalResponse.class)),
-              examples = {
-                  @ExampleObject(
-                      value = """
-                          {
-                          "code": "BAD_REQUEST",
-                          "message": "잘못된 요청입니다.",
-                          "data" : [
-                            "id : FAQ 아이디를 입력하세요",
-                            "answer : 답변을 입력하세요.",
-                            "answer : 답변은 최대 500자 이하 입니다."
-                          ]
-                          }
-                          """
-                  )
-              }
+  @Operation(
+      summary = "자주 묻는 질문 삭제",
+      tags = {"FAQ (자주 묻는 질문) API"},
+      responses = {
+          @ApiResponse(responseCode = "400", description = "잘못된 요청",
+              content = @Content(
+                  mediaType = "application/json",
+                  array = @ArraySchema(schema = @Schema(implementation = ApiGlobalResponse.class)),
+                  examples = {
+                      @ExampleObject(
+                          name = "NOT_FOUND_FAQ",
+                          summary = "미등록 FAQ",
+                          value = """
+                                "code": "NOT_FOUND_FAQ",
+                                "message": "존재하지 않는 FAQ 입니다.",
+                                "data": null
+                              """
+                      )
+                  }
+              )
           )
-      ))
+      }
+  )
   @Response200WithSwagger
   @Response401WithSwagger
   @Response403WithSwagger
-  ApiGlobalResponse<Null> answer(
-      @RequestBody FaqRequestDto.Answer request
+  ApiGlobalResponse<Null> remove(
+      @Parameter Long faqId
   );
 }
