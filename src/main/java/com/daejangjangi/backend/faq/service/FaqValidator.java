@@ -1,7 +1,7 @@
 package com.daejangjangi.backend.faq.service;
 
 import com.daejangjangi.backend.faq.exception.InvalidFaqCategoryException;
-import com.daejangjangi.backend.qna.enums.QnaCategory;
+import com.daejangjangi.backend.qna.domain.enums.QnaCategory;
 import java.util.Arrays;
 import java.util.Objects;
 import org.springframework.stereotype.Component;

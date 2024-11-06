@@ -6,7 +6,7 @@ import com.daejangjangi.backend.faq.domain.mapper.FaqMapper;
 import com.daejangjangi.backend.faq.exception.NotFoundFaqException;
 import com.daejangjangi.backend.faq.exception.QnaDuplicationException;
 import com.daejangjangi.backend.faq.repository.FaqRepository;
-import com.daejangjangi.backend.qna.Qna;
+import com.daejangjangi.backend.qna.domain.entity.Qna;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -1,7 +1,7 @@
 package com.daejangjangi.backend.faq.domain.entity;
 
 import com.daejangjangi.backend.global.common.BaseEntity;
-import com.daejangjangi.backend.qna.Qna;
+import com.daejangjangi.backend.qna.domain.entity.Qna;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
