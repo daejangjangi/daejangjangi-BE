@@ -38,7 +38,7 @@ public class FaqService {
    * @return List<FaqResponseDto.FaqDto>
    */
   public List<FaqResponseDto.FaqDto> findAll() {
-    List<Faq> faqList = faqRepository.findAll();
+    List<Faq> faqList = faqRepository.findAllWithQna();
     return FaqMapper.INSTANCE.entityToFaqsResponse(faqList);
   }
 

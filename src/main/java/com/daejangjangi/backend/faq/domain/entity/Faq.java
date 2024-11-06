@@ -3,8 +3,9 @@ package com.daejangjangi.backend.faq.domain.entity;
 import com.daejangjangi.backend.global.common.BaseEntity;
 import com.daejangjangi.backend.qna.domain.entity.Qna;
 import jakarta.persistence.Column;
+import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -27,8 +28,13 @@ public class Faq extends BaseEntity {
   @Column(name = "faq_id")
   private Long id;
 
-  @OneToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "qna_id", nullable = false)
+  @OneToOne
+  @JoinColumn(
+      name = "qna_id", nullable = false,
+      foreignKey = @ForeignKey(
+          value = ConstraintMode.CONSTRAINT,
+          foreignKeyDefinition = "FOREIGN KEY (qna_id) REFERENCES qnas(qna_id) ON DELETE CASCADE")
+  )
   private Qna qna;
 
   @Builder
