@@ -403,9 +403,34 @@ public interface MemberApi {
       HttpServletResponse response
   ) throws ServletException, IOException;
 
-  @Operation(summary = "회원 정보 조회", tags = {"Member (회원) API"})
-  @ApiResponse(responseCode = "200", description = "OK",
-      content = @Content(schema = @Schema(implementation = MemberResponseDto.Info.class)))
+  @Operation(summary = "회원 정보 조회", tags = {"Member (회원) API"},
+      responses = {
+          @ApiResponse(responseCode = "200", description = "OK",
+              content = @Content(schema = @Schema(implementation = MemberResponseDto.Info.class))
+          ),
+          @ApiResponse(
+              responseCode = "400",
+              description = "잘못된 요청",
+              content = @Content(
+                  mediaType = "application/json",
+                  array = @ArraySchema(schema = @Schema(implementation = ApiGlobalResponse.class)),
+                  examples = {
+                      @ExampleObject(
+                          name = "NOT_FOUND_MEMBER",
+                          summary = "존재하지 않는 회원",
+                          value = """
+                              {
+                                "code" : "NOT_FOUND_MEMBER",
+                                "message" : "존재하지 않는 회원입니다.",
+                                "data" : null
+                              }
+                              """
+                      )
+                  }
+              )
+          )
+      }
+  )
   @Response401WithSwagger
   @Response403WithSwagger
   ApiGlobalResponse<MemberResponseDto.Info> info();
@@ -466,4 +491,34 @@ public interface MemberApi {
   @Response401WithSwagger
   @Response403WithSwagger
   ApiGlobalResponse<Null> logout();
+
+  @Operation(summary = "회원탈퇴", tags = {"Member (회원) API"},
+      responses = {
+          @ApiResponse(
+              responseCode = "400",
+              description = "잘못된 요청",
+              content = @Content(
+                  mediaType = "application/json",
+                  array = @ArraySchema(schema = @Schema(implementation = ApiGlobalResponse.class)),
+                  examples = {
+                      @ExampleObject(
+                          name = "NOT_FOUND_MEMBER",
+                          summary = "존재하지 않는 회원",
+                          value = """
+                              {
+                                "code" : "NOT_FOUND_MEMBER",
+                                "message" : "존재하지 않는 회원입니다.",
+                                "data" : null
+                              }
+                              """
+                      )
+                  }
+              )
+          )
+      }
+  )
+  @Response200WithSwagger
+  @Response401WithSwagger
+  @Response403WithSwagger
+  ApiGlobalResponse<Null> withdraw();
 }

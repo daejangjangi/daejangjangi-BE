@@ -1,7 +1,13 @@
 package com.daejangjangi.backend.member.domain.entity;
 
+import com.daejangjangi.backend.comment.domain.entity.PostComment;
 import com.daejangjangi.backend.global.common.BaseEntity;
+import com.daejangjangi.backend.like.domain.entity.DaejangtoonLike;
+import com.daejangjangi.backend.like.domain.entity.PostCommentLike;
+import com.daejangjangi.backend.like.domain.entity.PostLike;
 import com.daejangjangi.backend.member.domain.enums.Role;
+import com.daejangjangi.backend.post.domain.entity.Post;
+import com.daejangjangi.backend.social.domain.entity.SocialAccount;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,7 +19,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -55,6 +60,12 @@ public class Member extends BaseEntity {
 
     this.diseases = new ArrayList<>();
     this.categories = new ArrayList<>();
+    this.daejangtoonLikes = new ArrayList<>();
+    this.socialAccounts = new ArrayList<>();
+    this.postLikes = new ArrayList<>();
+    this.posts = new ArrayList<>();
+    this.postComments = new ArrayList<>();
+    this.postCommentLikes = new ArrayList<>();
   }
 
   @Id
@@ -80,9 +91,6 @@ public class Member extends BaseEntity {
   @Column(name = "member_profile")
   private String profile;
 
-  @Column(name = "deleted_at")
-  private LocalDateTime deletedAt;
-
   @Enumerated(EnumType.STRING)
   @Column(name = "member_role", nullable = false)
   private Role role;
@@ -105,14 +113,25 @@ public class Member extends BaseEntity {
   @OneToMany(mappedBy = "member", orphanRemoval = true, cascade = CascadeType.ALL)
   private List<MemberCategory> categories;
 
-  /*-------------Business Logic---------------------------Business Logic--------------------------*/
+  @OneToMany(mappedBy = "member", orphanRemoval = true, cascade = CascadeType.ALL)
+  private List<DaejangtoonLike> daejangtoonLikes;
 
-  /**
-   * note : 회원 탈퇴 처리 상의
-   */
-  public void withdraw() {
-    this.deletedAt = LocalDateTime.now();
-  }
+  @OneToMany(mappedBy = "member", orphanRemoval = true, cascade = CascadeType.ALL)
+  private List<SocialAccount> socialAccounts;
+
+  @OneToMany(mappedBy = "member", orphanRemoval = true, cascade = CascadeType.ALL)
+  private List<PostLike> postLikes;
+
+  @OneToMany(mappedBy = "member")
+  private List<Post> posts;
+
+  @OneToMany(mappedBy = "member")
+  private List<PostComment> postComments;
+
+  @OneToMany(mappedBy = "member", orphanRemoval = true, cascade = CascadeType.ALL)
+  private List<PostCommentLike> postCommentLikes;
+
+  /*-------------Business Logic---------------------------Business Logic--------------------------*/
 
   /**
    * 회원 장건강 질환 등록

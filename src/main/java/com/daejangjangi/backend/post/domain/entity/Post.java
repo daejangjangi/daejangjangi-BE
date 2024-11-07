@@ -11,6 +11,8 @@ import lombok.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Table(name = "posts")
 @Getter
@@ -48,6 +50,7 @@ public class Post extends BaseEntity {
 
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name = "member_id")
+  @OnDelete(action = OnDeleteAction.SET_NULL)
   private Member member;
 
   @Column(name = "post_title", length = 100, nullable = false)
