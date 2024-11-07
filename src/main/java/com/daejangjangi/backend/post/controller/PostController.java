@@ -4,6 +4,8 @@ import com.daejangjangi.backend.board.domain.entity.Board;
 import com.daejangjangi.backend.board.service.BoardService;
 import com.daejangjangi.backend.comment.domain.entity.PostComment;
 import com.daejangjangi.backend.comment.service.CommentService;
+import com.daejangjangi.backend.post.domain.dto.PostResponseDto.CommentInfo;
+import com.daejangjangi.backend.post.domain.dto.PostResponseDto.DetailInfo;
 import com.daejangjangi.backend.post.domain.dto.PostResponseDto.Info;
 import com.daejangjangi.backend.post.service.PostCommentLikeService;
 import com.daejangjangi.backend.post.service.PostCommentService;
@@ -18,6 +20,7 @@ import com.daejangjangi.backend.post.domain.mapper.PostCommentMapper;
 import com.daejangjangi.backend.post.domain.mapper.PostMapper;
 import com.daejangjangi.backend.post.service.PostService;
 import jakarta.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
@@ -73,10 +76,41 @@ public class PostController implements PostApi {
 
   @GetMapping("/{postId}")
   @PreAuthorize("hasAuthority('MEMBER')")
-  public ApiGlobalResponse<PostResponseDto.Info> info(@PathVariable("postId") Long postId) {
-    Member member = memberService.info();
+  public ApiGlobalResponse<DetailInfo> info(@PathVariable("postId") Long postId) {
     Post post = postService.findById(postId);
-    PostResponseDto.Info response = PostMapper.INSTANCE.entityToResponseDto(post, member);
+    post = postService.updateHit(post);
+    Member member = memberService.info();
+    List<PostResponseDto.CommentInfo> commentInfos = new ArrayList<>();
+    post.getComments().forEach(comment -> {
+      PostResponseDto.CommentInfo info = CommentInfo.builder()
+          .id(comment.getId())
+          .likes((long) comment.getLikes().size())
+          .createdAt(comment.getCreatedAt())
+          .content(comment.getContent())
+          .nickname(comment.getMember().getNickname())
+          .isDeleted(comment.isDeleted())
+          .isLiked(comment.getLikes().stream().anyMatch(like -> like.getMember().equals(member)))
+          .isAuthor(comment.getMember().equals(member)).build();
+
+      if (comment.getParent() == null) {
+        comment.getChildren().forEach(child -> {
+          PostResponseDto.CommentInfo childInfo = CommentInfo.builder()
+              .id(child.getId())
+              .likes((long) child.getLikes().size())
+              .createdAt(child.getCreatedAt())
+              .content(child.getContent())
+              .nickname(child.getMember().getNickname())
+              .isDeleted(child.isDeleted())
+              .isLiked(
+                  child.getLikes().stream().anyMatch(like -> like.getMember().equals(member)))
+              .isAuthor(child.getMember().equals(member)).build();
+          info.addCommentInfo(childInfo);
+        });
+        commentInfos.add(info);
+      }
+    });
+    PostResponseDto.DetailInfo response = PostMapper.INSTANCE.entityToPostDetailInfoResponse(post,
+        member, commentInfos);
     return ApiGlobalResponse.ok(response);
   }
 
@@ -130,8 +164,7 @@ public class PostController implements PostApi {
     Member member = memberService.info();
     Pageable pageable = PageRequest.of(page, size, Direction.DESC, "id");
     Page<Post> posts = postService.findPostsByMember(member, pageable);
-    Page<PostResponseDto.Info> response = posts.map(
-        post -> PostMapper.INSTANCE.entityToResponseDto(post, member));
+    Page<PostResponseDto.Info> response = posts.map(PostMapper.INSTANCE::entityToPostInfoResponse);
     return ApiGlobalResponse.ok(response);
   }
 
@@ -142,8 +175,7 @@ public class PostController implements PostApi {
     Member member = memberService.info();
     Pageable pageable = PageRequest.of(page, size, Direction.DESC, "id");
     Page<Post> posts = postCommentService.findPostsCommentedByMember(member, pageable);
-    Page<PostResponseDto.Info> response = posts.map(
-        post -> PostMapper.INSTANCE.entityToResponseDto(post, member));
+    Page<PostResponseDto.Info> response = posts.map(PostMapper.INSTANCE::entityToPostInfoResponse);
     return ApiGlobalResponse.ok(response);
   }
 
@@ -152,12 +184,19 @@ public class PostController implements PostApi {
   public ApiGlobalResponse<Page<Info>> findPostsByKeyword(
       @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size,
       @RequestParam String keyword) {
-    Member member = memberService.info();
     Pageable pageable = PageRequest.of(page, size, Direction.DESC, "id");
     Page<Post> posts = postService.findPostsByKeyword(keyword, pageable);
-    Page<PostResponseDto.Info> response = posts.map(
-        post -> PostMapper.INSTANCE.entityToResponseDto(post, member));
+    Page<PostResponseDto.Info> response = posts.map(PostMapper.INSTANCE::entityToPostInfoResponse);
     return ApiGlobalResponse.ok(response);
+  }
+
+  @DeleteMapping("/{postId}")
+  @PreAuthorize("hasAuthority('MEMBER')")
+  public ApiGlobalResponse<Null> deletePost(@PathVariable("postId") Long postId) {
+    Member member = memberService.info();
+    Post post = postService.findById(postId);
+    postService.deletePost(member, post);
+    return ApiGlobalResponse.ok();
   }
 
 
