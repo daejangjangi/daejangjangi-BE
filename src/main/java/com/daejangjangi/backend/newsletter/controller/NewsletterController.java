@@ -27,7 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping("/api/v1/newsletters")
 @RequiredArgsConstructor
-public class NewsletterController {
+public class NewsletterController implements NewsletterApi {
 
   private final NewsletterService newsletterService;
   private final CategoryService categoryService;

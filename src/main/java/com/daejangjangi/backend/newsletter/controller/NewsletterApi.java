@@ -5,6 +5,7 @@ import com.daejangjangi.backend.global.annotation.swagger.Response401WithSwagger
 import com.daejangjangi.backend.global.annotation.swagger.Response403WithSwagger;
 import com.daejangjangi.backend.global.annotation.swagger.ResponseCommonWithSwagger;
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
+import com.daejangjangi.backend.newsletter.domain.dto.NewsletterRequestDto;
 import com.daejangjangi.backend.newsletter.domain.dto.NewsletterResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -14,6 +15,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.commons.lang3.ObjectUtils.Null;
+import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "Newsletter (뉴스레터) API", description = "뉴스레터 관련 API")
 @ResponseCommonWithSwagger
@@ -50,7 +52,10 @@ public interface NewsletterApi {
   @Response200WithSwagger
   @Response401WithSwagger
   @Response403WithSwagger
-  ApiGlobalResponse<Null> register();
+  ApiGlobalResponse<Null> register(
+      @Parameter NewsletterRequestDto.Register request,
+      @Parameter MultipartFile profileImage
+  );
 
   @Operation(summary = "뉴스레터 삭제", tags = {"Newsletter (뉴스레터) API"},
       responses = {
@@ -79,7 +84,9 @@ public interface NewsletterApi {
   @Response200WithSwagger
   @Response401WithSwagger
   @Response403WithSwagger
-  ApiGlobalResponse<Null> remove();
+  ApiGlobalResponse<Null> remove(
+      @Parameter Long newsletterId
+  );
 
   @Operation(summary = "뉴스레터 목록 조회", tags = {"Newsletter (뉴스레터) API"},
       responses = {
