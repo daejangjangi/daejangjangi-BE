@@ -1,6 +1,5 @@
 package com.daejangjangi.backend.like.service;
 
-import com.daejangjangi.backend.daejangtoon.domain.entity.Daejangtoon;
 import com.daejangjangi.backend.daejangtoon.domain.entity.DaejangtoonChapter;
 import com.daejangjangi.backend.like.domain.entity.DaejangtoonLike;
 import com.daejangjangi.backend.like.repository.DaejangtoonLikeRepository;

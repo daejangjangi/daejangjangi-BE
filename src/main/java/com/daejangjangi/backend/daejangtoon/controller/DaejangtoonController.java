@@ -78,9 +78,10 @@ public class DaejangtoonController implements DaejangtoonApi {
   public ApiGlobalResponse<DaejangtoonResponseDto.Daejangtoon> info(
       @PathVariable Long daejangtoonId
   ) {
+    Member member = memberService.info();
     Daejangtoon daejangtoon = daejangtoonService.findById(daejangtoonId);
     DaejangtoonResponseDto.Daejangtoon response
-        = DaejangtoonMapper.INSTANCE.entityToDaejangtoonResponse(daejangtoon);
+        = DaejangtoonMapper.INSTANCE.entityToDaejangtoonResponse(daejangtoon, member);
     return ApiGlobalResponse.ok(response);
   }
 
@@ -89,9 +90,10 @@ public class DaejangtoonController implements DaejangtoonApi {
   public ApiGlobalResponse<DaejangtoonResponseDto.DaejangtoonChapters> recentDaejangtoon(
       @PathVariable("daejangtoonId") Long daejangtoonId
   ) {
+    Member member = memberService.info();
     DaejangtoonChapter chapter = daejangtoonChapterService.recent(daejangtoonId);
     DaejangtoonResponseDto.DaejangtoonChapters response
-        = DaejangtoonMapper.INSTANCE.entityToChaptersResponse(chapter);
+        = DaejangtoonMapper.INSTANCE.entityToChaptersResponse(chapter, member);
     return ApiGlobalResponse.ok(response);
   }
 
@@ -101,11 +103,12 @@ public class DaejangtoonController implements DaejangtoonApi {
       @PathVariable("daejangtoonId") Long daejangtoonId,
       @PathVariable("chapter") Integer chapter
   ) {
+    Member member = memberService.info();
     Daejangtoon daejangtoon = daejangtoonService.findById(daejangtoonId);
     DaejangtoonChapter daejangtoonChapter =
         daejangtoonChapterService.getChapterWithHit(daejangtoon, chapter);
     DaejangtoonResponseDto.DaejangtoonChapter response
-        = DaejangtoonMapper.INSTANCE.entityToChapterResponse(daejangtoonChapter);
+        = DaejangtoonMapper.INSTANCE.entityToChapterResponse(daejangtoonChapter, member);
     return ApiGlobalResponse.ok(response);
   }
 

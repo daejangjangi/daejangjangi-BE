@@ -22,6 +22,7 @@ public class DaejangtoonResponseDto {
       @Schema(description = "대장툰 연재 요일", allowableValues = {"월", "화", "수", "목", "금", "토", "일"})
       Yoil yoil,
 
+      @Schema(description = "대장툰 회차 목록")
       List<DaejangtoonChapters> chapters
   ) {
 
@@ -45,7 +46,10 @@ public class DaejangtoonResponseDto {
       Long hit,
 
       @Schema(description = "대장툰 회차 좋아요 갯수", example = "120")
-      Integer likeCount
+      Integer likeCount,
+
+      @Schema(description = "대장툰 로그인 회원 좋아요 여부", example = "true")
+      Boolean isLiked
   ) {
 
   }
@@ -67,8 +71,10 @@ public class DaejangtoonResponseDto {
       List<String> toonImages,
 
       @Schema(description = "대장툰 회차 좋아요 갯수", example = "120")
-      Integer likeCount
+      Integer likeCount,
 
+      @Schema(description = "대장툰 로그인 회원 좋아요 여부", example = "true")
+      Boolean isLiked
   ) {
 
   }

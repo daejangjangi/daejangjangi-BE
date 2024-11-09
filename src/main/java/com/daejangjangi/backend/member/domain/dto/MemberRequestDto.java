@@ -75,7 +75,7 @@ public class MemberRequestDto {
       List<String> diseases,
 
       @Schema(description = "회원 관심 상품 카테고리", allowableValues = {
-          "유산균", "식이섬유", "저포드맵", "비건", "기타 장건강 간식"
+          "유산균", "식이섬유", "저포드맵", "간식", "생활용품.리빙"
       })
 
       @NotNull(message = "관심 상품을 선택해주세요.")
@@ -129,7 +129,7 @@ public class MemberRequestDto {
       List<String> diseases,
 
       @Schema(description = "회원 관심 상품 카테고리", allowableValues = {
-          "유산균", "식이섬유", "저포드맵", "비건", "기타_장건강_간식"
+          "유산균", "식이섬유", "저포드맵", "간식", "생활용품.리빙"
       })
 
       @Size(min = 1, message = "관심 상품을 최소 {min}개 이상 선택 바랍니다.")

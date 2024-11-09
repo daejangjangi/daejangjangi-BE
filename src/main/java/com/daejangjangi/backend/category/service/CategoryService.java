@@ -26,4 +26,8 @@ public class CategoryService {
     }
     return categories;
   }
+
+  public Category findByName(String name) {
+    return categoryRepository.findByName(name).orElseThrow(NotManagedCategoryException::new);
+  }
 }
