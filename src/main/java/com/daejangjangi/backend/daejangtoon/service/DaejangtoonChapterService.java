@@ -40,8 +40,8 @@ public class DaejangtoonChapterService {
       MultipartFile profileImage,
       List<MultipartFile> toonImages
   ) {
-    fileValidator.validate(profileImage);
-    fileValidator.validate(toonImages);
+    fileValidator.validateImage(profileImage);
+    fileValidator.validateImages(toonImages);
     String profileUrl = s3Manager.upload(profileImage);
     List<ImageInfoDto> images =
         s3Manager.upload(DAEJANGTOON_ROOT_DIRECTORY + chapter.getChapter() + "/", toonImages);

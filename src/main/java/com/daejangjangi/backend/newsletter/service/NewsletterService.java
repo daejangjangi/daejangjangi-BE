@@ -26,7 +26,7 @@ public class NewsletterService {
       MultipartFile profileImage,
       Category category
   ) {
-    fileValidator.validate(profileImage);
+    fileValidator.validateImage(profileImage);
     String profileUrl = s3Manager.upload(profileImage);
     newsletter.updateProfile(profileUrl);
     newsletter.updateCategory(category);

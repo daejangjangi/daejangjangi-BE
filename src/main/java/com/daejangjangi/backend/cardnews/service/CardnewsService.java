@@ -35,8 +35,8 @@ public class CardnewsService {
       MultipartFile profileImage,
       List<MultipartFile> newsImages
   ) {
-    fileValidator.validate(profileImage);
-    fileValidator.validate(newsImages);
+    fileValidator.validateImage(profileImage);
+    fileValidator.validateImages(newsImages);
     String profileUrl = s3Manager.upload(profileImage);
     List<ImageInfoDto> images = s3Manager.upload(CARDNEWS_ROOT_DIRECTORY, newsImages);
     List<CardnewsImage> cardnewsImages = CardnewsImageMapper.INSTANCE.dtoToEntity(images);
