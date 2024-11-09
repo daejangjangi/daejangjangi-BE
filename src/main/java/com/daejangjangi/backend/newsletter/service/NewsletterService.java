@@ -21,27 +21,51 @@ public class NewsletterService {
   private final FileValidator fileValidator;
   private final S3Manager s3Manager;
 
+  /**
+   * 뉴스레터 저장
+   *
+   * @param newsletter   뉴스레터
+   * @param profileImage 프로픨 이미지
+   * @param category     뉴스레터 카테고리
+   */
   public void save(
       Newsletter newsletter,
       MultipartFile profileImage,
       Category category
   ) {
-    fileValidator.validate(profileImage);
+    fileValidator.validateImage(profileImage);
     String profileUrl = s3Manager.upload(profileImage);
     newsletter.updateProfile(profileUrl);
     newsletter.updateCategory(category);
     newsletterRepository.save(newsletter);
   }
 
+  /**
+   * 뉴스레터 조회 by ID
+   *
+   * @param newsletterId 뉴스레터 ID
+   * @return Newsletter
+   */
   public Newsletter findById(Long newsletterId) {
     return newsletterRepository.findById(newsletterId)
         .orElseThrow(NotFoundNewsletterException::new);
   }
 
+  /**
+   * 뉴스레터 삭제
+   *
+   * @param newsletter 뉴스레터
+   */
   public void remove(Newsletter newsletter) {
+    s3Manager.deleteProfile(newsletter.getProfileImage());
     newsletterRepository.delete(newsletter);
   }
 
+  /**
+   * 뉴스레터 목록 조회
+   *
+   * @return List NewsletterInfo
+   */
   public List<NewsletterInfo> findAll() {
     List<Newsletter> newsletters = newsletterRepository.findAll();
     return NewsletterMapper.INSTANCE.newslettersToInfoList(newsletters);
