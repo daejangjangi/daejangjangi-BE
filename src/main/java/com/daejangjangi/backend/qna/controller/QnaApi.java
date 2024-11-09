@@ -3,6 +3,7 @@ package com.daejangjangi.backend.qna.controller;
 import com.daejangjangi.backend.global.annotation.swagger.Response200WithSwagger;
 import com.daejangjangi.backend.global.annotation.swagger.Response401WithSwagger;
 import com.daejangjangi.backend.global.annotation.swagger.Response403WithSwagger;
+import com.daejangjangi.backend.global.annotation.swagger.ResponseCommonWithSwagger;
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
 import com.daejangjangi.backend.qna.domain.dto.QnaRequestDto.Answer;
 import com.daejangjangi.backend.qna.domain.dto.QnaRequestDto.Register;
@@ -16,8 +17,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.commons.lang3.ObjectUtils.Null;
 
+@Tag(name = "QnA (질문) API", description = "질문 관련 API")
+@ResponseCommonWithSwagger
 public interface QnaApi {
 
   @Operation(summary = "QnA 등록", tags = {"QnA (질문) API"})
