@@ -36,6 +36,7 @@ public interface PostMapper {
   @Mapping(target = "comments", source = "post.comments")
   @Mapping(target = "isPopular", expression = "java(post.getLikeCount() >= 10)")
   @Mapping(target = "commentInfo", source = "commentInfos")
+  @Mapping(target = "profile", source = "member.profile")
   PostResponseDto.DetailInfo entityToPostDetailInfoResponse(Post post, Member member,
       List<PostResponseDto.CommentInfo> commentInfos);
 

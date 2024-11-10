@@ -89,6 +89,7 @@ public class PostController implements PostApi {
           .content(comment.getContent())
           .nickname(comment.getMember().getNickname())
           .isDeleted(comment.isDeleted())
+          .profile(comment.getMember().getProfile())
           .isLiked(comment.getLikes().stream().anyMatch(like -> like.getMember().equals(member)))
           .isAuthor(comment.getMember().equals(member)).build();
 
@@ -101,6 +102,7 @@ public class PostController implements PostApi {
               .content(child.getContent())
               .nickname(child.getMember().getNickname())
               .isDeleted(child.isDeleted())
+              .profile(child.getMember().getProfile())
               .isLiked(
                   child.getLikes().stream().anyMatch(like -> like.getMember().equals(member)))
               .isAuthor(child.getMember().equals(member)).build();
