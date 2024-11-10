@@ -35,7 +35,7 @@ public class Newsletter extends BaseEntity {
   @Column(name = "newsletter_sub_title", nullable = false)
   private String subTitle;
 
-  @Column(name = "newsletter_description", nullable = false)
+  @Column(name = "newsletter_description", columnDefinition = "longtext", nullable = false)
   private String description;
 
   @Column(name = "newsletter_profile", columnDefinition = "longtext", length = 2000, nullable = false)
