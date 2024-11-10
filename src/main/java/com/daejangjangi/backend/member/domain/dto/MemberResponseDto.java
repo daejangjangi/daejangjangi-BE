@@ -38,7 +38,7 @@ public class MemberResponseDto {
       List<String> diseases,
 
       @Schema(description = "회원 관심 상품 카테고리", allowableValues = {
-          "유산균", "식이섬유", "저포드맵", "비건", "기타 장건강 간식"
+          "유산균", "식이섬유", "저포드맵", "비건", "욕실용품", "아동", "운동기구"
       })
 
       List<String> categories
