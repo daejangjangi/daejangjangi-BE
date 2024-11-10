@@ -1,5 +1,7 @@
 package com.daejangjangi.backend.member.controller;
 
+import com.daejangjangi.backend.board.domain.entity.Board;
+import com.daejangjangi.backend.board.service.BoardService;
 import com.daejangjangi.backend.category.domain.Category;
 import com.daejangjangi.backend.category.service.CategoryService;
 import com.daejangjangi.backend.disease.domain.Disease;
@@ -37,6 +39,7 @@ public class MemberController implements MemberApi {
   private final MemberService memberService;
   private final DiseaseService diseaseService;
   private final CategoryService categoryService;
+  private final BoardService boardService;
 
   @GetMapping("/email/check/{email}")
   public ApiGlobalResponse<Null> emailDuplicationCheck(@PathVariable("email") String email) {
@@ -56,7 +59,8 @@ public class MemberController implements MemberApi {
     Member member = MemberMapper.INSTANCE.joinRequestToEntity(request);
     List<Disease> diseases = diseaseService.findByNames(request.diseases());
     List<Category> categories = categoryService.findByNames(request.categories());
-    memberService.save(member, diseases, categories);
+    List<Board> boards = boardService.findExistingBoardsByNames(request.diseases());
+    memberService.save(member, diseases, categories, boards);
     return ApiGlobalResponse.ok();
   }
 

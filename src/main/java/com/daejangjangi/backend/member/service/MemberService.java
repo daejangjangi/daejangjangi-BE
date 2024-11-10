@@ -1,8 +1,11 @@
 package com.daejangjangi.backend.member.service;
 
+import com.daejangjangi.backend.board.domain.entity.Board;
+import com.daejangjangi.backend.board.repository.BoardRepository;
 import com.daejangjangi.backend.category.domain.Category;
 import com.daejangjangi.backend.disease.domain.Disease;
 import com.daejangjangi.backend.member.domain.entity.Member;
+import com.daejangjangi.backend.member.domain.entity.MemberBoard;
 import com.daejangjangi.backend.member.domain.entity.MemberCategory;
 import com.daejangjangi.backend.member.domain.entity.MemberDisease;
 import com.daejangjangi.backend.member.exception.EmailDuplicationException;
@@ -10,9 +13,11 @@ import com.daejangjangi.backend.member.exception.EssentialItemsException;
 import com.daejangjangi.backend.member.exception.NicknameDuplicationException;
 import com.daejangjangi.backend.member.exception.NotAuthorException;
 import com.daejangjangi.backend.member.exception.NotFoundMemberException;
+import com.daejangjangi.backend.member.repository.MemberBoardRepository;
 import com.daejangjangi.backend.member.repository.MemberCategoryRepository;
 import com.daejangjangi.backend.member.repository.MemberDiseaseRepository;
 import com.daejangjangi.backend.member.repository.MemberRepository;
+import com.daejangjangi.backend.post.exception.NotManagedBoardException;
 import com.daejangjangi.backend.token.domain.entity.Token;
 import com.daejangjangi.backend.token.repository.TokenRepository;
 import java.util.ArrayList;
@@ -39,6 +44,8 @@ public class MemberService implements UserDetailsService {
   private final MemberRepository memberRepository;
   private final MemberDiseaseRepository memberDiseaseRepository;
   private final MemberCategoryRepository memberCategoryRepository;
+  private final MemberBoardRepository memberBoardRepository;
+  private final BoardRepository boardRepository;
   private final BCryptPasswordEncoder passwordEncoder;
 
   /**
@@ -94,7 +101,8 @@ public class MemberService implements UserDetailsService {
    * @param categories 관심 상품 카테고리
    */
   @Transactional
-  public void save(Member member, List<Disease> diseases, List<Category> categories) {
+  public void save(Member member, List<Disease> diseases, List<Category> categories,
+      List<Board> boards) {
     checkEmail(member.getEmail());
     checkNickname(member.getNickname());
     checkAgrees(member);
@@ -103,8 +111,10 @@ public class MemberService implements UserDetailsService {
     member = memberRepository.save(member);
     List<MemberDisease> memberDiseases = saveDiseases(member, diseases);
     List<MemberCategory> memberCategories = saveCategories(member, categories);
+    List<MemberBoard> memberBoards = saveBoards(member, boards);
     member.addDiseases(memberDiseases);
     member.addCategories(memberCategories);
+    member.addPinnedBoards(memberBoards);
   }
 
   /**
@@ -201,6 +211,32 @@ public class MemberService implements UserDetailsService {
       throw new NotAuthorException();
     }
   }
+
+  /**
+   * 회원 관심 게시판 수정
+   *
+   * @param originMember 기존 회원
+   * @param newBoards    새롭게 등록한 관심 게시판
+   */
+  @Transactional
+  public void updateBoards(Member originMember, List<Board> newBoards) {
+    List<Board> removeBoardList = new ArrayList<>();
+    List<Board> addBoardList = new ArrayList<>();
+    List<Board> originBoards = getOriginBoards(originMember);
+    for (Board board : originBoards) {
+      if (!newBoards.contains(board) && !board.getName().equals("자유")) {
+        removeBoardList.add(board);
+      }
+    }
+    memberBoardRepository.deleteAllByMemberAndBoards(originMember, removeBoardList);
+    for (Board board : newBoards) {
+      if (!originBoards.contains(board)) {
+        addBoardList.add(board);
+      }
+    }
+    saveBoards(originMember, addBoardList);
+  }
+
   /*--------------Private----------------------------Private----------------------------Private---*/
 
   /**
@@ -296,6 +332,33 @@ public class MemberService implements UserDetailsService {
   }
 
   /**
+   * 회원 관심 게시판 저장
+   *
+   * @param member 회원 정보
+   * @param boards 관심 게시판
+   * @return List - MemberBoard
+   */
+  private List<MemberBoard> saveBoards(Member member, List<Board> boards) {
+    List<MemberBoard> memberBoards = new ArrayList<>();
+    for (Board board : boards) {
+      MemberBoard memberBoard = MemberBoard.builder()
+          .member(member)
+          .board(board)
+          .build();
+      memberBoards.add(memberBoard);
+    }
+    if (member.getPinnedBoards().isEmpty()) {
+      Board board = boardRepository.findByName("자유").orElseThrow(NotManagedBoardException::new);
+      MemberBoard memberBoard = MemberBoard.builder()
+          .member(member)
+          .board(board)
+          .build();
+      memberBoards.add(memberBoard);
+    }
+    return memberBoardRepository.saveAll(memberBoards);
+  }
+
+  /**
    * 회원 장건강 질환 제거
    *
    * @param member   회원 정보
@@ -329,6 +392,18 @@ public class MemberService implements UserDetailsService {
   private List<Category> getOriginCategories(Member member) {
     return member.getCategories().stream()
         .map(MemberCategory::getCategory)
+        .toList();
+  }
+
+  /**
+   * 기존 회원 관심 게시판 목록
+   *
+   * @param member 회원 정보
+   * @return List<Board>
+   */
+  private List<Board> getOriginBoards(Member member) {
+    return member.getPinnedBoards().stream()
+        .map(MemberBoard::getBoard)
         .toList();
   }
 
