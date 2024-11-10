@@ -30,7 +30,7 @@ public interface ProductApi {
               description = "잘못된 요청",
               content = @Content(
                   mediaType = "application/json",
-                  array = @ArraySchema(schema = @Schema(implementation = ApiGlobalResponse.class)),
+                  schema = @Schema(implementation = ApiGlobalResponse.class),
                   examples = {
                       @ExampleObject(
                           name = "BAD_REQUEST",
@@ -43,7 +43,8 @@ public interface ProductApi {
                                  "comment : 상품 코멘트를 입력해주세요.",
                                  "saleLink : 상품 판매 링크를 입력해주세요.",
                                  "regularPrice : 상품 가격을 입력해주세요.",
-                                 "categories : 상품 카테고리를 최소 1개 이상 선택 바랍니다."
+                                 "categories : 회원 추천 카테고리를 선택해주세요.",
+                                 "categories : 회원 추천 카테고리를 최소 1개 이상 선택 바랍니다."
                               ]
                               """
                       )

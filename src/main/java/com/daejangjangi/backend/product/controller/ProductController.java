@@ -2,6 +2,8 @@ package com.daejangjangi.backend.product.controller;
 
 import com.daejangjangi.backend.category.domain.Category;
 import com.daejangjangi.backend.category.service.CategoryService;
+import com.daejangjangi.backend.disease.domain.Disease;
+import com.daejangjangi.backend.disease.service.DiseaseService;
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
 import com.daejangjangi.backend.member.domain.entity.Member;
 import com.daejangjangi.backend.member.service.MemberService;
@@ -33,6 +35,7 @@ public class ProductController implements ProductApi {
   private final ProductService productService;
   private final MemberService memberService;
   private final CategoryService categoryService;
+  private final DiseaseService diseaseService;
 
 
   @PreAuthorize("hasAuthority('ADMIN')")
@@ -41,9 +44,10 @@ public class ProductController implements ProductApi {
       @Valid @RequestPart ProductRequestDto.Register request,
       @RequestPart MultipartFile profileImage
   ) {
+    List<Disease> diseases = diseaseService.findByNames(request.diseases());
     List<Category> categories = categoryService.findByNames(request.categories());
     Product product = ProductMapper.INSTANCE.requestToEntity(request);
-    productService.register(product, profileImage, categories);
+    productService.register(product, profileImage, diseases, categories);
     return ApiGlobalResponse.ok();
   }
 

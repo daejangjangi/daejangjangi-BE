@@ -54,6 +54,9 @@ public class Product extends BaseEntity {
   private Discount discount;
 
   @OneToMany(mappedBy = "product", orphanRemoval = true, cascade = CascadeType.ALL)
+  private List<ProductDisease> diseases;
+
+  @OneToMany(mappedBy = "product", orphanRemoval = true, cascade = CascadeType.ALL)
   private List<ProductCategory> categories;
 
   @Builder
@@ -69,6 +72,18 @@ public class Product extends BaseEntity {
     this.regularPrice = regularPrice;
 
     this.hit = 0L;
+  }
+
+  public void addDiseases(List<ProductDisease> productDiseases) {
+    if (Objects.isNull(this.diseases)) {
+      this.diseases = new ArrayList<>();
+    }
+    for (ProductDisease disease : productDiseases) {
+      if (disease != null && !this.diseases.contains(disease)) {
+        this.diseases.add(disease);
+        disease.updateParent(this);
+      }
+    }
   }
 
   public void addCategories(List<ProductCategory> categories) {
