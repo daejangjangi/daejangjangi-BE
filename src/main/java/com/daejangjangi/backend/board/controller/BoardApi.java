@@ -44,17 +44,12 @@ public interface BoardApi {
                                   "id": 1,
                                   "title": "게시글 제목",
                                   "content": "게시글 내용",
-                                  "createdAt": "2024-11-01T00:54:09.399766",
-                                  "updatedAt": null,
                                   "nickname": "nick",
-                                  "boards": [
-                                    "자유"
-                                  ],
-                                  "isAuthor": false,
-                                  "hit": 0,
-                                  "likeCount": 0,
-                                  "commentCount": 0,
-                                  "isLiked": false
+                                  "createdAt": "2024-11-01T00:54:09.399766",
+                                  "views": 10,
+                                  "likes": 5,
+                                  "comments": 0,
+                                  "isPopular": true
                                 }
                               ],
                               "pageable": {

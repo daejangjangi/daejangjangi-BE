@@ -21,4 +21,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
   @Query("UPDATE Post p SET p.hit = p.hit + 1 WHERE p = :post")
   void updateHit(@Param(("post")) Post post);
 
+  Page<Post> findByLikeCountGreaterThanEqual(Long likeCount, Pageable pageable);
+
 }

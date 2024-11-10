@@ -21,6 +21,9 @@ public class PostResponseDto {
       @Schema(description = "내용")
       String content,
 
+      @Schema(description = "작성자 닉네임")
+      String nickname,
+
       @Schema(description = "생성일")
       LocalDateTime createdAt,
 

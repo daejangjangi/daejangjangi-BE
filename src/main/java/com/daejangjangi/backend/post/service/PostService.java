@@ -163,9 +163,25 @@ public class PostService {
     return findById(post.getId());
   }
 
+  /**
+   * 게시글 삭제
+   *
+   * @param member 회원 정보
+   * @param post   삭제할 게시글 정보
+   */
   @Transactional
   public void deletePost(Member member, Post post) {
     checkPostAuthor(member, post.getMember().getId());
     postRepository.delete(post);
+  }
+
+  /**
+   * 인기 게시글 조회
+   *
+   * @param pageable 페이징 정보
+   * @return Page - Post
+   */
+  public Page<Post> findHotPosts(Pageable pageable) {
+    return postRepository.findByLikeCountGreaterThanEqual(5L, pageable);
   }
 }

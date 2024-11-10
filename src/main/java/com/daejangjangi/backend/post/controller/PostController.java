@@ -199,5 +199,15 @@ public class PostController implements PostApi {
     return ApiGlobalResponse.ok();
   }
 
+  @GetMapping("/hot")
+  @PreAuthorize("hasAuthority('MEMBER')")
+  public ApiGlobalResponse<Page<PostResponseDto.Info>> findHotPosts(
+      @RequestParam(defaultValue = "0") int page,
+      @RequestParam(defaultValue = "10") int size) {
+    Pageable pageable = PageRequest.of(page, size, Direction.DESC, "id");
+    Page<Post> posts = postService.findHotPosts(pageable);
+    Page<PostResponseDto.Info> response = posts.map(PostMapper.INSTANCE::entityToPostInfoResponse);
+    return ApiGlobalResponse.ok(response);
+  }
 
 }
