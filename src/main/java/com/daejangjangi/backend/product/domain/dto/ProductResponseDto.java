@@ -14,6 +14,10 @@ public class ProductResponseDto {
 
   @Schema(name = "RecommendedProductResponse", description = "추천 상품 응답 DTO")
   public record RecommendedProduct(
+
+      @Schema(description = "상품 아이디", example = "1")
+      Long id,
+
       @Schema(description = "상품명", example = "추석선물세트 푸룬 건자두 2구 선물세트 넛츠앤 37호")
       String name,
 

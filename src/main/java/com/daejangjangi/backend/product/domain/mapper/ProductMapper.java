@@ -18,6 +18,7 @@ public interface ProductMapper {
   @Mapping(target = "regularPrice", source = "request.regularPrice")
   Product requestToEntity(Register request);
 
+  @Mapping(target = "id", source = "product.id")
   @Mapping(target = "name", source = "product.name")
   @Mapping(target = "comment", source = "product.comment")
   @Mapping(target = "saleLink", source = "product.saleLink")
