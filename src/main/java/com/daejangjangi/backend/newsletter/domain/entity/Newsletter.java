@@ -1,6 +1,7 @@
 package com.daejangjangi.backend.newsletter.domain.entity;
 
 import com.daejangjangi.backend.category.domain.Category;
+import com.daejangjangi.backend.global.common.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -21,7 +22,7 @@ import org.hibernate.annotations.OnDeleteAction;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Newsletter {
+public class Newsletter extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +35,7 @@ public class Newsletter {
   @Column(name = "newsletter_sub_title", nullable = false)
   private String subTitle;
 
-  @Column(name = "newsletter_description", nullable = false)
+  @Column(name = "newsletter_description", columnDefinition = "longtext", nullable = false)
   private String description;
 
   @Column(name = "newsletter_profile", columnDefinition = "longtext", length = 2000, nullable = false)

@@ -91,7 +91,7 @@ public class MemberService implements UserDetailsService {
    *
    * @param member     회원 정보
    * @param diseases   장건강 질환
-   * @param categories 관심 상품 카테고리
+   * @param categories 회원 관심 카테고리
    */
   @Transactional
   public void save(Member member, List<Disease> diseases, List<Category> categories) {
@@ -156,7 +156,7 @@ public class MemberService implements UserDetailsService {
    *
    * @param newMember     수정된 회원 정보
    * @param newDiseases   수정된 장건강 질환
-   * @param newCategories 수정된 관심 상품 카테고리
+   * @param newCategories 수정된 회원 관심 카테고리
    */
   @Transactional
   public void update(Member newMember, List<Disease> newDiseases, List<Category> newCategories) {
@@ -231,10 +231,10 @@ public class MemberService implements UserDetailsService {
   }
 
   /**
-   * 회원 관심 상품 카테고리 수정
+   * 회원 관심 카테고리 수정
    *
    * @param originMember  기존 회원
-   * @param newCategories 새롭게 등록한 관심 상품 카테고리
+   * @param newCategories 새롭게 등록한 관심 카테고리
    * @return List<MemberCategory>
    */
   private List<MemberCategory> updateCategories(Member originMember, List<Category> newCategories) {
@@ -277,10 +277,10 @@ public class MemberService implements UserDetailsService {
   }
 
   /**
-   * 회원 괌심 상품 카테고리 저장
+   * 회원 괌심 카테고리 저장
    *
    * @param member     회원 정보
-   * @param categories 카테고리
+   * @param categories 관심 카테고리
    * @return List - MemberCategory
    */
   private List<MemberCategory> saveCategories(Member member, List<Category> categories) {
@@ -321,7 +321,7 @@ public class MemberService implements UserDetailsService {
   }
 
   /**
-   * 기존 회원 관심 상품 카테고리 목록
+   * 기존 회원 관심 카테고리 목록
    *
    * @param member 회원 정보
    * @return List<Category>

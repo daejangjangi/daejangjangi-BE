@@ -74,11 +74,11 @@ public class MemberRequestDto {
       @Size(min = 1, message = "질병을 최소 {min}개 이상 선택 바랍니다.")
       List<String> diseases,
 
-      @Schema(description = "회원 관심 상품 카테고리", allowableValues = {
-          "유산균", "식이섬유", "저포드맵", "간식", "생활용품.리빙"
+      @Schema(description = "회원 관심 카테고리", allowableValues = {
+          "유산균", "식이섬유", "저포드맵", "비건", "욕실용품", "아동", "운동기구"
       })
 
-      @NotNull(message = "관심 상품을 선택해주세요.")
+      @NotNull(message = "관심 카테고리를 선택해주세요.")
       @Size(min = 1, message = "관심 상품을 최소 {min}개 이상 선택 바랍니다.")
       List<String> categories
   ) {
@@ -128,11 +128,11 @@ public class MemberRequestDto {
       @Size(min = 1, message = "질병을 최소 {min}개 이상 선택 바랍니다.")
       List<String> diseases,
 
-      @Schema(description = "회원 관심 상품 카테고리", allowableValues = {
-          "유산균", "식이섬유", "저포드맵", "간식", "생활용품.리빙"
+      @Schema(description = "회원 관심 카테고리", allowableValues = {
+          "유산균", "식이섬유", "저포드맵", "비건", "욕실용품", "아동", "운동기구"
       })
 
-      @Size(min = 1, message = "관심 상품을 최소 {min}개 이상 선택 바랍니다.")
+      @Size(min = 1, message = "관심 카테고리를 최소 {min}개 이상 선택 바랍니다.")
       List<String> categories
   ) {
 

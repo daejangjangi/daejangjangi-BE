@@ -153,9 +153,9 @@ public class Member extends BaseEntity {
   }
 
   /**
-   * 회원 관심 상품 카테고리 등록
+   * 회원 관심 카테고리 등록
    *
-   * @param categories 회원 관심 상품 카테고리 목록
+   * @param categories 회원 관심 카테고리 목록
    */
   public void addCategories(List<MemberCategory> categories) {
     if (Objects.isNull(this.categories)) {

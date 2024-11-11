@@ -4,7 +4,6 @@ import com.daejangjangi.backend.file.exception.EmptyFileException;
 import com.daejangjangi.backend.file.exception.NotAccessibleContentTypeException;
 import com.daejangjangi.backend.file.exception.NotImageFileException;
 import com.daejangjangi.backend.file.exception.NotVideoFileException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.springframework.stereotype.Component;

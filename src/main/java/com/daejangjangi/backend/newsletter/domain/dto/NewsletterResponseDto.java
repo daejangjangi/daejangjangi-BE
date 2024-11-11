@@ -34,7 +34,7 @@ public class NewsletterResponseDto {
       String profileImage,
 
       @Schema(description = "뉴스레터 카테고리", allowableValues = {
-          "유산균", "식이섬유", "저포드맵", "간식", "생활용품.리빙"
+          "유산균", "식이섬유", "저포드맵", "비건", "욕실용품", "아동", "운동기구"
       })
       String category
   ) {
