@@ -1,5 +1,7 @@
 package com.daejangjangi.backend.board.controller;
 
+import com.daejangjangi.backend.board.domain.dto.BoardRequestDto;
+import com.daejangjangi.backend.board.domain.dto.BoardResponseDto;
 import com.daejangjangi.backend.global.annotation.swagger.Response401WithSwagger;
 import com.daejangjangi.backend.global.annotation.swagger.ResponseCommonWithSwagger;
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
@@ -14,7 +16,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.Null;
 import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Tag(name = "Board (게시판) API", description = "게시판 관련 API")
@@ -40,17 +44,12 @@ public interface BoardApi {
                                   "id": 1,
                                   "title": "게시글 제목",
                                   "content": "게시글 내용",
-                                  "createdAt": "2024-11-01T00:54:09.399766",
-                                  "updatedAt": null,
                                   "nickname": "nick",
-                                  "boards": [
-                                    "자유"
-                                  ],
-                                  "isAuthor": false,
-                                  "hit": 0,
-                                  "likeCount": 0,
-                                  "commentCount": 0,
-                                  "isLiked": false
+                                  "createdAt": "2024-11-01T00:54:09.399766",
+                                  "views": 10,
+                                  "likes": 5,
+                                  "comments": 0,
+                                  "isPopular": true
                                 }
                               ],
                               "pageable": {
@@ -116,4 +115,55 @@ public interface BoardApi {
   ApiGlobalResponse<Page<Info>> getPostsByBoard(@RequestParam(defaultValue = "0") int page,
       @RequestParam(defaultValue = "10") int size, @RequestParam String board);
 
+  @Operation(summary = "관심 게시판 수정", tags = {"Board (게시판) API"})
+  @Response401WithSwagger
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "400", description = "잘못된 요청",
+          content = @Content(
+              mediaType = "application/json",
+              array = @ArraySchema(schema = @Schema(implementation = ApiGlobalResponse.class)),
+              examples = {
+                  // Board
+                  @ExampleObject(
+                      name = "NOT_MANAGED_BOARDS",
+                      summary = "관리되지 않는 게시판 카테고리",
+                      value = """
+                          {
+                            "code": "NOT_MANAGED_BOARD",
+                            "message": "관리되지 않는 게시판 카테고리입니다.",
+                            "data": null
+                          }
+                          """
+                  )
+              }
+          )
+      )
+  })
+  ApiGlobalResponse<Null> modifyPinnedBoards(@RequestBody BoardRequestDto.Modify request);
+
+  @Operation(summary = "관심 게시판 조회", tags = {"Board (게시판) API"},
+      responses = {
+          @ApiResponse(
+              responseCode = "200",
+              description = "OK",
+              content = @Content(
+                  mediaType = "application/json",
+                  examples = @ExampleObject(
+                      value = """
+                          {
+                             "code": "OK",
+                             "message": "OK",
+                             "data": {
+                               "pinnedBoards": [
+                                 "변비"
+                               ]
+                             }
+                           }
+                          """
+                  )
+              )
+          )
+      })
+  @Response401WithSwagger
+  ApiGlobalResponse<BoardResponseDto.Info> getPinnedBoards();
 }

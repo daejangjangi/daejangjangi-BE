@@ -36,6 +36,7 @@ public interface PostMapper {
   @Mapping(target = "comments", source = "post.comments")
   @Mapping(target = "isPopular", expression = "java(post.getLikeCount() >= 10)")
   @Mapping(target = "commentInfo", source = "commentInfos")
+  @Mapping(target = "profile", source = "member.profile")
   PostResponseDto.DetailInfo entityToPostDetailInfoResponse(Post post, Member member,
       List<PostResponseDto.CommentInfo> commentInfos);
 
@@ -43,12 +44,12 @@ public interface PostMapper {
   @Mapping(target = "id", source = "post.id")
   @Mapping(target = "title", source = "post.title")
   @Mapping(target = "content", source = "post.content")
+  @Mapping(target = "nickname", source = "post.member.nickname")
   @Mapping(target = "createdAt", source = "post.createdAt")
   @Mapping(target = "views", source = "post.hit")
   @Mapping(target = "likes", source = "post.likeCount")
   @Mapping(target = "comments", source = "post.comments")
-  // TODO 인기글 여부 추후에 수정 필요
-  @Mapping(target = "isPopular", expression = "java(post.getLikeCount() >= 10)")
+  @Mapping(target = "isPopular", expression = "java(post.getLikeCount() >= 5)")
   PostResponseDto.Info entityToPostInfoResponse(Post post);
 
 

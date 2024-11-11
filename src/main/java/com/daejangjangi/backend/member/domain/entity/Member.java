@@ -68,6 +68,7 @@ public class Member extends BaseEntity {
     this.posts = new ArrayList<>();
     this.postComments = new ArrayList<>();
     this.postCommentLikes = new ArrayList<>();
+    this.pinnedBoards = new ArrayList<>();
   }
 
   @Id
@@ -133,6 +134,9 @@ public class Member extends BaseEntity {
   @OneToMany(mappedBy = "member", orphanRemoval = true, cascade = CascadeType.ALL)
   private List<PostCommentLike> postCommentLikes;
 
+  @OneToMany(mappedBy = "member", orphanRemoval = true, cascade = CascadeType.ALL)
+  private List<MemberBoard> pinnedBoards;
+
   /*-------------Business Logic---------------------------Business Logic--------------------------*/
 
   /**
@@ -168,6 +172,24 @@ public class Member extends BaseEntity {
       }
     }
   }
+
+  /**
+   * 회원 관심 게시판 등록
+   *
+   * @param boards 회원 관심 게시판 목록
+   */
+  public void addPinnedBoards(List<MemberBoard> boards) {
+    if (Objects.isNull(this.pinnedBoards)) {
+      this.pinnedBoards = new ArrayList<>();
+    }
+    for (MemberBoard board : boards) {
+      if (board != null && !this.pinnedBoards.contains(board)) {
+        this.pinnedBoards.add(board);
+        board.updateMember(this);
+      }
+    }
+  }
+
 
   /**
    * 비밀번호 암호화

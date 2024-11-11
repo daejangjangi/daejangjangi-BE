@@ -21,6 +21,9 @@ public class PostResponseDto {
       @Schema(description = "내용")
       String content,
 
+      @Schema(description = "작성자 닉네임")
+      String nickname,
+
       @Schema(description = "생성일")
       LocalDateTime createdAt,
 
@@ -50,6 +53,9 @@ public class PostResponseDto {
 
       @Schema(description = "내용")
       String content,
+
+      @Schema(description = "프로필 이미지")
+      String profile,
 
       @Schema(description = "생성일")
       LocalDateTime createdAt,
@@ -99,6 +105,9 @@ public class PostResponseDto {
 
     @Schema(description = "작성자 닉네임")
     private String nickname;
+
+    @Schema(description = "프로필 이미지")
+    private String profile;
 
     @Schema(description = "좋아요 수")
     private Long likes;
