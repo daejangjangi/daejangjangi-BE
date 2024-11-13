@@ -11,7 +11,7 @@ spring:
     password: ${datasource.dev.password}
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: none
     show-sql: true
     properties:
       hibernate:
