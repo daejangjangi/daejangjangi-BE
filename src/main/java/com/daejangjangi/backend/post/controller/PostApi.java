@@ -7,7 +7,6 @@ import com.daejangjangi.backend.global.response.ApiGlobalResponse;
 import com.daejangjangi.backend.post.domain.dto.PostRequestDto;
 import com.daejangjangi.backend.post.domain.dto.PostResponseDto;
 import com.daejangjangi.backend.post.domain.dto.PostResponseDto.DetailInfo;
-import com.daejangjangi.backend.post.domain.dto.PostResponseDto.Info;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -20,7 +19,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.apache.commons.lang3.ObjectUtils.Null;
-import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -629,44 +627,23 @@ public interface PostApi {
                             "code": "OK",
                             "message": "OK",
                             "data": {
-                              "content": [
+                              "posts": [
                                 {
                                   "id": 1,
                                   "title": "게시글 제목",
                                   "content": "게시글 내용",
-                                  "nickname": "nick",
-                                  "createdAt": "2024-11-01T00:54:09.399766",
+                                  "nickname": null,
+                                  "createdAt": "2024-11-14T18:27:12.329813",
                                   "views": 10,
                                   "likes": 5,
-                                  "comments": 0,
+                                  "comments": 2,
                                   "isPopular": true
                                 }
                               ],
-                              "pageable": {
-                                "pageNumber": 0,
-                                "pageSize": 10,
-                                "sort": {
-                                  "empty": false,
-                                  "unsorted": false,
-                                  "sorted": true
-                                },
-                                "offset": 0,
-                                "unpaged": false,
-                                "paged": true
-                              },
-                              "last": true,
+                              "pageNumber": 1,
+                              "pageSize": 10,
                               "totalElements": 1,
-                              "totalPages": 1,
-                              "first": true,
-                              "size": 10,
-                              "number": 0,
-                              "sort": {
-                                "empty": false,
-                                "unsorted": false,
-                                "sorted": true
-                              },
-                              "numberOfElements": 1,
-                              "empty": false
+                              "totalPages": 1
                             }
                           }
                           """
@@ -679,8 +656,8 @@ public interface PostApi {
       @Parameter(name = "page", description = "페이지 수", required = true)
   })
   @Response401WithSwagger
-  ApiGlobalResponse<Page<Info>> findPostsByMember(
-      @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size);
+  ApiGlobalResponse<PostResponseDto.Infos> findPostsByMember(
+      @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size);
 
   @Operation(summary = "댓글 단 게시글 조회", tags = {"Post (게시글) API"},
       responses = {
@@ -695,44 +672,23 @@ public interface PostApi {
                             "code": "OK",
                             "message": "OK",
                             "data": {
-                              "content": [
+                              "posts": [
                                 {
                                   "id": 1,
                                   "title": "게시글 제목",
                                   "content": "게시글 내용",
-                                  "nickname": "nick",
-                                  "createdAt": "2024-11-01T00:54:09.399766",
+                                  "nickname": null,
+                                  "createdAt": "2024-11-14T18:27:12.329813",
                                   "views": 10,
                                   "likes": 5,
-                                  "comments": 0,
+                                  "comments": 2,
                                   "isPopular": true
                                 }
                               ],
-                              "pageable": {
-                                "pageNumber": 0,
-                                "pageSize": 10,
-                                "sort": {
-                                  "empty": false,
-                                  "unsorted": false,
-                                  "sorted": true
-                                },
-                                "offset": 0,
-                                "unpaged": false,
-                                "paged": true
-                              },
-                              "last": true,
+                              "pageNumber": 1,
+                              "pageSize": 10,
                               "totalElements": 1,
-                              "totalPages": 1,
-                              "first": true,
-                              "size": 10,
-                              "number": 0,
-                              "sort": {
-                                "empty": false,
-                                "unsorted": false,
-                                "sorted": true
-                              },
-                              "numberOfElements": 1,
-                              "empty": false
+                              "totalPages": 1
                             }
                           }
                           """
@@ -745,8 +701,8 @@ public interface PostApi {
       @Parameter(name = "page", description = "페이지 수", required = true)
   })
   @Response401WithSwagger
-  ApiGlobalResponse<Page<PostResponseDto.Info>> findPostsCommentedByMember(
-      @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size);
+  ApiGlobalResponse<PostResponseDto.Infos> findPostsCommentedByMember(
+      @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size);
 
   @Operation(summary = "게시글 검색", tags = {"Post (게시글) API"},
       responses = {
@@ -761,44 +717,23 @@ public interface PostApi {
                             "code": "OK",
                             "message": "OK",
                             "data": {
-                              "content": [
+                              "posts": [
                                 {
                                   "id": 1,
                                   "title": "게시글 제목",
                                   "content": "게시글 내용",
-                                  "nickname": "nick",
-                                  "createdAt": "2024-11-01T00:54:09.399766",
+                                  "nickname": null,
+                                  "createdAt": "2024-11-14T18:27:12.329813",
                                   "views": 10,
                                   "likes": 5,
-                                  "comments": 0,
+                                  "comments": 2,
                                   "isPopular": true
                                 }
                               ],
-                              "pageable": {
-                                "pageNumber": 0,
-                                "pageSize": 10,
-                                "sort": {
-                                  "empty": false,
-                                  "unsorted": false,
-                                  "sorted": true
-                                },
-                                "offset": 0,
-                                "unpaged": false,
-                                "paged": true
-                              },
-                              "last": true,
+                              "pageNumber": 1,
+                              "pageSize": 10,
                               "totalElements": 1,
-                              "totalPages": 1,
-                              "first": true,
-                              "size": 10,
-                              "number": 0,
-                              "sort": {
-                                "empty": false,
-                                "unsorted": false,
-                                "sorted": true
-                              },
-                              "numberOfElements": 1,
-                              "empty": false
+                              "totalPages": 1
                             }
                           }
                           """
@@ -812,8 +747,8 @@ public interface PostApi {
       @Parameter(name = "keyword", description = "검색 키워드", required = true)
   })
   @Response401WithSwagger
-  ApiGlobalResponse<Page<Info>> findPostsByKeyword(
-      @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size,
+  ApiGlobalResponse<PostResponseDto.Infos> findPostsByKeyword(
+      @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size,
       @RequestParam String keyword);
 
 
@@ -867,44 +802,23 @@ public interface PostApi {
                             "code": "OK",
                             "message": "OK",
                             "data": {
-                              "content": [
+                              "posts": [
                                 {
                                   "id": 1,
                                   "title": "게시글 제목",
                                   "content": "게시글 내용",
-                                  "nickname": "nick",
-                                  "createdAt": "2024-11-01T00:54:09.399766",
+                                  "nickname": null,
+                                  "createdAt": "2024-11-14T18:27:12.329813",
                                   "views": 10,
                                   "likes": 5,
-                                  "comments": 0,
+                                  "comments": 2,
                                   "isPopular": true
                                 }
                               ],
-                              "pageable": {
-                                "pageNumber": 0,
-                                "pageSize": 10,
-                                "sort": {
-                                  "empty": false,
-                                  "unsorted": false,
-                                  "sorted": true
-                                },
-                                "offset": 0,
-                                "unpaged": false,
-                                "paged": true
-                              },
-                              "last": true,
+                              "pageNumber": 1,
+                              "pageSize": 10,
                               "totalElements": 1,
-                              "totalPages": 1,
-                              "first": true,
-                              "size": 10,
-                              "number": 0,
-                              "sort": {
-                                "empty": false,
-                                "unsorted": false,
-                                "sorted": true
-                              },
-                              "numberOfElements": 1,
-                              "empty": false
+                              "totalPages": 1
                             }
                           }
                           """
@@ -917,7 +831,7 @@ public interface PostApi {
       @Parameter(name = "page", description = "페이지 수", required = true)
   })
   @Response401WithSwagger
-  ApiGlobalResponse<Page<PostResponseDto.Info>> findHotPosts(
-      @RequestParam(defaultValue = "0") int page,
+  ApiGlobalResponse<PostResponseDto.Infos> findHotPosts(
+      @RequestParam(defaultValue = "1") int page,
       @RequestParam(defaultValue = "10") int size);
 }

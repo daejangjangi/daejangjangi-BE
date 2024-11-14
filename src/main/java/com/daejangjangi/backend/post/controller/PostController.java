@@ -6,7 +6,6 @@ import com.daejangjangi.backend.comment.domain.entity.PostComment;
 import com.daejangjangi.backend.comment.service.CommentService;
 import com.daejangjangi.backend.post.domain.dto.PostResponseDto.CommentInfo;
 import com.daejangjangi.backend.post.domain.dto.PostResponseDto.DetailInfo;
-import com.daejangjangi.backend.post.domain.dto.PostResponseDto.Info;
 import com.daejangjangi.backend.post.service.PostCommentLikeService;
 import com.daejangjangi.backend.post.service.PostCommentService;
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
@@ -161,35 +160,38 @@ public class PostController implements PostApi {
 
   @GetMapping("/my-posts")
   @PreAuthorize("hasAuthority('MEMBER')")
-  public ApiGlobalResponse<Page<Info>> findPostsByMember(
-      @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+  public ApiGlobalResponse<PostResponseDto.Infos> findPostsByMember(
+      @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size) {
     Member member = memberService.info();
-    Pageable pageable = PageRequest.of(page, size, Direction.DESC, "id");
+    Pageable pageable = PageRequest.of(page - 1, size, Direction.DESC, "id");
     Page<Post> posts = postService.findPostsByMember(member, pageable);
     Page<PostResponseDto.Info> response = posts.map(PostMapper.INSTANCE::entityToPostInfoResponse);
-    return ApiGlobalResponse.ok(response);
+    PostResponseDto.Infos infos = PostMapper.INSTANCE.entityToPostInfosResponse(response);
+    return ApiGlobalResponse.ok(infos);
   }
 
   @GetMapping("/commented-posts")
   @PreAuthorize("hasAuthority('MEMBER')")
-  public ApiGlobalResponse<Page<PostResponseDto.Info>> findPostsCommentedByMember(
-      @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+  public ApiGlobalResponse<PostResponseDto.Infos> findPostsCommentedByMember(
+      @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size) {
     Member member = memberService.info();
-    Pageable pageable = PageRequest.of(page, size, Direction.DESC, "id");
+    Pageable pageable = PageRequest.of(page - 1, size, Direction.DESC, "id");
     Page<Post> posts = postCommentService.findPostsCommentedByMember(member, pageable);
     Page<PostResponseDto.Info> response = posts.map(PostMapper.INSTANCE::entityToPostInfoResponse);
-    return ApiGlobalResponse.ok(response);
+    PostResponseDto.Infos infos = PostMapper.INSTANCE.entityToPostInfosResponse(response);
+    return ApiGlobalResponse.ok(infos);
   }
 
   @GetMapping("/search")
   @PreAuthorize("hasAuthority('MEMBER')")
-  public ApiGlobalResponse<Page<Info>> findPostsByKeyword(
-      @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size,
+  public ApiGlobalResponse<PostResponseDto.Infos> findPostsByKeyword(
+      @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size,
       @RequestParam String keyword) {
-    Pageable pageable = PageRequest.of(page, size, Direction.DESC, "id");
+    Pageable pageable = PageRequest.of(page - 1, size, Direction.DESC, "id");
     Page<Post> posts = postService.findPostsByKeyword(keyword, pageable);
     Page<PostResponseDto.Info> response = posts.map(PostMapper.INSTANCE::entityToPostInfoResponse);
-    return ApiGlobalResponse.ok(response);
+    PostResponseDto.Infos infos = PostMapper.INSTANCE.entityToPostInfosResponse(response);
+    return ApiGlobalResponse.ok(infos);
   }
 
   @DeleteMapping("/{postId}")
@@ -203,13 +205,14 @@ public class PostController implements PostApi {
 
   @GetMapping("/hot")
   @PreAuthorize("hasAuthority('MEMBER')")
-  public ApiGlobalResponse<Page<PostResponseDto.Info>> findHotPosts(
-      @RequestParam(defaultValue = "0") int page,
+  public ApiGlobalResponse<PostResponseDto.Infos> findHotPosts(
+      @RequestParam(defaultValue = "1") int page,
       @RequestParam(defaultValue = "10") int size) {
-    Pageable pageable = PageRequest.of(page, size, Direction.DESC, "id");
+    Pageable pageable = PageRequest.of(page - 1, size, Direction.DESC, "id");
     Page<Post> posts = postService.findHotPosts(pageable);
     Page<PostResponseDto.Info> response = posts.map(PostMapper.INSTANCE::entityToPostInfoResponse);
-    return ApiGlobalResponse.ok(response);
+    PostResponseDto.Infos infos = PostMapper.INSTANCE.entityToPostInfosResponse(response);
+    return ApiGlobalResponse.ok(infos);
   }
 
 }

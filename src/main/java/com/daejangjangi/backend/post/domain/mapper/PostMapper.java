@@ -8,6 +8,7 @@ import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
+import org.springframework.data.domain.Page;
 
 @Mapper(uses = {BoardPostMapper.class, CommentMapper.class})
 public interface PostMapper {
@@ -34,7 +35,7 @@ public interface PostMapper {
   @Mapping(target = "isAuthor", expression = "java(isAuthor(post, member))")
   @Mapping(target = "isLiked", expression = "java(isLikedByMember(post, member))")
   @Mapping(target = "comments", source = "post.comments")
-  @Mapping(target = "isPopular", expression = "java(post.getLikeCount() >= 10)")
+  @Mapping(target = "isPopular", expression = "java(post.getLikeCount() >= 5)")
   @Mapping(target = "commentInfo", source = "commentInfos")
   @Mapping(target = "profile", source = "member.profile")
   PostResponseDto.DetailInfo entityToPostDetailInfoResponse(Post post, Member member,
@@ -52,6 +53,12 @@ public interface PostMapper {
   @Mapping(target = "isPopular", expression = "java(post.getLikeCount() >= 5)")
   PostResponseDto.Info entityToPostInfoResponse(Post post);
 
+  @Mapping(target = "posts", source = "posts.content")
+  @Mapping(target = "pageNumber", expression = "java(getPageNumber(posts))")
+  @Mapping(target = "pageSize", source = "posts.size")
+  @Mapping(target = "totalElements", source = "posts.totalElements")
+  @Mapping(target = "totalPages", source = "posts.totalPages")
+  PostResponseDto.Infos entityToPostInfosResponse(Page<PostResponseDto.Info> posts);
 
   default boolean isLikedByMember(Post post, Member member) {
     return post.getLikes().stream().anyMatch(like -> like.getMember().equals(member));
@@ -59,5 +66,13 @@ public interface PostMapper {
 
   default boolean isAuthor(Post post, Member member) {
     return post.getMember() != null && post.getMember().equals(member);
+  }
+
+  default int getPageNumber(Page<PostResponseDto.Info> posts) {
+    if (posts.getTotalElements() > 0) {
+      return posts.getNumber() + 1;
+    } else {
+      return 0;
+    }
   }
 }
