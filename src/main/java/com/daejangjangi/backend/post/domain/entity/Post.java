@@ -48,7 +48,7 @@ public class Post extends BaseEntity {
   @Column(name = "post_id")
   private Long id;
 
-  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "member_id")
   @OnDelete(action = OnDeleteAction.SET_NULL)
   private Member member;

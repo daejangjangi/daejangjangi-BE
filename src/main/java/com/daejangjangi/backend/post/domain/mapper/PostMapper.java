@@ -58,6 +58,6 @@ public interface PostMapper {
   }
 
   default boolean isAuthor(Post post, Member member) {
-    return post.getMember().equals(member);
+    return post.getMember() != null && post.getMember().equals(member);
   }
 }

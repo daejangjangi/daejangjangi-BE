@@ -87,11 +87,11 @@ public class PostController implements PostApi {
           .likes((long) comment.getLikes().size())
           .createdAt(comment.getCreatedAt())
           .content(comment.getContent())
-          .nickname(comment.getMember().getNickname())
+          .nickname((comment.getMember() == null) ? null : comment.getMember().getNickname())
           .isDeleted(comment.isDeleted())
-          .profile(comment.getMember().getProfile())
+          .profile((comment.getMember() == null) ? null : comment.getMember().getProfile())
           .isLiked(comment.getLikes().stream().anyMatch(like -> like.getMember().equals(member)))
-          .isAuthor(comment.getMember().equals(member)).build();
+          .isAuthor(comment.getMember() != null && comment.getMember().equals(member)).build();
 
       if (comment.getParent() == null) {
         comment.getChildren().forEach(child -> {
@@ -100,12 +100,12 @@ public class PostController implements PostApi {
               .likes((long) child.getLikes().size())
               .createdAt(child.getCreatedAt())
               .content(child.getContent())
-              .nickname(child.getMember().getNickname())
+              .nickname((child.getMember() == null) ? null : child.getMember().getNickname())
               .isDeleted(child.isDeleted())
-              .profile(child.getMember().getProfile())
+              .profile((child.getMember() == null) ? null : child.getMember().getProfile())
               .isLiked(
                   child.getLikes().stream().anyMatch(like -> like.getMember().equals(member)))
-              .isAuthor(child.getMember().equals(member)).build();
+              .isAuthor(child.getMember() != null && child.getMember().equals(member)).build();
           info.addCommentInfo(childInfo);
         });
         commentInfos.add(info);
