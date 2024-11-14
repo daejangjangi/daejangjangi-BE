@@ -3,7 +3,9 @@ package com.daejangjangi.backend.product.domain.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.List;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 public class ProductRequestDto {
 
@@ -30,17 +32,17 @@ public class ProductRequestDto {
           "변비", "과민성장증후군_설사형", "과민성장증후군_변비형", "치질", "치핵", "치열", "변실금", "항문소양증",
           "대장암", "크론병", "궤양성대장염", "복부팽만", "없음"
       })
-      @NotNull(message = "관련 장질환을 선택해주세요.")
-      @Size(min = 1, message = "관련 장질환을 최소 {min}개 이상 선택 바랍니다.")
       List<String> diseases,
 
       @Schema(description = "회원 추천 카테고리", allowableValues = {
           "유산균", "식이섬유", "저포드맵", "비건", "욕실용품", "아동", "운동기구"
       })
-      @NotNull(message = "회원 추천 카테고리를 선택해주세요.")
-      @Size(min = 1, message = "회원 추천 카테고리를 최소 {min}개 이상 선택 바랍니다.")
       List<String> categories
   ) {
 
+    public Register {
+      diseases = diseases == null ? new ArrayList<>() : diseases;
+      categories = categories == null ? new ArrayList<>() : categories;
+    }
   }
 }

@@ -47,10 +47,14 @@ public class ProductService {
     String imageUrl = s3Manager.upload(profileImage);
     product.updateProfile(imageUrl);
     productRepository.save(product);
-    List<ProductDisease> productDiseases = saveDisease(product, diseases);
-    List<ProductCategory> productCategories = saveCategories(product, categories);
-    product.addDiseases(productDiseases);
-    product.addCategories(productCategories);
+    if (!diseases.isEmpty()) {
+      List<ProductDisease> productDiseases = saveDisease(product, diseases);
+      product.addDiseases(productDiseases);
+    }
+    if (!categories.isEmpty()) {
+      List<ProductCategory> productCategories = saveCategories(product, categories);
+      product.addCategories(productCategories);
+    }
   }
 
   /**
