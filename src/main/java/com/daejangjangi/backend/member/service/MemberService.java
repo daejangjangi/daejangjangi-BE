@@ -17,7 +17,10 @@ import com.daejangjangi.backend.member.repository.MemberBoardRepository;
 import com.daejangjangi.backend.member.repository.MemberCategoryRepository;
 import com.daejangjangi.backend.member.repository.MemberDiseaseRepository;
 import com.daejangjangi.backend.member.repository.MemberRepository;
+import com.daejangjangi.backend.post.domain.entity.Post;
 import com.daejangjangi.backend.post.exception.NotManagedBoardException;
+import com.daejangjangi.backend.post.repository.PostLikeRepository;
+import com.daejangjangi.backend.post.repository.PostRepository;
 import com.daejangjangi.backend.token.domain.entity.Token;
 import com.daejangjangi.backend.token.repository.TokenRepository;
 import java.util.ArrayList;
@@ -47,6 +50,8 @@ public class MemberService implements UserDetailsService {
   private final MemberBoardRepository memberBoardRepository;
   private final BoardRepository boardRepository;
   private final BCryptPasswordEncoder passwordEncoder;
+  private final PostRepository postRepository;
+  private final PostLikeRepository postLikeRepository;
 
   /**
    * 2. 인증 전처리 - DB 회원 조회 후 UserDetails 반환
@@ -195,6 +200,7 @@ public class MemberService implements UserDetailsService {
     Long memberId = getCurrentId();
     Member member = findById(memberId);
     Token token = getToken(memberId);
+    removePostLikes(member);
     memberRepository.delete(member);
     // TODO : token - member 연관관계 수정하여 CASCADE 로 삭제하도록 수정
     tokenRepository.delete(token);
@@ -427,5 +433,19 @@ public class MemberService implements UserDetailsService {
   private Token getToken(Long memberId) {
     return tokenRepository.findByMemberId(memberId)
         .orElseThrow(NotFoundMemberException::new);
+  }
+
+  /**
+   * 회원이 좋아요한 게시글 좋아요 수 차감
+   *
+   * @param member 회원 정보
+   */
+  private void removePostLikes(Member member) {
+    List<Post> posts = postLikeRepository.findPostsByMember(member);
+    posts.forEach(post -> {
+      if (post.getLikeCount() > 0) {
+        postRepository.decreaseLikes(post);
+      }
+    });
   }
 }

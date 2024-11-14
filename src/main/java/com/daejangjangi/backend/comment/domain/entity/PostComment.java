@@ -53,7 +53,7 @@ public class PostComment extends BaseEntity {
   private Long id;
 
   @JoinColumn(name = "member_id")
-  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @ManyToOne(fetch = FetchType.LAZY)
   @OnDelete(action = OnDeleteAction.SET_NULL)
   private Member member;
 
