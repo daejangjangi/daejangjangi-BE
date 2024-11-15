@@ -2,6 +2,7 @@ package com.daejangjangi.backend.member.domain.entity;
 
 import com.daejangjangi.backend.disease.domain.Disease;
 import com.daejangjangi.backend.global.common.BaseEntity;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -32,6 +33,7 @@ public class MemberDisease extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "member_disease_id")
   private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY)

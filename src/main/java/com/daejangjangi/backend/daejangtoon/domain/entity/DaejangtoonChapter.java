@@ -32,13 +32,13 @@ public class DaejangtoonChapter extends BaseEntity {
   @Column(name = "daejangtoon_chapter_id")
   private Long id;
 
-  @Column(name = "daejangtoon_chapter", nullable = false)
+  @Column(name = "daejangtoon_chapter", columnDefinition = "smallint", nullable = false)
   private Integer chapter;
 
   @Column(name = "daejangtoon_chapter_title", nullable = false)
   private String title;
 
-  @Column(name = "daejangtoon_chapter_profile", columnDefinition = "longtext", length = 2000, nullable = false)
+  @Column(name = "daejangtoon_chapter_profile", length = 1000, nullable = false)
   private String profile;
 
   @Column(name = "daejangtoon_chapter_hit", nullable = false)
