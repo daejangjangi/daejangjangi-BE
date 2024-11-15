@@ -5,7 +5,7 @@ import com.daejangjangi.backend.board.domain.dto.BoardResponseDto;
 import com.daejangjangi.backend.global.annotation.swagger.Response401WithSwagger;
 import com.daejangjangi.backend.global.annotation.swagger.ResponseCommonWithSwagger;
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
-import com.daejangjangi.backend.post.domain.dto.PostResponseDto.Info;
+import com.daejangjangi.backend.post.domain.dto.PostResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -36,49 +36,28 @@ public interface BoardApi {
                   examples = @ExampleObject(
                       value = """
                           {
-                            "code": "OK",
-                            "message": "OK",
-                            "data": {
-                              "content": [
-                                {
-                                  "id": 1,
-                                  "title": "게시글 제목",
-                                  "content": "게시글 내용",
-                                  "nickname": "nick",
-                                  "createdAt": "2024-11-01T00:54:09.399766",
-                                  "views": 10,
-                                  "likes": 5,
-                                  "comments": 0,
-                                  "isPopular": true
-                                }
-                              ],
-                              "pageable": {
-                                "pageNumber": 0,
-                                "pageSize": 10,
-                                "sort": {
-                                  "empty": false,
-                                  "unsorted": false,
-                                  "sorted": true
-                                },
-                                "offset": 0,
-                                "unpaged": false,
-                                "paged": true
-                              },
-                              "last": true,
-                              "totalElements": 1,
-                              "totalPages": 1,
-                              "first": true,
-                              "size": 10,
-                              "number": 0,
-                              "sort": {
-                                "empty": false,
-                                "unsorted": false,
-                                "sorted": true
-                              },
-                              "numberOfElements": 1,
-                              "empty": false
-                            }
-                          }
+                             "code": "OK",
+                             "message": "OK",
+                             "data": {
+                               "posts": [
+                                 {
+                                   "id": 1,
+                                   "title": "게시글 제목",
+                                   "content": "게시글 내용",
+                                   "nickname": null,
+                                   "createdAt": "2024-11-14T18:27:12.329813",
+                                   "views": 10,
+                                   "likes": 3,
+                                   "comments": 2,
+                                   "isPopular": false
+                                 }
+                               ],
+                               "pageNumber": 1,
+                               "pageSize": 10,
+                               "totalElements": 1,
+                               "totalPages": 1
+                             }
+                           }
                           """
                   )
               )
@@ -112,7 +91,8 @@ public interface BoardApi {
           )
       )
   })
-  ApiGlobalResponse<Page<Info>> getPostsByBoard(@RequestParam(defaultValue = "0") int page,
+  ApiGlobalResponse<PostResponseDto.Infos> getPostsByBoard(
+      @RequestParam(defaultValue = "1") int page,
       @RequestParam(defaultValue = "10") int size, @RequestParam String board);
 
   @Operation(summary = "관심 게시판 수정", tags = {"Board (게시판) API"})

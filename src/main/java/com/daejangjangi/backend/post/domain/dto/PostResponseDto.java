@@ -133,7 +133,24 @@ public class PostResponseDto {
       }
       this.commentInfos.add(commentInfo);
     }
+  }
 
+  public record Infos(
+      @Schema(description = "게시글 정보들")
+      List<Info> posts,
+
+      @Schema(description = "현재 페이지 번호")
+      int pageNumber,
+
+      @Schema(description = "한 페이지에 표시되는 항목의 수")
+      int pageSize,
+
+      @Schema(description = "전체 데이터의 개수")
+      long totalElements,
+
+      @Schema(description = "전체 페이지 수")
+      int totalPages
+  ) {
 
   }
 

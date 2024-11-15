@@ -9,7 +9,6 @@ import com.daejangjangi.backend.global.response.ApiGlobalResponse;
 import com.daejangjangi.backend.member.domain.entity.Member;
 import com.daejangjangi.backend.member.service.MemberService;
 import com.daejangjangi.backend.post.domain.dto.PostResponseDto;
-import com.daejangjangi.backend.post.domain.dto.PostResponseDto.Info;
 import com.daejangjangi.backend.post.domain.entity.Post;
 import com.daejangjangi.backend.post.domain.mapper.PostMapper;
 import com.daejangjangi.backend.post.service.PostService;
@@ -39,13 +38,15 @@ public class BoardController implements BoardApi {
 
   @GetMapping
   @PreAuthorize("hasAuthority('MEMBER')")
-  public ApiGlobalResponse<Page<Info>> getPostsByBoard(@RequestParam(defaultValue = "0") int page,
+  public ApiGlobalResponse<PostResponseDto.Infos> getPostsByBoard(
+      @RequestParam(defaultValue = "1") int page,
       @RequestParam(defaultValue = "10") int size, @RequestParam String board) {
     Board getBoard = boardService.findByName(board);
-    Pageable pageable = PageRequest.of(page, size, Direction.DESC, "id");
+    Pageable pageable = PageRequest.of(page - 1, size, Direction.DESC, "id");
     Page<Post> posts = postService.getPostByBoard(getBoard, pageable);
     Page<PostResponseDto.Info> response = posts.map(PostMapper.INSTANCE::entityToPostInfoResponse);
-    return ApiGlobalResponse.ok(response);
+    PostResponseDto.Infos infos = PostMapper.INSTANCE.entityToPostInfosResponse(response);
+    return ApiGlobalResponse.ok(infos);
   }
 
   @PutMapping("/pinned-boards")
