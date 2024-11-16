@@ -43,10 +43,10 @@ public class Qna extends BaseEntity {
   @Enumerated(EnumType.STRING)
   private QnaStatus status;
 
-  @Column(name = "qna_question", columnDefinition = "longtext", length = 500, nullable = false)
+  @Column(name = "qna_question", length = 500, nullable = false)
   private String question;
 
-  @Column(name = "qna_answer", columnDefinition = "longtext", length = 10000)
+  @Column(name = "qna_answer", length = 500)
   private String answer;
 
   @Builder

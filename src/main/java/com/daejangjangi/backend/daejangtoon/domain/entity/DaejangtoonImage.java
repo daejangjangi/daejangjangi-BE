@@ -47,7 +47,7 @@ public class DaejangtoonImage extends BaseEntity {
   @Column(name = "daejangtoon_image_order", columnDefinition = "tinyint", nullable = false)
   private Integer order;
 
-  @Column(name = "daejangtoon_image", nullable = false)
+  @Column(name = "daejangtoon_image", length = 1000, nullable = false)
   private String image;
 
   /*-------------Business Logic---------------------------Business Logic--------------------------*/

@@ -37,17 +37,14 @@ public class Product extends BaseEntity {
   @Column(name = "product_comment", nullable = false)
   private String comment;
 
-  @Column(name = "product_sale_link", nullable = false)
+  @Column(name = "product_sale_link", length = 1000, nullable = false)
   private String saleLink;
 
   @Column(name = "product_regular_price", nullable = false)
-  private Long regularPrice;
+  private Integer regularPrice;
 
-  @Column(name = "product_profile", nullable = false)
+  @Column(name = "product_profile", length = 1000, nullable = false)
   private String profile;
-
-  @Column(name = "product_hit", nullable = false)
-  private Long hit;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "discount_id")
@@ -64,14 +61,12 @@ public class Product extends BaseEntity {
       String name,
       String comment,
       String saleLink,
-      Long regularPrice
+      Integer regularPrice
   ) {
     this.name = name;
     this.comment = comment;
     this.saleLink = saleLink;
     this.regularPrice = regularPrice;
-
-    this.hit = 0L;
   }
 
   public void addDiseases(List<ProductDisease> productDiseases) {
