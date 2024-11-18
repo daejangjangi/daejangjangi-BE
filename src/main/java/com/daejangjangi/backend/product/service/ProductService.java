@@ -10,6 +10,7 @@ import com.daejangjangi.backend.product.domain.entity.Product;
 import com.daejangjangi.backend.product.domain.entity.ProductCategory;
 import com.daejangjangi.backend.product.domain.entity.ProductDisease;
 import com.daejangjangi.backend.product.domain.mapper.ProductMapper;
+import com.daejangjangi.backend.product.exception.NotFoundProductException;
 import com.daejangjangi.backend.product.repository.ProductCategoryRepository;
 import com.daejangjangi.backend.product.repository.ProductDiseaseRepository;
 import com.daejangjangi.backend.product.repository.ProductRepository;
@@ -110,5 +111,15 @@ public class ProductService {
       productCategories.add(productCategory);
     }
     return productCategoryRepository.saveAll(productCategories);
+  }
+
+  /**
+   * 상품 조회
+   *
+   * @param productId 상품 ID
+   * @return Product
+   */
+  public Product findById(Long productId) {
+    return productRepository.findById(productId).orElseThrow(NotFoundProductException::new);
   }
 }

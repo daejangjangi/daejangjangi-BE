@@ -94,4 +94,33 @@ public interface ProductApi {
   @Response401WithSwagger
   @Response403WithSwagger
   ApiGlobalResponse<ProductResponseDto.RecommendedProductList> recommend(@RequestParam int count);
+
+  @Operation(summary = "상품 좋아요", tags = {"Product (상품) API"},
+      responses = {
+          @ApiResponse(
+              responseCode = "400",
+              description = "잘못된 요청",
+              content = @Content(
+                  mediaType = "application/json",
+                  array = @ArraySchema(schema = @Schema(implementation = ApiGlobalResponse.class)),
+                  examples = {
+                      @ExampleObject(
+                          name = "NOT_FOUND_PRODUCT",
+                          value = """
+                              {
+                              "code" : "NOT_FOUND_PRODUCT",
+                              "message" : "존재하지 않는 상품입니다.",
+                              "data" : null
+                              }
+                              """
+                      )}
+              )
+          )
+      })
+  @Response200WithSwagger
+  @Response401WithSwagger
+  @Response403WithSwagger
+  ApiGlobalResponse<Null> likeProduct(
+      @Parameter Long productId
+  );
 }

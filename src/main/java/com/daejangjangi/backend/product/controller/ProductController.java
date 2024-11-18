@@ -5,6 +5,7 @@ import com.daejangjangi.backend.category.service.CategoryService;
 import com.daejangjangi.backend.disease.domain.Disease;
 import com.daejangjangi.backend.disease.service.DiseaseService;
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
+import com.daejangjangi.backend.like.service.ProductLikeService;
 import com.daejangjangi.backend.member.domain.entity.Member;
 import com.daejangjangi.backend.member.service.MemberService;
 import com.daejangjangi.backend.product.domain.dto.ProductRequestDto;
@@ -20,6 +21,7 @@ import org.apache.commons.lang3.ObjectUtils.Null;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,6 +38,7 @@ public class ProductController implements ProductApi {
   private final MemberService memberService;
   private final CategoryService categoryService;
   private final DiseaseService diseaseService;
+  private final ProductLikeService productLikeService;
 
 
   @PreAuthorize("hasAuthority('ADMIN')")
@@ -62,5 +65,16 @@ public class ProductController implements ProductApi {
     ProductResponseDto.RecommendedProductList response
         = new RecommendedProductList(recommendedProducts);
     return ApiGlobalResponse.ok(response);
+  }
+
+  @PreAuthorize("hasAuthority('MEMBER')")
+  @PostMapping("/{productId}/likes")
+  public ApiGlobalResponse<Null> likeProduct(
+      @PathVariable Long productId
+  ) {
+    Member member = memberService.info();
+    Product product = productService.findById(productId);
+    productLikeService.like(member, product);
+    return ApiGlobalResponse.ok();
   }
 }

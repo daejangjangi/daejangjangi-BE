@@ -1,8 +1,8 @@
 package com.daejangjangi.backend.product.domain.mapper;
 
+import com.daejangjangi.backend.product.domain.dto.ProductRequestDto.Register;
 import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.RecommendedProduct;
 import com.daejangjangi.backend.product.domain.entity.Product;
-import com.daejangjangi.backend.product.domain.dto.ProductRequestDto.Register;
 import java.util.List;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
