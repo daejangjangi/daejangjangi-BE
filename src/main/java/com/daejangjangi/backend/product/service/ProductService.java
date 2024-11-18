@@ -72,7 +72,7 @@ public class ProductService {
         .map(c -> c.getCategory().getName()).toList();
     List<Product> recommendedProduct
         = productRepository.findMyProductList(myDiseases, myCategories, count);
-    return ProductMapper.INSTANCE.entitiesToResponses(recommendedProduct);
+    return ProductMapper.INSTANCE.recommendProductsToDtoList(recommendedProduct);
   }
 
   /**

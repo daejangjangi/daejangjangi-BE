@@ -6,6 +6,8 @@ import com.daejangjangi.backend.member.domain.entity.Member;
 import com.daejangjangi.backend.product.domain.entity.Product;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,5 +32,10 @@ public class ProductLikeService {
       product.addLike(productLike);
       productLikeRepository.save(productLike);
     }
+  }
+
+  public Page<Product> findByMember(Member member, Pageable pageable) {
+    Page<ProductLike> myProductLikes = productLikeRepository.findByMember(member, pageable);
+    return myProductLikes.map(ProductLike::getProduct);
   }
 }

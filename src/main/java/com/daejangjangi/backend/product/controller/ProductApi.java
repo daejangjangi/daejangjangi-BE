@@ -7,6 +7,7 @@ import com.daejangjangi.backend.global.annotation.swagger.ResponseCommonWithSwag
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
 import com.daejangjangi.backend.product.domain.dto.ProductRequestDto;
 import com.daejangjangi.backend.product.domain.dto.ProductResponseDto;
+import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.MyProductLikeList;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -105,6 +106,16 @@ public interface ProductApi {
                   array = @ArraySchema(schema = @Schema(implementation = ApiGlobalResponse.class)),
                   examples = {
                       @ExampleObject(
+                          name = "NOT_FOUND_MEMBER",
+                          summary = "미가입 회원",
+                          value = """
+                              {
+                                "code": "NOT_FOUND_MEMBER",
+                                "message": "존재하지 않는 회원입니다.",
+                                "data": null
+                              }"""
+                      ),
+                      @ExampleObject(
                           name = "NOT_FOUND_PRODUCT",
                           value = """
                               {
@@ -122,5 +133,44 @@ public interface ProductApi {
   @Response403WithSwagger
   ApiGlobalResponse<Null> likeProduct(
       @Parameter Long productId
+  );
+
+  @Operation(summary = "관심 상품 목록 조회", tags = {"Product (상품) API"},
+      responses = {
+          @ApiResponse(
+              responseCode = "200",
+              description = "OK",
+              content = @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = MyProductLikeList.class)
+              )
+          ),
+          @ApiResponse(
+              responseCode = "400",
+              description = "잘못된 요청",
+              content = @Content(
+                  mediaType = "application/json",
+                  array = @ArraySchema(schema = @Schema(implementation = ApiGlobalResponse.class)),
+                  examples = {
+                      @ExampleObject(
+                          name = "NOT_FOUND_MEMBER",
+                          summary = "미가입 회원",
+                          value = """
+                              {
+                                "code": "NOT_FOUND_MEMBER",
+                                "message": "존재하지 않는 회원입니다.",
+                                "data": null
+                              }"""
+                      ),
+                  }
+              )
+          )
+      }
+  )
+  @Response401WithSwagger
+  @Response403WithSwagger
+  ApiGlobalResponse<MyProductLikeList> myProductLikeList(
+      @Parameter int page,
+      @Parameter int size
   );
 }
