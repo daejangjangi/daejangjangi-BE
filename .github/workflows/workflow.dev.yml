@@ -30,6 +30,11 @@ jobs:
           mkdir -p src/main/resources
           echo "${{secrets.SECRET_YML}}" | base64 --decode > src/main/resources/application-secret.yml
 
+      - name: Create fcm-secret-key.json
+        run: |
+          mkdir -p src/main/resources
+          echo "${{secrets.FCM_SECRET_KEY_BASE64_ENCODE}}" | base64 --decode > src/main/resources/fcm-secret-key.json
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 

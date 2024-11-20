@@ -72,6 +72,9 @@ dependencies {
     implementation 'org.mapstruct:mapstruct:1.6.2'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.2'
 
+    // Firebase
+    implementation 'com.google.firebase:firebase-admin:9.2.0'
+
     // Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
