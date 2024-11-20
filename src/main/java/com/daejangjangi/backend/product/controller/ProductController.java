@@ -10,8 +10,8 @@ import com.daejangjangi.backend.member.domain.entity.Member;
 import com.daejangjangi.backend.member.service.MemberService;
 import com.daejangjangi.backend.product.domain.dto.ProductRequestDto;
 import com.daejangjangi.backend.product.domain.dto.ProductResponseDto;
-import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.MyProductLike;
 import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.MyProductLikeList;
+import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.ProductInfo;
 import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.RecommendedProductList;
 import com.daejangjangi.backend.product.domain.entity.Product;
 import com.daejangjangi.backend.product.domain.mapper.ProductMapper;
@@ -93,7 +93,7 @@ public class ProductController implements ProductApi {
     Member member = memberService.info();
     Pageable pageable = PageRequest.of(page - 1, size, Direction.DESC, "createdAt");
     Page<Product> myLikedList = productLikeService.findByMember(member, pageable);
-    Page<MyProductLike> myProductLikes
+    Page<ProductInfo> myProductLikes
         = myLikedList.map(product -> ProductMapper.INSTANCE.myProductToDto(product, member));
     MyProductLikeList response = ProductMapper.INSTANCE.pageMyProductToDto(myProductLikes);
     return ApiGlobalResponse.ok(response);

@@ -40,13 +40,14 @@ public class ProductResponseDto {
       @Schema(description = "페이징 정보")
       PageFields pageFields,
 
-      List<MyProductLike> myProductLikeList
+      @Schema(description = "내가 좋아하는 상품 목록")
+      List<ProductInfo> myProductLikeList
   ) {
 
   }
 
   @Schema(name = "MyProductLikeResponse", description = "내가 좋아하는 상품 응답 DTO")
-  public record MyProductLike(
+  public record ProductInfo(
 
       @Schema(description = "상품 아이디", example = "1")
       Long id,

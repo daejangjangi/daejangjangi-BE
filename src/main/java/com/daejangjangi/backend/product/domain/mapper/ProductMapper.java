@@ -3,8 +3,8 @@ package com.daejangjangi.backend.product.domain.mapper;
 import com.daejangjangi.backend.global.common.PageFields;
 import com.daejangjangi.backend.member.domain.entity.Member;
 import com.daejangjangi.backend.product.domain.dto.ProductRequestDto.Register;
-import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.MyProductLike;
 import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.MyProductLikeList;
+import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.ProductInfo;
 import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.RecommendedProduct;
 import com.daejangjangi.backend.product.domain.entity.Product;
 import java.util.List;
@@ -44,7 +44,7 @@ public interface ProductMapper {
   @Mapping(target = "saleLink", source = "product.saleLink")
   @Mapping(target = "profile", source = "product.profile")
   @Mapping(target = "isLiked", expression = "java(isLikedByMember(product, member))")
-  MyProductLike myProductToDto(Product product, Member member);
+  ProductInfo myProductToDto(Product product, Member member);
 
   default boolean isLikedByMember(Product product, Member member) {
     return product.getProductLikes().stream()
@@ -53,19 +53,21 @@ public interface ProductMapper {
 
   @Mapping(target = "pageFields", expression = "java(pageToDto(myProductLikes))")
   @Mapping(target = "myProductLikeList", source = "myProductLikes.content")
-  MyProductLikeList pageMyProductToDto(Page<MyProductLike> myProductLikes);
+  MyProductLikeList pageMyProductToDto(Page<ProductInfo> myProductLikes);
 
   @Mapping(target = "pageNumber", expression = "java(getPageNumber(myProductLikes))")
   @Mapping(target = "pageSize", source = "myProductLikes.size")
   @Mapping(target = "totalElements", source = "myProductLikes.totalElements")
   @Mapping(target = "totalPages", source = "myProductLikes.totalPages")
-  PageFields pageToDto(Page<MyProductLike> myProductLikes);
+  PageFields pageToDto(Page<ProductInfo> myProductLikes);
 
-  default int getPageNumber(Page<MyProductLike> myProductLikes) {
+  default int getPageNumber(Page<ProductInfo> myProductLikes) {
     if (myProductLikes.getTotalElements() > 0) {
       return myProductLikes.getNumber() + 1;
     } else {
       return 0;
     }
   }
+
+  List<ProductInfo> bestProductToDto(List<Product> bestProduct);
 }
