@@ -5,6 +5,7 @@ import com.daejangjangi.backend.global.annotation.swagger.Response401WithSwagger
 import com.daejangjangi.backend.global.annotation.swagger.Response403WithSwagger;
 import com.daejangjangi.backend.global.annotation.swagger.ResponseCommonWithSwagger;
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
+import com.daejangjangi.backend.product.domain.dto.DiscountRequestDto.DiscountRegister;
 import com.daejangjangi.backend.product.domain.dto.ProductRequestDto;
 import com.daejangjangi.backend.product.domain.dto.ProductResponseDto;
 import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.ProductInfoList;
@@ -58,6 +59,42 @@ public interface ProductApi {
   ApiGlobalResponse<Null> register(
       @Parameter ProductRequestDto.Register request,
       @Parameter MultipartFile profileImage
+  );
+
+  @Operation(summary = "상품 할인 등록", tags = {"Product (상품) API"},
+      responses = {
+          @ApiResponse(
+              responseCode = "400",
+              description = "잘못된 요청",
+              content = @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = ApiGlobalResponse.class),
+                  examples = {
+                      @ExampleObject(
+                          name = "BAD_REQUEST",
+                          summary = "잘못된 요청",
+                          value = """
+                              "code": "BAD_REQUEST",
+                              "message": "잘못된 요청입니다.",
+                              "data": [
+                                 "name : 할인명을 입력하세요.",
+                                 "rate : 할인율을 입력하세요.",
+                                 "rate : 할인울은 최대 100이하 입니다.",
+                                 "rate : 할인율은 최소 1이상 입니다."
+                              ]
+                              """
+                      )
+                  }
+              )
+          )
+      }
+  )
+  @Response200WithSwagger
+  @Response401WithSwagger
+  @Response403WithSwagger
+  ApiGlobalResponse<Null> discount(
+      @Parameter Long productId,
+      @Parameter DiscountRegister request
   );
 
   @Operation(summary = "추천 상품 조회", tags = {"Product (상품) API"},

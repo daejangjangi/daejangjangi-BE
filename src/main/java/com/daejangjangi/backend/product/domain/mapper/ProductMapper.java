@@ -6,6 +6,7 @@ import com.daejangjangi.backend.product.domain.dto.ProductRequestDto.Register;
 import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.ProductInfo;
 import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.ProductInfoList;
 import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.RecommendedProduct;
+import com.daejangjangi.backend.product.domain.entity.Discount;
 import com.daejangjangi.backend.product.domain.entity.Product;
 import java.util.List;
 import org.mapstruct.IterableMapping;
@@ -44,7 +45,7 @@ public interface ProductMapper {
   @Mapping(target = "id", source = "product.id")
   @Mapping(target = "name", source = "product.name")
   @Mapping(target = "regularPrice", source = "product.regularPrice")
-  @Mapping(target = "discountRate", source = "product.discount.rate")
+  @Mapping(target = "discountRate", expression = "java(initDiscountRate(product.getDiscount()))")
   @Mapping(target = "saleLink", source = "product.saleLink")
   @Mapping(target = "profile", source = "product.profile")
   @Mapping(target = "isLiked", expression = "java(isLikedByMember(product, member))")
@@ -53,6 +54,14 @@ public interface ProductMapper {
   default boolean isLikedByMember(Product product, Member member) {
     return product.getProductLikes().stream()
         .anyMatch(like -> like.getMember().equals(member));
+  }
+
+  default int initDiscountRate(Discount discount) {
+    if (discount == null) {
+      return 0;
+    } else {
+      return discount.getRate();
+    }
   }
 
   @Mapping(target = "pageFields", expression = "java(pageToDto(productInfos))")

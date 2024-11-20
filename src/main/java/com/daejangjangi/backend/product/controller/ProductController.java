@@ -8,12 +8,15 @@ import com.daejangjangi.backend.global.response.ApiGlobalResponse;
 import com.daejangjangi.backend.like.service.ProductLikeService;
 import com.daejangjangi.backend.member.domain.entity.Member;
 import com.daejangjangi.backend.member.service.MemberService;
+import com.daejangjangi.backend.product.domain.dto.DiscountRequestDto.DiscountRegister;
 import com.daejangjangi.backend.product.domain.dto.ProductRequestDto;
 import com.daejangjangi.backend.product.domain.dto.ProductResponseDto;
 import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.ProductInfo;
 import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.ProductInfoList;
 import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.RecommendedProductList;
+import com.daejangjangi.backend.product.domain.entity.Discount;
 import com.daejangjangi.backend.product.domain.entity.Product;
+import com.daejangjangi.backend.product.domain.mapper.DiscountMapper;
 import com.daejangjangi.backend.product.domain.mapper.ProductMapper;
 import com.daejangjangi.backend.product.service.ProductService;
 import jakarta.validation.Valid;
@@ -29,6 +32,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -57,6 +61,18 @@ public class ProductController implements ProductApi {
     List<Category> categories = categoryService.findByNames(request.categories());
     Product product = ProductMapper.INSTANCE.requestToEntity(request);
     productService.register(product, profileImage, diseases, categories);
+    return ApiGlobalResponse.ok();
+  }
+
+  @PreAuthorize("hasAuthority('ADMIN')")
+  @PostMapping("/{productId}")
+  public ApiGlobalResponse<Null> discount(
+      @PathVariable Long productId,
+      @Valid @RequestBody DiscountRegister request
+  ) {
+    Product product = productService.findById(productId);
+    Discount discount = DiscountMapper.INSTANCE.dtoToEntity(request);
+    productService.registerAndUpdateDiscount(product, discount);
     return ApiGlobalResponse.ok();
   }
 

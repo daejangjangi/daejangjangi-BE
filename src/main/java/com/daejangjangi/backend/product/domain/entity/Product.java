@@ -20,6 +20,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Table(name = "products")
 @Entity
@@ -49,6 +51,7 @@ public class Product extends BaseEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "discount_id")
+  @OnDelete(action = OnDeleteAction.SET_NULL)
   private Discount discount;
 
   @OneToMany(mappedBy = "product", orphanRemoval = true, cascade = CascadeType.ALL)
