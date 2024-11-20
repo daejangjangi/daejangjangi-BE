@@ -2,10 +2,8 @@ package com.daejangjangi.backend.product.domain.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 
 public class ProductRequestDto {
 
