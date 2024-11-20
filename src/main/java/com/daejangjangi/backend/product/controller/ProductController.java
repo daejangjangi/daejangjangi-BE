@@ -10,9 +10,8 @@ import com.daejangjangi.backend.member.domain.entity.Member;
 import com.daejangjangi.backend.member.service.MemberService;
 import com.daejangjangi.backend.product.domain.dto.ProductRequestDto;
 import com.daejangjangi.backend.product.domain.dto.ProductResponseDto;
-import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.BestProductList;
-import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.MyProductLikeList;
 import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.ProductInfo;
+import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.ProductInfoList;
 import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.RecommendedProductList;
 import com.daejangjangi.backend.product.domain.entity.Product;
 import com.daejangjangi.backend.product.domain.mapper.ProductMapper;
@@ -87,7 +86,7 @@ public class ProductController implements ProductApi {
 
   @PreAuthorize("hasAuthority('MEMBER')")
   @GetMapping("/likes")
-  public ApiGlobalResponse<MyProductLikeList> myProductLikeList(
+  public ApiGlobalResponse<ProductInfoList> myProductLikeList(
       @RequestParam(defaultValue = "1") int page,
       @RequestParam(defaultValue = "10") int size
   ) {

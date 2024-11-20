@@ -34,13 +34,13 @@ public class ProductResponseDto {
 
   }
 
-  @Schema(name = "MyProductLikeListResponse", description = "내가 좋아하는 상품 목록 응답 DTO")
-  public record MyProductLikeList(
+  @Schema(name = "ProductInfoListResponse", description = "상품 목록 응답 DTO")
+  public record ProductInfoList(
 
       @Schema(description = "페이징 정보")
       PageFields pageFields,
 
-      @Schema(description = "내가 좋아하는 상품 목록")
+      @Schema(description = "상품 목록")
       List<ProductInfo> myProductLikeList
   ) {
 

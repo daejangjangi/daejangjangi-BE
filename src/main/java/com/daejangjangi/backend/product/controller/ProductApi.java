@@ -7,7 +7,7 @@ import com.daejangjangi.backend.global.annotation.swagger.ResponseCommonWithSwag
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
 import com.daejangjangi.backend.product.domain.dto.ProductRequestDto;
 import com.daejangjangi.backend.product.domain.dto.ProductResponseDto;
-import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.MyProductLikeList;
+import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.ProductInfoList;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -142,7 +142,7 @@ public interface ProductApi {
               description = "OK",
               content = @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = MyProductLikeList.class)
+                  schema = @Schema(implementation = ProductInfoList.class)
               )
           ),
           @ApiResponse(
@@ -169,7 +169,7 @@ public interface ProductApi {
   )
   @Response401WithSwagger
   @Response403WithSwagger
-  ApiGlobalResponse<MyProductLikeList> myProductLikeList(
+  ApiGlobalResponse<ProductInfoList> myProductLikeList(
       @Parameter int page,
       @Parameter int size
   );
