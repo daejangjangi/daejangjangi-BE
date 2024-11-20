@@ -10,6 +10,7 @@ import com.daejangjangi.backend.member.domain.entity.Member;
 import com.daejangjangi.backend.member.service.MemberService;
 import com.daejangjangi.backend.product.domain.dto.ProductRequestDto;
 import com.daejangjangi.backend.product.domain.dto.ProductResponseDto;
+import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.BestProductList;
 import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.MyProductLikeList;
 import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.ProductInfo;
 import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.RecommendedProductList;
@@ -98,4 +99,14 @@ public class ProductController implements ProductApi {
     MyProductLikeList response = ProductMapper.INSTANCE.pageMyProductToDto(myProductLikes);
     return ApiGlobalResponse.ok(response);
   }
+
+  //  @PreAuthorize("hasAuthority('MEMBER')")
+//  @GetMapping("/best")
+//  public ApiGlobalResponse<BestProductList> bestProducts() {
+//    List<Product> bestProduct = productService.getBestProducts();
+//    List<ProductInfo> productInfoList
+//        = ProductMapper.INSTANCE.bestProductToDto(bestProduct);
+//    BestProductList response = new BestProductList(productInfoList);
+//    return ApiGlobalResponse.ok(response);
+//  }
 }

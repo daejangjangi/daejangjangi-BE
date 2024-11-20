@@ -37,6 +37,10 @@ public interface ProductMapper {
   @Mapping(target = "profile", source = "product.profile")
   RecommendedProduct recommendProductToDto(Product product);
 
+  @IterableMapping(elementTargetType = ProductInfo.class, qualifiedByName = "myProductToDto")
+  List<ProductInfo> bestProductToDto(List<Product> bestProduct);
+
+  @Named("myProductToDto")
   @Mapping(target = "id", source = "product.id")
   @Mapping(target = "name", source = "product.name")
   @Mapping(target = "regularPrice", source = "product.regularPrice")
@@ -68,6 +72,4 @@ public interface ProductMapper {
       return 0;
     }
   }
-
-  List<ProductInfo> bestProductToDto(List<Product> bestProduct);
 }

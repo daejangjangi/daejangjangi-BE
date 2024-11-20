@@ -64,6 +64,8 @@ public class ProductService {
    * @param member 로그인 회원
    * @param count  추천 갯수
    * @return List RecommendedProduct
+   * <p>
+   * // TODO : 태그가 1개 이상 일치하는 상품들이 count 미만인 경우 랜덤한 상품 추가 조회하도록 추가 구현.
    */
   public List<RecommendedProduct> getRecommendedProducts(Member member, int count) {
     List<String> myDiseases = member.getDiseases().stream()
@@ -122,4 +124,15 @@ public class ProductService {
   public Product findById(Long productId) {
     return productRepository.findById(productId).orElseThrow(NotFoundProductException::new);
   }
+
+  /**
+   * TODO : 고민이 필요하다.
+   * 조회 시마다 해당 상품에 대한 조회수를 rdb + redis에 카운팅한다.(이는
+   *
+   * @return List Product
+   */
+//  public List<Product> getBestProducts() {
+//
+//    return new ArrayList<>();
+//  }
 }

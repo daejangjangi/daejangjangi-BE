@@ -46,6 +46,14 @@ public class ProductResponseDto {
 
   }
 
+  @Schema(name = "BestProductListResponse", description = "인기 상품 목록 응답 DTO")
+  public record BestProductList(
+      @Schema(description = "인기 상품 목록")
+      List<ProductInfo> bestProductList
+  ) {
+
+  }
+
   @Schema(name = "MyProductLikeResponse", description = "내가 좋아하는 상품 응답 DTO")
   public record ProductInfo(
 
