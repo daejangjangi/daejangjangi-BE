@@ -9,6 +9,7 @@ import com.daejangjangi.backend.product.domain.dto.DiscountRequestDto.DiscountRe
 import com.daejangjangi.backend.product.domain.dto.ProductRequestDto;
 import com.daejangjangi.backend.product.domain.dto.ProductResponseDto;
 import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.ProductInfoList;
+import com.daejangjangi.backend.product.domain.enums.ProductSortKey;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -207,6 +208,47 @@ public interface ProductApi {
   @Response401WithSwagger
   @Response403WithSwagger
   ApiGlobalResponse<ProductInfoList> myProductLikeList(
+      @Parameter int page,
+      @Parameter int size
+  );
+
+  @Operation(summary = "검색 및 정렬된 상품 목록 조회", tags = {"Product (상품) API"},
+      responses = {
+          @ApiResponse(
+              responseCode = "200",
+              description = "OK",
+              content = @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = ProductInfoList.class)
+              )
+          ),
+          @ApiResponse(
+              responseCode = "400",
+              description = "잘못된 요청",
+              content = @Content(
+                  mediaType = "application/json",
+                  array = @ArraySchema(schema = @Schema(implementation = ApiGlobalResponse.class)),
+                  examples = {
+                      @ExampleObject(
+                          name = "NOT_FOUND_MEMBER",
+                          summary = "미가입 회원",
+                          value = """
+                              {
+                                "code": "NOT_FOUND_MEMBER",
+                                "message": "존재하지 않는 회원입니다.",
+                                "data": null
+                              }"""
+                      ),
+                  }
+              )
+          )
+      }
+  )
+  @Response401WithSwagger
+  @Response403WithSwagger
+  ApiGlobalResponse<ProductInfoList> searchAndSort(
+      @Parameter String keyword,
+      @Parameter ProductSortKey sortKey,
       @Parameter int page,
       @Parameter int size
   );

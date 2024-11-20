@@ -16,6 +16,7 @@ import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.ProductInf
 import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.RecommendedProductList;
 import com.daejangjangi.backend.product.domain.entity.Discount;
 import com.daejangjangi.backend.product.domain.entity.Product;
+import com.daejangjangi.backend.product.domain.enums.ProductSortKey;
 import com.daejangjangi.backend.product.domain.mapper.DiscountMapper;
 import com.daejangjangi.backend.product.domain.mapper.ProductMapper;
 import com.daejangjangi.backend.product.service.ProductService;
@@ -110,8 +111,26 @@ public class ProductController implements ProductApi {
     Pageable pageable = PageRequest.of(page - 1, size, Direction.DESC, "createdAt");
     Page<Product> myLikedList = productLikeService.findByMember(member, pageable);
     Page<ProductInfo> myProductLikes
-        = myLikedList.map(product -> ProductMapper.INSTANCE.myProductToDto(product, member));
-    MyProductLikeList response = ProductMapper.INSTANCE.pageMyProductToDto(myProductLikes);
+        = myLikedList.map(product -> ProductMapper.INSTANCE.ProductToInfoDto(product, member));
+    ProductInfoList response = ProductMapper.INSTANCE.pageMyProductToDto(myProductLikes);
+    return ApiGlobalResponse.ok(response);
+  }
+
+  @PreAuthorize("hasAuthority('MEMBER')")
+  @GetMapping("/search")
+  public ApiGlobalResponse<ProductInfoList> searchAndSort(
+      @RequestParam(value = "keyword", defaultValue = "") String keyword,
+      @RequestParam(value = "sortKey", defaultValue = "전체") ProductSortKey sortKey,
+      @RequestParam(defaultValue = "1") int page,
+      @RequestParam(defaultValue = "10") int size
+  ) {
+    Member member = memberService.info();
+    Pageable pageable = PageRequest.of(page - 1, size, Direction.DESC, "createdAt");
+    Page<Product> productList
+        = productService.getSearchedAndSortedProductList(keyword, sortKey, pageable);
+    Page<ProductInfo> productInfoList
+        = productList.map(product -> ProductMapper.INSTANCE.ProductToInfoDto(product, member));
+    ProductInfoList response = ProductMapper.INSTANCE.pageSearchedProductToDto(productInfoList);
     return ApiGlobalResponse.ok(response);
   }
 
