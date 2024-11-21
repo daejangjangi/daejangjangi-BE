@@ -20,13 +20,13 @@ public class Discount extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "dicount_id")
+  @Column(name = "discount_id")
   private Long id;
 
   @Column(name = "discount_name", nullable = false, unique = true)
   private String name;
 
-  @Column(name = "dicount_rate", columnDefinition = "tinyint", nullable = false)
+  @Column(name = "discount_rate", columnDefinition = "tinyint", nullable = false)
   private Integer rate;
 
   @Builder

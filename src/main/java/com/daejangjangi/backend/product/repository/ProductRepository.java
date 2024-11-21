@@ -2,8 +2,6 @@ package com.daejangjangi.backend.product.repository;
 
 import com.daejangjangi.backend.product.domain.entity.Product;
 import java.util.List;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -26,13 +24,4 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
       @Param("categoryNames") List<String> categoryNames,
       @Param("count") Integer count
   );
-
-  @Query(value = """
-        SELECT DISTINCT p
-        FROM Product p
-        WHERE 1=1
-        AND p.name LIKE concat('%',:keyword,'%') OR p.comment LIKE concat('%',:keyword,'%')
-        ORDER BY p.createdAt DESC
-      """)
-  Page<Product> findByKeyword(String keyword, Pageable pageable);
 }

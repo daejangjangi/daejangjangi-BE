@@ -1,5 +1,7 @@
 package com.daejangjangi.backend.product.service;
 
+import static com.daejangjangi.backend.product.domain.entity.QProduct.product;
+
 import com.daejangjangi.backend.category.domain.Category;
 import com.daejangjangi.backend.disease.domain.Disease;
 import com.daejangjangi.backend.file.service.FileValidator;
@@ -17,13 +19,20 @@ import com.daejangjangi.backend.product.repository.DiscountRepository;
 import com.daejangjangi.backend.product.repository.ProductCategoryRepository;
 import com.daejangjangi.backend.product.repository.ProductDiseaseRepository;
 import com.daejangjangi.backend.product.repository.ProductRepository;
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.core.types.dsl.NumberExpression;
+import com.querydsl.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,6 +48,7 @@ public class ProductService {
   private final S3Manager s3Manager;
   private final ProductDiseaseRepository productDiseaseRepository;
   private final DiscountRepository discountRepository;
+  private final JPAQueryFactory jpaQueryFactory;
 
   /**
    * 상품 저장
@@ -147,8 +157,55 @@ public class ProductService {
       ProductSortKey sortKey,
       Pageable pageable
   ) {
-    Page<Product> searchedProductList = productRepository.findByKeyword(keyword, pageable);
-    return sortProductList(searchedProductList, sortKey);
+    // 검색 조건
+    BooleanExpression predicate = product.name.like("%" + keyword + "%")
+        .or(product.comment.like("%" + keyword + "%"));
+
+    // 정렬 조건
+    OrderSpecifier<?>[] orderSpecifier = createOrderSpecifier(sortKey);
+
+//  1. 우선 ID만 페이징하여 조회
+    List<Long> productIds = jpaQueryFactory
+        .select(product.id)
+        .from(product)
+        .where(predicate)
+        .orderBy(orderSpecifier)
+        .offset(pageable.getOffset())
+        .limit(pageable.getPageSize())
+        .fetch();
+
+//  2. 조회된 ID로 실제 데이터 조회
+    JPAQuery<Product> query = jpaQueryFactory
+        .selectFrom(product)
+        .leftJoin(product.productLikes).fetchJoin()
+        .where(product.id.in(productIds))
+        .orderBy(orderSpecifier);
+
+//  3. 카운트 쿼리
+    JPAQuery<Long> countQuery = jpaQueryFactory
+        .select(product.countDistinct())
+        .from(product)
+        .where(predicate);
+
+//    // 쿼리 실행
+//    JPAQuery<Product> query = jpaQueryFactory
+//        .selectFrom(product)
+//        .leftJoin(product.productLikes).fetchJoin()
+//        .where(predicate)
+//        .offset(pageable.getOffset())
+//        .limit(pageable.getPageSize())
+//        .orderBy(orderSpecifier);
+//
+//    JPAQuery<Long> countQuery = jpaQueryFactory
+//        .select(product.countDistinct())
+//        .from(product)
+//        .where(predicate);
+
+    return PageableExecutionUtils.getPage(
+        query.fetch(),
+        pageable,
+        countQuery::fetchOne
+    );
   }
 
   /**
@@ -182,34 +239,32 @@ public class ProductService {
   /**
    * 상품 정렬
    *
-   * @param searchedProductList 조회된 상품 목록
-   * @param sortKey             상품 정렬 키
+   * @param sortKey 상품 정렬 키
    * @return Page Product
    */
-  private Page<Product> sortProductList(
-      Page<Product> searchedProductList,
-      ProductSortKey sortKey
-  ) {
-    List<Product> sortedContent = switch (sortKey) {
-      case 인기순 -> searchedProductList.getContent().stream()
-          .sorted((p1, p2) -> p2.getProductLikes().size() - p1.getProductLikes().size())
-          .toList();
-      case 낮은가격순 -> searchedProductList.getContent().stream()
-          .sorted((p1, p2) -> {
-            int p1Rate = p1.getDiscount() == null ? 0 : p1.getDiscount().getRate();
-            int p2Rate = p2.getDiscount() == null ? 0 : p2.getDiscount().getRate();
-            int p1Price = p1.getRegularPrice() - (int) (p1.getRegularPrice() * p1Rate * 0.01);
-            int p2Price = p2.getRegularPrice() - (int) (p2.getRegularPrice() * p2Rate * 0.01);
-            return p1Price - p2Price;
-          })
-          .toList();
-      default -> searchedProductList.getContent();
+  private OrderSpecifier<?>[] createOrderSpecifier(ProductSortKey sortKey) {
+    return switch (sortKey) {
+      case 인기순 -> new OrderSpecifier[]{
+          new OrderSpecifier<>(Order.DESC, product.productLikes.size()),
+          new OrderSpecifier<>(Order.ASC, product.id)
+      };
+      case 낮은가격순 -> {
+        NumberExpression<Integer> discountRate = new CaseBuilder()
+            .when(product.discount.isNull())
+            .then(0)
+            .otherwise(product.discount.rate);
+        NumberExpression<Integer> price = product.regularPrice.subtract(
+            product.regularPrice.multiply(discountRate).multiply(0.01).castToNum(Integer.class)
+        );
+        yield new OrderSpecifier[]{
+            new OrderSpecifier<>(Order.ASC, price),
+            new OrderSpecifier<>(Order.ASC, product.id)
+        };
+      }
+      default -> new OrderSpecifier[]{
+          new OrderSpecifier<>(Order.DESC, product.createdAt),
+          new OrderSpecifier<>(Order.ASC, product.id)
+      };
     };
-
-    return new PageImpl<>(
-        sortedContent,
-        searchedProductList.getPageable(),
-        searchedProductList.getTotalElements()
-    );
   }
 }
