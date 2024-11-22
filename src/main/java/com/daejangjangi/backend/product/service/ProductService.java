@@ -19,17 +19,20 @@ import com.daejangjangi.backend.product.repository.DiscountRepository;
 import com.daejangjangi.backend.product.repository.ProductCategoryRepository;
 import com.daejangjangi.backend.product.repository.ProductDiseaseRepository;
 import com.daejangjangi.backend.product.repository.ProductRepository;
+import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.NumberExpression;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
@@ -40,6 +43,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 @RequiredArgsConstructor
 @SuppressWarnings("NonAsciiCharacters")
+@Slf4j
 public class ProductService {
 
   private final ProductRepository productRepository;
@@ -177,6 +181,7 @@ public class ProductService {
 //  2. 조회된 ID로 실제 데이터 조회
     JPAQuery<Product> query = jpaQueryFactory
         .selectFrom(product)
+        .leftJoin(product.discount).fetchJoin()
         .leftJoin(product.productLikes).fetchJoin()
         .where(product.id.in(productIds))
         .orderBy(orderSpecifier);
@@ -186,20 +191,6 @@ public class ProductService {
         .select(product.countDistinct())
         .from(product)
         .where(predicate);
-
-//    // 쿼리 실행
-//    JPAQuery<Product> query = jpaQueryFactory
-//        .selectFrom(product)
-//        .leftJoin(product.productLikes).fetchJoin()
-//        .where(predicate)
-//        .offset(pageable.getOffset())
-//        .limit(pageable.getPageSize())
-//        .orderBy(orderSpecifier);
-//
-//    JPAQuery<Long> countQuery = jpaQueryFactory
-//        .select(product.countDistinct())
-//        .from(product)
-//        .where(predicate);
 
     return PageableExecutionUtils.getPage(
         query.fetch(),
@@ -254,8 +245,8 @@ public class ProductService {
             .then(0)
             .otherwise(product.discount.rate);
         NumberExpression<Integer> price = product.regularPrice.subtract(
-            product.regularPrice.multiply(discountRate).multiply(0.01).castToNum(Integer.class)
-        );
+            product.regularPrice.multiply(discountRate).divide(100)
+        ).castToNum(Integer.class);
         yield new OrderSpecifier[]{
             new OrderSpecifier<>(Order.ASC, price),
             new OrderSpecifier<>(Order.ASC, product.id)
