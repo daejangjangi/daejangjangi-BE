@@ -38,3 +38,15 @@ VALUES ("자유"),
        ("복부팽만"),
        ("기타")
 ;
+
+INSERT INTO products(product_name, product_comment, product_sale_link, product_regular_price,
+                     product_profile, created_at, created_by)
+VALUES ("상품1", "코멘트1", "판매 링크", 10000, "프로필 이미지", now(), "hyensu"),
+       ("상품2", "코멘트2", "판매 링크", 10000, "프로필 이미지", now(), "hyensu"),
+       ("상품3", "코멘트3", "판매 링크", 10000, "프로필 이미지", now(), "hyensu"),
+       ("상품4", "코멘트4", "판매 링크", 10000, "프로필 이미지", now(), "hyensu"),
+       ("상품5", "코멘트5", "판매 링크", 10000, "프로필 이미지", now(), "hyensu"),
+       ("상품6", "코멘트6", "판매 링크", 10000, "프로필 이미지", now(), "hyensu"),
+       ("상품7", "코멘트7", "판매 링크", 10000, "프로필 이미지", now(), "hyensu"),
+       ("상품8", "코멘트8", "판매 링크", 10000, "프로필 이미지", now(), "hyensu"),
+       ("상품9", "코멘트9", "판매 링크", 10000, "프로필 이미지", now(), "hyensu");

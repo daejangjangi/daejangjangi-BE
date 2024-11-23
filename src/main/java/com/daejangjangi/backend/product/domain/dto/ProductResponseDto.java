@@ -1,5 +1,6 @@
 package com.daejangjangi.backend.product.domain.dto;
 
+import com.daejangjangi.backend.global.common.PageFields;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 
@@ -29,6 +30,45 @@ public class ProductResponseDto {
 
       @Schema(description = "상품 프로필 이미지", example = "이미지 링크")
       String profile
+  ) {
+
+  }
+
+  @Schema(name = "MyProductLikeListResponse", description = "내가 좋아하는 상품 목록 응답 DTO")
+  public record MyProductLikeList(
+
+      @Schema(description = "페이징 정보")
+      PageFields pageFields,
+
+      List<MyProductLike> myProductLikeList
+  ) {
+
+  }
+
+  @Schema(name = "MyProductLikeResponse", description = "내가 좋아하는 상품 응답 DTO")
+  public record MyProductLike(
+
+      @Schema(description = "상품 아이디", example = "1")
+      Long id,
+
+      @Schema(description = "상품명", example = "차전차피 식이섬유")
+      String name,
+
+      @Schema(description = "상품 정가", example = "15000")
+      Integer regularPrice,
+
+      @Schema(description = "상품 할인율", example = "3")
+      Integer discountRate,
+
+      @Schema(description = "상품 판매 링크", example = "상품 판매 링크")
+      String saleLink,
+
+      @Schema(description = "상품 프로필 이미지", example = "상품 프로필 이미지")
+      String profile,
+
+      @Schema(description = "상품 로그인 회원 좋아요 여부", example = "true")
+      Boolean isLiked
+
   ) {
 
   }

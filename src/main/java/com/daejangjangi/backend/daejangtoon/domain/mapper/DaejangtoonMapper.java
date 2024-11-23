@@ -6,7 +6,6 @@ import com.daejangjangi.backend.daejangtoon.domain.entity.Daejangtoon;
 import com.daejangjangi.backend.daejangtoon.domain.entity.DaejangtoonChapter;
 import com.daejangjangi.backend.daejangtoon.domain.entity.DaejangtoonImage;
 import com.daejangjangi.backend.member.domain.entity.Member;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import org.mapstruct.Mapper;
@@ -26,34 +25,17 @@ public interface DaejangtoonMapper {
   @Mapping(target = "title", source = "registerRequest.title")
   DaejangtoonChapter registerChapterToEntity(DaejangtoonRequestDto.RegisterChapter registerRequest);
 
-  @Mapping(target = "id", source = "daejangtoon.id")
-  @Mapping(target = "title", source = "daejangtoon.title")
-  @Mapping(target = "overview", source = "daejangtoon.overview")
-  @Mapping(target = "yoil", source = "daejangtoon.yoil")
-  @Mapping(target = "chapters", expression = "java(chaptersMapper(daejangtoon.getChapters(), member))")
-  DaejangtoonResponseDto.Daejangtoon entityToDaejangtoonResponse(Daejangtoon daejangtoon,
-      Member member);
-
-  // TODO : 로직 리팩토링 필요
-  default List<DaejangtoonResponseDto.DaejangtoonChapters> chaptersMapper(
-      List<DaejangtoonChapter> daejangtoonChapters,
-      Member member
-  ) {
-    List<DaejangtoonResponseDto.DaejangtoonChapters> chapters = new ArrayList<>();
-    for (DaejangtoonChapter chapter : daejangtoonChapters) {
-      chapters.add(
-          new DaejangtoonResponseDto.DaejangtoonChapters(
-              chapter.getId(),
-              chapter.getChapter(),
-              chapter.getTitle(),
-              chapter.getProfile(),
-              chapter.getHit(),
-              chapter.getToonLikes().size(),
-              isLikedByMember(chapter, member)
-          )
-      );
-    }
-    return chapters;
+  default DaejangtoonResponseDto.Daejangtoon entityToDaejangtoonResponse(Daejangtoon daejangtoon,
+      Member member) {
+    return new DaejangtoonResponseDto.Daejangtoon(
+        daejangtoon.getId(),
+        daejangtoon.getTitle(),
+        daejangtoon.getOverview(),
+        daejangtoon.getYoil(),
+        daejangtoon.getChapters().stream()
+            .map(chapter -> entityToChaptersResponse(chapter, member))
+            .toList()
+    );
   }
 
   @Mapping(target = "id", source = "chapter.id")

@@ -5,10 +5,13 @@ import com.daejangjangi.backend.category.service.CategoryService;
 import com.daejangjangi.backend.disease.domain.Disease;
 import com.daejangjangi.backend.disease.service.DiseaseService;
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
+import com.daejangjangi.backend.like.service.ProductLikeService;
 import com.daejangjangi.backend.member.domain.entity.Member;
 import com.daejangjangi.backend.member.service.MemberService;
 import com.daejangjangi.backend.product.domain.dto.ProductRequestDto;
 import com.daejangjangi.backend.product.domain.dto.ProductResponseDto;
+import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.MyProductLike;
+import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.MyProductLikeList;
 import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.RecommendedProductList;
 import com.daejangjangi.backend.product.domain.entity.Product;
 import com.daejangjangi.backend.product.domain.mapper.ProductMapper;
@@ -17,9 +20,14 @@ import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils.Null;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,6 +44,7 @@ public class ProductController implements ProductApi {
   private final MemberService memberService;
   private final CategoryService categoryService;
   private final DiseaseService diseaseService;
+  private final ProductLikeService productLikeService;
 
 
   @PreAuthorize("hasAuthority('ADMIN')")
@@ -61,6 +70,32 @@ public class ProductController implements ProductApi {
         = productService.getRecommendedProducts(member, count);
     ProductResponseDto.RecommendedProductList response
         = new RecommendedProductList(recommendedProducts);
+    return ApiGlobalResponse.ok(response);
+  }
+
+  @PreAuthorize("hasAuthority('MEMBER')")
+  @PostMapping("/{productId}/likes")
+  public ApiGlobalResponse<Null> likeProduct(
+      @PathVariable Long productId
+  ) {
+    Member member = memberService.info();
+    Product product = productService.findById(productId);
+    productLikeService.like(member, product);
+    return ApiGlobalResponse.ok();
+  }
+
+  @PreAuthorize("hasAuthority('MEMBER')")
+  @GetMapping("/likes")
+  public ApiGlobalResponse<MyProductLikeList> myProductLikeList(
+      @RequestParam(defaultValue = "1") int page,
+      @RequestParam(defaultValue = "10") int size
+  ) {
+    Member member = memberService.info();
+    Pageable pageable = PageRequest.of(page - 1, size, Direction.DESC, "createdAt");
+    Page<Product> myLikedList = productLikeService.findByMember(member, pageable);
+    Page<MyProductLike> myProductLikes
+        = myLikedList.map(product -> ProductMapper.INSTANCE.myProductToDto(product, member));
+    MyProductLikeList response = ProductMapper.INSTANCE.pageMyProductToDto(myProductLikes);
     return ApiGlobalResponse.ok(response);
   }
 }

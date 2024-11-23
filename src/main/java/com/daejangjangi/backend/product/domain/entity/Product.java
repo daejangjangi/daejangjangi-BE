@@ -1,6 +1,7 @@
 package com.daejangjangi.backend.product.domain.entity;
 
 import com.daejangjangi.backend.global.common.BaseEntity;
+import com.daejangjangi.backend.like.domain.entity.ProductLike;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -37,17 +38,14 @@ public class Product extends BaseEntity {
   @Column(name = "product_comment", nullable = false)
   private String comment;
 
-  @Column(name = "product_sale_link", nullable = false)
+  @Column(name = "product_sale_link", length = 1000, nullable = false)
   private String saleLink;
 
   @Column(name = "product_regular_price", nullable = false)
-  private Long regularPrice;
+  private Integer regularPrice;
 
-  @Column(name = "product_profile", nullable = false)
+  @Column(name = "product_profile", length = 1000, nullable = false)
   private String profile;
-
-  @Column(name = "product_hit", nullable = false)
-  private Long hit;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "discount_id")
@@ -59,19 +57,24 @@ public class Product extends BaseEntity {
   @OneToMany(mappedBy = "product", orphanRemoval = true, cascade = CascadeType.ALL)
   private List<ProductCategory> categories;
 
+  @OneToMany(mappedBy = "product", orphanRemoval = true, cascade = CascadeType.ALL)
+  private List<ProductLike> productLikes;
+
   @Builder
   public Product(
       String name,
       String comment,
       String saleLink,
-      Long regularPrice
+      Integer regularPrice
   ) {
     this.name = name;
     this.comment = comment;
     this.saleLink = saleLink;
     this.regularPrice = regularPrice;
 
-    this.hit = 0L;
+    diseases = new ArrayList<>();
+    categories = new ArrayList<>();
+    productLikes = new ArrayList<>();
   }
 
   public void addDiseases(List<ProductDisease> productDiseases) {
@@ -96,6 +99,18 @@ public class Product extends BaseEntity {
         category.updateParent(this);
       }
     }
+  }
+
+  /**
+   * 좋아요 증가
+   *
+   * @param like 좋아요
+   */
+  public void addLike(ProductLike like) {
+    if (Objects.isNull(this.productLikes)) {
+      this.productLikes = new ArrayList<>();
+    }
+    this.productLikes.add(like);
   }
 
   public void updateProfile(String profile) {

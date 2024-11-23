@@ -1,7 +1,8 @@
-package com.daejangjangi.backend.member.domain.entity;
+package com.daejangjangi.backend.like.domain.entity;
 
-import com.daejangjangi.backend.disease.domain.Disease;
 import com.daejangjangi.backend.global.common.BaseEntity;
+import com.daejangjangi.backend.member.domain.entity.Member;
+import com.daejangjangi.backend.product.domain.entity.Product;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -16,42 +17,31 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Table(name = "products_likes")
+@Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "members_diseases")
-@Entity
-public class MemberDisease extends BaseEntity {
-
-  @Builder
-  public MemberDisease(
-      Member member,
-      Disease disease
-  ) {
-    this.member = member;
-    this.disease = disease;
-  }
+public class ProductLike extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "member_disease_id")
+  @Column(name = "product_like_id")
   private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "member_id", nullable = false)
+  @JoinColumn(name = "member_id")
   private Member member;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "disease_id", nullable = false)
-  private Disease disease;
+  @JoinColumn(name = "product_id")
+  private Product product;
 
-  /*-------------Business Logic---------------------------Business Logic--------------------------*/
-
-  /**
-   * 회원 갱신
-   *
-   * @param member
-   */
-  public void updateParent(Member member) {
+  @Builder
+  public ProductLike(
+      Member member,
+      Product product
+  ) {
     this.member = member;
+    this.product = product;
   }
 }

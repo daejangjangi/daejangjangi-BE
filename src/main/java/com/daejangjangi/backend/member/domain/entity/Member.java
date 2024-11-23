@@ -91,7 +91,7 @@ public class Member extends BaseEntity {
   @Column(name = "member_birth", nullable = false)
   private LocalDate birth;
 
-  @Column(name = "member_profile")
+  @Column(name = "member_profile", length = 1000)
   private String profile;
 
   @Enumerated(EnumType.STRING)
@@ -107,7 +107,7 @@ public class Member extends BaseEntity {
   @Column(name = "member_agree_sensitive_info", nullable = false)
   private boolean sensitiveInfo;
 
-  @Column(name = "member_agree_promotion_reception")
+  @Column(name = "member_agree_promotion_reception", nullable = false)
   private boolean promotionReception;
 
   @OneToMany(mappedBy = "member", orphanRemoval = true, cascade = CascadeType.ALL)
