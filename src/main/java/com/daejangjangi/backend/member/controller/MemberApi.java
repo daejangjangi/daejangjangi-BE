@@ -1,6 +1,6 @@
 package com.daejangjangi.backend.member.controller;
 
-import com.daejangjangi.backend.faq.domain.dto.FaqResponseDto;
+import com.daejangjangi.backend.fcm.domain.dto.FcmRequestDto;
 import com.daejangjangi.backend.global.annotation.swagger.Response200WithSwagger;
 import com.daejangjangi.backend.global.annotation.swagger.Response401WithSwagger;
 import com.daejangjangi.backend.global.annotation.swagger.Response403WithSwagger;
@@ -8,7 +8,6 @@ import com.daejangjangi.backend.global.annotation.swagger.ResponseCommonWithSwag
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
 import com.daejangjangi.backend.member.domain.dto.MemberRequestDto;
 import com.daejangjangi.backend.member.domain.dto.MemberResponseDto;
-import com.daejangjangi.backend.token.domain.dto.TokenResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -22,6 +21,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import java.io.IOException;
 import org.apache.commons.lang3.ObjectUtils.Null;
 
@@ -502,7 +502,29 @@ public interface MemberApi {
   @Response200WithSwagger
   @Response401WithSwagger
   @Response403WithSwagger
-  ApiGlobalResponse<Null> logout();
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "400", description = "잘못된 요청",
+          content = @Content(
+              mediaType = "application/json",
+              array = @ArraySchema(schema = @Schema(implementation = ApiGlobalResponse.class)),
+              examples = {
+                  @ExampleObject(
+                      name = "BAD_REQUEST_FCM_TOKEN",
+                      summary = "FCM 토큰 미입력",
+                      value = """
+                          {
+                            "code": "BAD_REQUEST",
+                            "message": "잘못된 요청입니다.",
+                            "data": [
+                              "fcmToken : FCM 토큰을 입력해주세요."
+                            ]
+                          }"""
+                  )
+              }
+          )
+      )
+  })
+  ApiGlobalResponse<Null> logout(@Valid @RequestBody FcmRequestDto.Delete request);
 
   @Operation(summary = "회원탈퇴", tags = {"Member (회원) API"},
       responses = {

@@ -38,9 +38,9 @@ public class FcmService {
   }
 
   /**
-   * Fcm 토큰 삭제
+   * FCM 토큰 삭제
    *
-   * @param token fcm 토큰
+   * @param token FCM 토큰
    */
   @Transactional
   public void delete(String token) {
