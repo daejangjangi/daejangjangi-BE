@@ -524,7 +524,7 @@ public interface MemberApi {
           )
       )
   })
-  ApiGlobalResponse<Null> logout(@Valid @RequestBody FcmRequestDto.Delete request);
+  ApiGlobalResponse<Null> logout(@Valid @RequestBody FcmRequestDto.TcmtokenDeleteRequest request);
 
   @Operation(summary = "회원탈퇴", tags = {"Member (회원) API"},
       responses = {

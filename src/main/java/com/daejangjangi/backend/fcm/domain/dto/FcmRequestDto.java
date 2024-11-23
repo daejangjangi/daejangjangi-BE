@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 public class FcmRequestDto {
 
   @Schema(description = "토큰 삭제 DTO")
-  public record Delete(
+  public record TcmtokenDeleteRequest(
 
       @Schema(description = "FCM 토큰", example = "bk3RNwTe3H0:CI2k_HHwgIpoDKCIZvvDMExUdFQ3P1...")
       @NotBlank(message = "FCM 토큰를 입력해주세요.")

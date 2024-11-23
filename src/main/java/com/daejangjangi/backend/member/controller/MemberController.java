@@ -96,7 +96,8 @@ public class MemberController implements MemberApi {
 
   @PreAuthorize("hasAuthority('MEMBER')")
   @PostMapping("/logout")
-  public ApiGlobalResponse<Null> logout(@Valid @RequestBody FcmRequestDto.Delete request) {
+  public ApiGlobalResponse<Null> logout(
+      @Valid @RequestBody FcmRequestDto.TcmtokenDeleteRequest request) {
     fcmService.delete(request.fcmToken());
     memberService.logout();
     return ApiGlobalResponse.ok();
