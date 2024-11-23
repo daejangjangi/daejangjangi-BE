@@ -393,6 +393,18 @@ public interface MemberApi {
                             ]
                           }"""
                   ),
+                  @ExampleObject(
+                      name = "BAD_REQUEST_FCM_TOKEN",
+                      summary = "FCM 토큰 미입력",
+                      value = """
+                          {
+                            "code": "BAD_REQUEST",
+                            "message": "잘못된 요청입니다.",
+                            "data": [
+                              "fcmToken : FCM 토큰을 입력해주세요."
+                            ]
+                          }"""
+                  )
               }
           )
       )

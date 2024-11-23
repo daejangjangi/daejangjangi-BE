@@ -44,7 +44,7 @@ public class PostCommentService {
     if (!postComment.getMember().equals(postComment.getPost().getMember())) {
       fcmTokenRepository.findByMember(postComment.getPost().getMember()).forEach(token -> {
         saveCommentNotification(postComment);
-        sendNotification(token.getToken(), postComment.getPost().getTitle(),
+        sendNotification(token.getFcmToken(), postComment.getPost().getTitle(),
             COMMENT_NOTIFICATION_BODY + postComment.getContent());
       });
     }
@@ -155,7 +155,7 @@ public class PostCommentService {
     try {
       FirebaseMessaging.getInstance().send(message);
     } catch (FirebaseMessagingException e) {
-      fcmTokenRepository.deleteByToken(token);
+      fcmTokenRepository.deleteByFcmToken(token);
     }
   }
 

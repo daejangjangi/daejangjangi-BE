@@ -11,7 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,11 +26,11 @@ public class FcmToken extends BaseEntity {
   @Builder
   public FcmToken(
       Member member,
-      String token
+      String fcmToken
   ) {
     this.member = member;
-    this.token = token;
-    this.lastUsedAt = LocalDate.now();
+    this.fcmToken = fcmToken;
+    this.lastUsedAt = LocalDateTime.now();
   }
 
   @Id
@@ -43,12 +43,12 @@ public class FcmToken extends BaseEntity {
   private Member member;
 
   @Column(nullable = false, name = "fcm_token")
-  private String token;
+  private String fcmToken;
 
   @Column(name = "fcm_token_last_used_at", nullable = false)
-  private LocalDate lastUsedAt;
+  private LocalDateTime lastUsedAt;
 
   public void updateLastUsedAt() {
-    this.lastUsedAt = LocalDate.now();
+    this.lastUsedAt = LocalDateTime.now();
   }
 }

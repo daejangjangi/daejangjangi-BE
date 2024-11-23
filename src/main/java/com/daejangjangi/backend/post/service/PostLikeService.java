@@ -62,7 +62,7 @@ public class PostLikeService {
           if (!member.equals(post.getMember())) {
             fcmTokenRepository.findByMember(post.getMember()).forEach(fcmToken -> {
               saveLikeNotification(post);
-              sendNotification(fcmToken.getToken(), post.getTitle(), LIKE_NOTIFICATION_BODY);
+              sendNotification(fcmToken.getFcmToken(), post.getTitle(), LIKE_NOTIFICATION_BODY);
             });
           }
         });
@@ -91,7 +91,7 @@ public class PostLikeService {
     try {
       FirebaseMessaging.getInstance().send(message);
     } catch (FirebaseMessagingException e) {
-      fcmTokenRepository.deleteByToken(token);
+      fcmTokenRepository.deleteByFcmToken(token);
     }
   }
 

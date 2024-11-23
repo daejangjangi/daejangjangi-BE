@@ -3,6 +3,8 @@ package com.daejangjangi.backend.fcm.service;
 import com.daejangjangi.backend.fcm.domain.entity.FcmToken;
 import com.daejangjangi.backend.fcm.repository.FcmTokenRepository;
 import com.daejangjangi.backend.member.domain.entity.Member;
+import com.daejangjangi.backend.member.exception.NotFoundMemberException;
+import com.daejangjangi.backend.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,22 +14,27 @@ import org.springframework.transaction.annotation.Transactional;
 public class FcmService {
 
   private final FcmTokenRepository fcmTokenRepository;
+  private final MemberRepository memberRepository;
 
   /**
-   * Fcm 토큰 저장
+   * FCM 토큰 저장
    *
-   * @param fcmToken 토큰 정보
-   * @return FcmToken
+   * @param email    회원 이메일
+   * @param fcmToken FCM 토큰
    */
-  // TODO 로그인 시 fcm 토큰 저장
   @Transactional
-  public FcmToken save(FcmToken fcmToken) {
-    return fcmTokenRepository.findByMemberAndToken(fcmToken.getMember(), fcmToken.getToken())
+  public void save(String email, String fcmToken) {
+    fcmTokenRepository.findByMemberEmailAndFcmToken(email, fcmToken)
         .map(token -> {
           token.updateLastUsedAt();
           return token;
         })
-        .orElse(fcmTokenRepository.save(fcmToken));
+        .orElseGet(() ->
+            fcmTokenRepository.save(FcmToken.builder()
+                .fcmToken(fcmToken)
+                .member(
+                    memberRepository.findByEmail(email).orElseThrow(NotFoundMemberException::new))
+                .build()));
   }
 
   /**
@@ -35,10 +42,9 @@ public class FcmService {
    *
    * @param token fcm 토큰
    */
-  // TODO 로그아웃 시 fcm 토큰 삭제
   @Transactional
   public void delete(String token) {
-    fcmTokenRepository.deleteByToken(token);
+    fcmTokenRepository.deleteByFcmToken(token);
   }
 
   /**

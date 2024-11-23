@@ -8,9 +8,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface FcmTokenRepository extends JpaRepository<FcmToken, Long> {
 
-  Optional<FcmToken> findByMemberAndToken(Member member, String token);
+  Optional<FcmToken> findByMemberEmailAndFcmToken(String email, String token);
 
-  void deleteByToken(String fcmToken);
+  void deleteByFcmToken(String fcmToken);
 
   void deleteByMember(Member member);
 

@@ -1,5 +1,6 @@
 package com.daejangjangi.backend.global.config;
 
+import com.daejangjangi.backend.fcm.service.FcmService;
 import com.daejangjangi.backend.global.config.log.LogFilter;
 import com.daejangjangi.backend.global.config.token.TokenAuthenticationFilter;
 import com.daejangjangi.backend.member.service.MemberService;
@@ -28,6 +29,7 @@ public class SecurityConfig {
 
   private final TokenService tokenService;
   private final MemberService memberService;
+  private final FcmService fcmService;
   private final BCryptPasswordEncoder passwordEncoder;
 
   public static final String FILTER_PROCESS_URL = "/members/login";
@@ -73,7 +75,7 @@ public class SecurityConfig {
   private TokenAuthenticationFilter getAuthenticationFilter(
       AuthenticationManager authenticationManager) {
     TokenAuthenticationFilter filter = new TokenAuthenticationFilter(authenticationManager,
-        tokenService);
+        tokenService, fcmService);
     filter
         .setFilterProcessesUrl(FILTER_PROCESS_URL);
     return filter;
