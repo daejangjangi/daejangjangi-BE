@@ -3,9 +3,10 @@ package com.daejangjangi.backend.product.domain.mapper;
 import com.daejangjangi.backend.global.common.PageFields;
 import com.daejangjangi.backend.member.domain.entity.Member;
 import com.daejangjangi.backend.product.domain.dto.ProductRequestDto.Register;
-import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.MyProductLike;
-import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.MyProductLikeList;
+import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.ProductInfo;
+import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.ProductInfoList;
 import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.RecommendedProduct;
+import com.daejangjangi.backend.product.domain.entity.Discount;
 import com.daejangjangi.backend.product.domain.entity.Product;
 import java.util.List;
 import org.mapstruct.IterableMapping;
@@ -37,33 +38,49 @@ public interface ProductMapper {
   @Mapping(target = "profile", source = "product.profile")
   RecommendedProduct recommendProductToDto(Product product);
 
+//  @IterableMapping(elementTargetType = ProductInfo.class, qualifiedByName = "myProductToDto")
+//  List<ProductInfo> bestProductToDto(List<Product> bestProduct);
+
+  @Named("myProductToDto")
   @Mapping(target = "id", source = "product.id")
   @Mapping(target = "name", source = "product.name")
   @Mapping(target = "regularPrice", source = "product.regularPrice")
-  @Mapping(target = "discountRate", source = "product.discount.rate")
+  @Mapping(target = "discountRate", expression = "java(initDiscountRate(product.getDiscount()))")
   @Mapping(target = "saleLink", source = "product.saleLink")
   @Mapping(target = "profile", source = "product.profile")
   @Mapping(target = "isLiked", expression = "java(isLikedByMember(product, member))")
-  MyProductLike myProductToDto(Product product, Member member);
+  ProductInfo ProductToInfoDto(Product product, Member member);
 
   default boolean isLikedByMember(Product product, Member member) {
     return product.getProductLikes().stream()
         .anyMatch(like -> like.getMember().equals(member));
   }
 
-  @Mapping(target = "pageFields", expression = "java(pageToDto(myProductLikes))")
-  @Mapping(target = "myProductLikeList", source = "myProductLikes.content")
-  MyProductLikeList pageMyProductToDto(Page<MyProductLike> myProductLikes);
+  default int initDiscountRate(Discount discount) {
+    if (discount == null) {
+      return 0;
+    } else {
+      return discount.getRate();
+    }
+  }
 
-  @Mapping(target = "pageNumber", expression = "java(getPageNumber(myProductLikes))")
-  @Mapping(target = "pageSize", source = "myProductLikes.size")
-  @Mapping(target = "totalElements", source = "myProductLikes.totalElements")
-  @Mapping(target = "totalPages", source = "myProductLikes.totalPages")
-  PageFields pageToDto(Page<MyProductLike> myProductLikes);
+  @Mapping(target = "pageFields", expression = "java(pageToDto(productInfos))")
+  @Mapping(target = "myProductLikeList", source = "productInfos.content")
+  ProductInfoList pageMyProductToDto(Page<ProductInfo> productInfos);
 
-  default int getPageNumber(Page<MyProductLike> myProductLikes) {
-    if (myProductLikes.getTotalElements() > 0) {
-      return myProductLikes.getNumber() + 1;
+  @Mapping(target = "pageFields", expression = "java(pageToDto(productInfos))")
+  @Mapping(target = "myProductLikeList", source = "productInfos.content")
+  ProductInfoList pageSearchedProductToDto(Page<ProductInfo> productInfos);
+
+  @Mapping(target = "pageNumber", expression = "java(getPageNumber(productInfos))")
+  @Mapping(target = "pageSize", source = "productInfos.size")
+  @Mapping(target = "totalElements", source = "productInfos.totalElements")
+  @Mapping(target = "totalPages", source = "productInfos.totalPages")
+  PageFields pageToDto(Page<ProductInfo> productInfos);
+
+  default int getPageNumber(Page<ProductInfo> productInfos) {
+    if (productInfos.getTotalElements() > 0) {
+      return productInfos.getNumber() + 1;
     } else {
       return 0;
     }

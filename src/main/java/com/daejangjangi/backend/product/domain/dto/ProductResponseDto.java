@@ -34,19 +34,28 @@ public class ProductResponseDto {
 
   }
 
-  @Schema(name = "MyProductLikeListResponse", description = "내가 좋아하는 상품 목록 응답 DTO")
-  public record MyProductLikeList(
+  @Schema(name = "ProductInfoListResponse", description = "상품 목록 응답 DTO")
+  public record ProductInfoList(
 
       @Schema(description = "페이징 정보")
       PageFields pageFields,
 
-      List<MyProductLike> myProductLikeList
+      @Schema(description = "상품 목록")
+      List<ProductInfo> myProductLikeList
+  ) {
+
+  }
+
+  @Schema(name = "BestProductListResponse", description = "인기 상품 목록 응답 DTO")
+  public record BestProductList(
+      @Schema(description = "인기 상품 목록")
+      List<ProductInfo> bestProductList
   ) {
 
   }
 
   @Schema(name = "MyProductLikeResponse", description = "내가 좋아하는 상품 응답 DTO")
-  public record MyProductLike(
+  public record ProductInfo(
 
       @Schema(description = "상품 아이디", example = "1")
       Long id,

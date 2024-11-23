@@ -8,12 +8,16 @@ import com.daejangjangi.backend.global.response.ApiGlobalResponse;
 import com.daejangjangi.backend.like.service.ProductLikeService;
 import com.daejangjangi.backend.member.domain.entity.Member;
 import com.daejangjangi.backend.member.service.MemberService;
+import com.daejangjangi.backend.product.domain.dto.DiscountRequestDto.DiscountRegister;
 import com.daejangjangi.backend.product.domain.dto.ProductRequestDto;
 import com.daejangjangi.backend.product.domain.dto.ProductResponseDto;
-import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.MyProductLike;
-import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.MyProductLikeList;
+import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.ProductInfo;
+import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.ProductInfoList;
 import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.RecommendedProductList;
+import com.daejangjangi.backend.product.domain.entity.Discount;
 import com.daejangjangi.backend.product.domain.entity.Product;
+import com.daejangjangi.backend.product.domain.enums.ProductSortKey;
+import com.daejangjangi.backend.product.domain.mapper.DiscountMapper;
 import com.daejangjangi.backend.product.domain.mapper.ProductMapper;
 import com.daejangjangi.backend.product.service.ProductService;
 import jakarta.validation.Valid;
@@ -29,6 +33,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -60,6 +65,18 @@ public class ProductController implements ProductApi {
     return ApiGlobalResponse.ok();
   }
 
+  @PreAuthorize("hasAuthority('ADMIN')")
+  @PostMapping("/{productId}")
+  public ApiGlobalResponse<Null> discount(
+      @PathVariable Long productId,
+      @Valid @RequestBody DiscountRegister request
+  ) {
+    Product product = productService.findById(productId);
+    Discount discount = DiscountMapper.INSTANCE.dtoToEntity(request);
+    productService.registerAndUpdateDiscount(product, discount);
+    return ApiGlobalResponse.ok();
+  }
+
   @PreAuthorize("hasAuthority('MEMBER')")
   @GetMapping("/recommend")
   public ApiGlobalResponse<ProductResponseDto.RecommendedProductList> recommend(
@@ -86,16 +103,44 @@ public class ProductController implements ProductApi {
 
   @PreAuthorize("hasAuthority('MEMBER')")
   @GetMapping("/likes")
-  public ApiGlobalResponse<MyProductLikeList> myProductLikeList(
+  public ApiGlobalResponse<ProductInfoList> myProductLikeList(
       @RequestParam(defaultValue = "1") int page,
       @RequestParam(defaultValue = "10") int size
   ) {
     Member member = memberService.info();
     Pageable pageable = PageRequest.of(page - 1, size, Direction.DESC, "createdAt");
     Page<Product> myLikedList = productLikeService.findByMember(member, pageable);
-    Page<MyProductLike> myProductLikes
-        = myLikedList.map(product -> ProductMapper.INSTANCE.myProductToDto(product, member));
-    MyProductLikeList response = ProductMapper.INSTANCE.pageMyProductToDto(myProductLikes);
+    Page<ProductInfo> myProductLikes
+        = myLikedList.map(product -> ProductMapper.INSTANCE.ProductToInfoDto(product, member));
+    ProductInfoList response = ProductMapper.INSTANCE.pageMyProductToDto(myProductLikes);
     return ApiGlobalResponse.ok(response);
   }
+
+  @PreAuthorize("hasAuthority('MEMBER')")
+  @GetMapping("/search")
+  public ApiGlobalResponse<ProductInfoList> searchAndSort(
+      @RequestParam(value = "keyword", defaultValue = "") String keyword,
+      @RequestParam(value = "sortKey", defaultValue = "전체") ProductSortKey sortKey,
+      @RequestParam(defaultValue = "1") int page,
+      @RequestParam(defaultValue = "10") int size
+  ) {
+    Member member = memberService.info();
+    Pageable pageable = PageRequest.of(page - 1, size, Direction.DESC, "createdAt");
+    Page<Product> productList
+        = productService.getSearchedAndSortedProductList(keyword, sortKey, pageable);
+    Page<ProductInfo> productInfoList
+        = productList.map(product -> ProductMapper.INSTANCE.ProductToInfoDto(product, member));
+    ProductInfoList response = ProductMapper.INSTANCE.pageSearchedProductToDto(productInfoList);
+    return ApiGlobalResponse.ok(response);
+  }
+
+  //  @PreAuthorize("hasAuthority('MEMBER')")
+//  @GetMapping("/best")
+//  public ApiGlobalResponse<BestProductList> bestProducts() {
+//    List<Product> bestProduct = productService.getBestProducts();
+//    List<ProductInfo> productInfoList
+//        = ProductMapper.INSTANCE.bestProductToDto(bestProduct);
+//    BestProductList response = new BestProductList(productInfoList);
+//    return ApiGlobalResponse.ok(response);
+//  }
 }

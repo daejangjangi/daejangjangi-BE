@@ -1,27 +1,49 @@
 package com.daejangjangi.backend.product.service;
 
+import static com.daejangjangi.backend.product.domain.entity.QProduct.product;
+
 import com.daejangjangi.backend.category.domain.Category;
 import com.daejangjangi.backend.disease.domain.Disease;
 import com.daejangjangi.backend.file.service.FileValidator;
 import com.daejangjangi.backend.file.service.S3Manager;
 import com.daejangjangi.backend.member.domain.entity.Member;
 import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.RecommendedProduct;
+import com.daejangjangi.backend.product.domain.entity.Discount;
 import com.daejangjangi.backend.product.domain.entity.Product;
 import com.daejangjangi.backend.product.domain.entity.ProductCategory;
 import com.daejangjangi.backend.product.domain.entity.ProductDisease;
+import com.daejangjangi.backend.product.domain.enums.ProductSortKey;
 import com.daejangjangi.backend.product.domain.mapper.ProductMapper;
 import com.daejangjangi.backend.product.exception.NotFoundProductException;
+import com.daejangjangi.backend.product.repository.DiscountRepository;
 import com.daejangjangi.backend.product.repository.ProductCategoryRepository;
 import com.daejangjangi.backend.product.repository.ProductDiseaseRepository;
 import com.daejangjangi.backend.product.repository.ProductRepository;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.core.types.dsl.NumberExpression;
+import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
+@SuppressWarnings("NonAsciiCharacters")
+@Slf4j
 public class ProductService {
 
   private final ProductRepository productRepository;
@@ -29,6 +51,8 @@ public class ProductService {
   private final FileValidator fileValidator;
   private final S3Manager s3Manager;
   private final ProductDiseaseRepository productDiseaseRepository;
+  private final DiscountRepository discountRepository;
+  private final JPAQueryFactory jpaQueryFactory;
 
   /**
    * 상품 저장
@@ -64,6 +88,8 @@ public class ProductService {
    * @param member 로그인 회원
    * @param count  추천 갯수
    * @return List RecommendedProduct
+   * <p>
+   * // TODO : 태그가 1개 이상 일치하는 상품들이 count 미만인 경우 랜덤한 상품 추가 조회하도록 추가 구현.
    */
   public List<RecommendedProduct> getRecommendedProducts(Member member, int count) {
     List<String> myDiseases = member.getDiseases().stream()
@@ -121,5 +147,115 @@ public class ProductService {
    */
   public Product findById(Long productId) {
     return productRepository.findById(productId).orElseThrow(NotFoundProductException::new);
+  }
+
+  /**
+   * 검색된 상품 조회
+   *
+   * @param keyword  검색 키워드
+   * @param sortKey  정렬 종류
+   * @param pageable 페이지 정보
+   */
+  public Page<Product> getSearchedAndSortedProductList(
+      String keyword,
+      ProductSortKey sortKey,
+      Pageable pageable
+  ) {
+    // 검색 조건
+    BooleanExpression predicate = product.name.like("%" + keyword + "%")
+        .or(product.comment.like("%" + keyword + "%"));
+
+    // 정렬 조건
+    OrderSpecifier<?>[] orderSpecifier = createOrderSpecifier(sortKey);
+
+//  1. 우선 ID만 페이징하여 조회
+    List<Long> productIds = jpaQueryFactory
+        .select(product.id)
+        .from(product)
+        .where(predicate)
+        .orderBy(orderSpecifier)
+        .offset(pageable.getOffset())
+        .limit(pageable.getPageSize())
+        .fetch();
+
+//  2. 조회된 ID로 실제 데이터 조회
+    JPAQuery<Product> query = jpaQueryFactory
+        .selectFrom(product)
+        .leftJoin(product.discount).fetchJoin()
+        .leftJoin(product.productLikes).fetchJoin()
+        .where(product.id.in(productIds))
+        .orderBy(orderSpecifier);
+
+//  3. 카운트 쿼리
+    JPAQuery<Long> countQuery = jpaQueryFactory
+        .select(product.countDistinct())
+        .from(product)
+        .where(predicate);
+
+    return PageableExecutionUtils.getPage(
+        query.fetch(),
+        pageable,
+        countQuery::fetchOne
+    );
+  }
+
+  /**
+   * 할인 상품 등록
+   *
+   * @param product  상품
+   * @param discount 할인
+   */
+  @Transactional
+  public void registerAndUpdateDiscount(Product product, Discount discount) {
+    Optional<Discount> discountOptional = discountRepository.findByName(discount.getName());
+    if (discountOptional.isPresent()) {
+      discount = discountOptional.get();
+    } else {
+      discount = discountRepository.save(discount);
+    }
+    product.discount(discount);
+  }
+
+  /**
+   * TODO : 고민이 필요하다.
+   * 조회 시마다 해당 상품에 대한 조회수를 rdb + redis에 카운팅한다.(이는
+   *
+   * @return List Product
+   */
+//  public List<Product> getBestProducts() {
+//
+//    return new ArrayList<>();
+//  }
+
+  /**
+   * 상품 정렬
+   *
+   * @param sortKey 상품 정렬 키
+   * @return Page Product
+   */
+  private OrderSpecifier<?>[] createOrderSpecifier(ProductSortKey sortKey) {
+    return switch (sortKey) {
+      case 인기순 -> new OrderSpecifier[]{
+          new OrderSpecifier<>(Order.DESC, product.productLikes.size()),
+          new OrderSpecifier<>(Order.ASC, product.id)
+      };
+      case 낮은가격순 -> {
+        NumberExpression<Integer> discountRate = new CaseBuilder()
+            .when(product.discount.isNull())
+            .then(0)
+            .otherwise(product.discount.rate);
+        NumberExpression<Integer> price = product.regularPrice.subtract(
+            product.regularPrice.multiply(discountRate).divide(100)
+        ).castToNum(Integer.class);
+        yield new OrderSpecifier[]{
+            new OrderSpecifier<>(Order.ASC, price),
+            new OrderSpecifier<>(Order.ASC, product.id)
+        };
+      }
+      default -> new OrderSpecifier[]{
+          new OrderSpecifier<>(Order.DESC, product.createdAt),
+          new OrderSpecifier<>(Order.ASC, product.id)
+      };
+    };
   }
 }
