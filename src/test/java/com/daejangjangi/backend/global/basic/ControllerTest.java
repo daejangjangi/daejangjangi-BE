@@ -1,5 +1,6 @@
 package com.daejangjangi.backend.global.basic;
 
+import com.daejangjangi.backend.fcm.service.FcmService;
 import com.daejangjangi.backend.global.config.SecurityConfig;
 import com.daejangjangi.backend.global.config.token.TokenAuthInterceptor;
 import com.daejangjangi.backend.global.exception.GlobalExceptionHandler;
@@ -30,6 +31,9 @@ abstract public class ControllerTest {
 
   @MockBean
   protected TokenService tokenService;
+
+  @MockBean
+  protected FcmService fcmService;
 
   @MockBean
   protected MemberService memberService;
