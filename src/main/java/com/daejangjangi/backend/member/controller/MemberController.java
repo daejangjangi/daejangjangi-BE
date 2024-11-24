@@ -6,6 +6,8 @@ import com.daejangjangi.backend.category.domain.Category;
 import com.daejangjangi.backend.category.service.CategoryService;
 import com.daejangjangi.backend.disease.domain.Disease;
 import com.daejangjangi.backend.disease.service.DiseaseService;
+import com.daejangjangi.backend.fcm.domain.dto.FcmRequestDto;
+import com.daejangjangi.backend.fcm.service.FcmService;
 import com.daejangjangi.backend.global.config.SecurityConfig;
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
 import com.daejangjangi.backend.member.domain.dto.MemberRequestDto;
@@ -40,6 +42,7 @@ public class MemberController implements MemberApi {
   private final DiseaseService diseaseService;
   private final CategoryService categoryService;
   private final BoardService boardService;
+  private final FcmService fcmService;
 
   @GetMapping("/email/check/{email}")
   public ApiGlobalResponse<Null> emailDuplicationCheck(@PathVariable("email") String email) {
@@ -93,7 +96,9 @@ public class MemberController implements MemberApi {
 
   @PreAuthorize("hasAuthority('MEMBER')")
   @PostMapping("/logout")
-  public ApiGlobalResponse<Null> logout() {
+  public ApiGlobalResponse<Null> logout(
+      @Valid @RequestBody FcmRequestDto.TcmtokenDeleteRequest request) {
+    fcmService.delete(request.fcmToken());
     memberService.logout();
     return ApiGlobalResponse.ok();
   }

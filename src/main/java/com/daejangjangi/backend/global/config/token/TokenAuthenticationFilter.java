@@ -1,5 +1,6 @@
 package com.daejangjangi.backend.global.config.token;
 
+import com.daejangjangi.backend.fcm.service.FcmService;
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
 import com.daejangjangi.backend.member.domain.dto.MemberRequestDto;
 import com.daejangjangi.backend.member.domain.dto.MemberResponseDto;
@@ -29,13 +30,16 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class TokenAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
   private final TokenService tokenService;
+  private final FcmService fcmService;
 
   public TokenAuthenticationFilter(
       AuthenticationManager manager,
-      TokenService tokenService
+      TokenService tokenService,
+      FcmService fcmService
   ) {
     super(manager);
     this.tokenService = tokenService;
+    this.fcmService = fcmService;
   }
 
   private final Gson gson = new GsonBuilder().serializeNulls().create();
@@ -83,6 +87,12 @@ public class TokenAuthenticationFilter extends UsernamePasswordAuthenticationFil
     TokenResponseDto tokenResponseDto = tokenService.getToken(authResult);
     MemberResponseDto.Login responseDto =
         MemberMapper.INSTANCE.dtoToLoginResponse(tokenResponseDto);
+    try (Reader reader = new InputStreamReader(request.getInputStream())) {
+      MemberRequestDto.Login loginRequest = gson.fromJson(reader, MemberRequestDto.Login.class);
+      fcmService.save(loginRequest.email(), loginRequest.fcmToken());
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
     writeResponse(response, HttpStatus.OK.value(), ApiGlobalResponse.ok(responseDto));
   }
 
