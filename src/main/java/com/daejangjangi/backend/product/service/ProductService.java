@@ -23,9 +23,9 @@ import com.daejangjangi.backend.product.repository.ProductCategoryRepository;
 import com.daejangjangi.backend.product.repository.ProductDiseaseRepository;
 import com.daejangjangi.backend.product.repository.ProductGroupRepository;
 import com.daejangjangi.backend.product.repository.ProductRepository;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -41,6 +41,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
@@ -192,9 +193,23 @@ public class ProductService {
       String name,
       Pageable pageable
   ) {
-    // 검색 조건
-    BooleanExpression predicate = product.name.like("%" + keyword + "%")
-        .or(product.comment.like("%" + keyword + "%"));
+
+    BooleanBuilder predicate = new BooleanBuilder();
+
+    // 키워드 검색 조건
+    if (StringUtils.hasText(keyword)) {
+      predicate.and(
+          product.name.like("%" + keyword + "%")
+              .or(product.comment
+                  .like("%" + keyword + "%")
+              )
+      );
+    }
+
+    // 상품 그룹 조건
+    if (StringUtils.hasText(name)) {
+      predicate.and(product.productGroups.any().name.eq(name));
+    }
 
     // 정렬 조건
     OrderSpecifier<?>[] orderSpecifier = createOrderSpecifier(sortKey);
@@ -203,6 +218,7 @@ public class ProductService {
     List<Long> productIds = jpaQueryFactory
         .select(product.id)
         .from(product)
+        .leftJoin(product.productGroups)
         .where(predicate)
         .orderBy(orderSpecifier)
         .offset(pageable.getOffset())
@@ -213,7 +229,6 @@ public class ProductService {
     JPAQuery<Product> query = jpaQueryFactory
         .selectFrom(product)
         .leftJoin(product.discount).fetchJoin()
-        .leftJoin(product.productLikes).fetchJoin()
         .where(product.id.in(productIds))
         .orderBy(orderSpecifier);
 

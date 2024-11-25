@@ -10,7 +10,6 @@ import com.daejangjangi.backend.product.domain.entity.Discount;
 import com.daejangjangi.backend.product.domain.entity.Product;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -68,11 +67,6 @@ public interface ProductMapper {
   }
 
   default List<String> getTagList(Product product) {
-    if (Objects.isNull(product) ||
-        Objects.isNull(product.getCategories()) ||
-        Objects.isNull(product.getDiseases())) {
-      return new ArrayList<>();
-    }
     List<String> tagList = new ArrayList<>(product.getCategories().stream()
         .map(pc -> pc.getCategory().getName()).toList());
     tagList.addAll(product.getDiseases().stream()
@@ -81,11 +75,11 @@ public interface ProductMapper {
   }
 
   @Mapping(target = "pageFields", expression = "java(pageToDto(productInfos))")
-  @Mapping(target = "myProductLikeList", source = "productInfos.content")
+  @Mapping(target = "myProductInfoList", source = "productInfos.content")
   ProductInfoList pageMyProductToDto(Page<ProductInfo> productInfos);
 
   @Mapping(target = "pageFields", expression = "java(pageToDto(productInfos))")
-  @Mapping(target = "myProductLikeList", source = "productInfos.content")
+  @Mapping(target = "myProductInfoList", source = "productInfos.content")
   ProductInfoList pageSearchedProductToDto(Page<ProductInfo> productInfos);
 
   @Mapping(target = "pageNumber", expression = "java(getPageNumber(productInfos))")

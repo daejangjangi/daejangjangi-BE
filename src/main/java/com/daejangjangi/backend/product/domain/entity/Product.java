@@ -20,6 +20,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -54,12 +55,15 @@ public class Product extends BaseEntity {
   @OnDelete(action = OnDeleteAction.SET_NULL)
   private Discount discount;
 
+  @BatchSize(size = 1000)
   @OneToMany(mappedBy = "product", orphanRemoval = true, cascade = CascadeType.ALL)
   private List<ProductDisease> diseases;
 
+  @BatchSize(size = 1000)
   @OneToMany(mappedBy = "product", orphanRemoval = true, cascade = CascadeType.ALL)
   private List<ProductCategory> categories;
 
+  @BatchSize(size = 1000)
   @OneToMany(mappedBy = "product", orphanRemoval = true, cascade = CascadeType.ALL)
   private List<ProductLike> productLikes;
 

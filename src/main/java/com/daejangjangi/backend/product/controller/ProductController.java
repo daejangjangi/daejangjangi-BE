@@ -122,13 +122,15 @@ public class ProductController implements ProductApi {
   public ApiGlobalResponse<ProductInfoList> searchAndSort(
       @RequestParam(value = "keyword", defaultValue = "") String keyword,
       @RequestParam(value = "sortKey", defaultValue = "전체") ProductSortKey sortKey,
+      @RequestParam(value = "productGroup", defaultValue = "") String productGroup,
       @RequestParam(defaultValue = "1") int page,
       @RequestParam(defaultValue = "10") int size
   ) {
+    productService.validateProductGroup(productGroup);
     Member member = memberService.info();
     Pageable pageable = PageRequest.of(page - 1, size, Direction.DESC, "createdAt");
     Page<Product> productList
-        = productService.getSearchedAndSortedProductList(keyword, sortKey, pageable);
+        = productService.getSearchedAndSortedProductList(keyword, sortKey, productGroup, pageable);
     Page<ProductInfo> productInfoList
         = productList.map(product -> ProductMapper.INSTANCE.ProductToInfoDto(product, member));
     ProductInfoList response = ProductMapper.INSTANCE.pageSearchedProductToDto(productInfoList);
