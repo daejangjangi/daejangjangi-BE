@@ -58,10 +58,11 @@ public class ProductController implements ProductApi {
       @Valid @RequestPart ProductRequestDto.Register request,
       @RequestPart MultipartFile profileImage
   ) {
+    productService.validateProductGroup(request.productGroups());
     List<Disease> diseases = diseaseService.findByNames(request.diseases());
     List<Category> categories = categoryService.findByNames(request.categories());
     Product product = ProductMapper.INSTANCE.requestToEntity(request);
-    productService.register(product, profileImage, diseases, categories);
+    productService.register(product, profileImage, diseases, categories, request.productGroups());
     return ApiGlobalResponse.ok();
   }
 

@@ -239,6 +239,39 @@ public interface ProductApi {
                                 "data": null
                               }"""
                       ),
+                      @ExampleObject(
+                          name = "INVALID_PRODUCT_GROUP",
+                          summary = "미지원 상품 그룹",
+                          value = """
+                              {
+                                "code" : "INVALID_PRODUCT_GROUP",
+                                "message" : "지원하지 않는 상품 그룹입니다.",
+                                "data" : null
+                              }
+                              """
+                      ),
+                      @ExampleObject(
+                          name = "NOT_MANAGED_DISEASE",
+                          summary = "미지원 관련 질병",
+                          value = """
+                              {
+                                "code" : "NOT_MANAGED_DISEASE",
+                                "message" : "관리되지 않는 질병입니다.",
+                                "data" : null
+                              }
+                              """
+                      ),
+                      @ExampleObject(
+                          name = "NOT_MANAGED_CATEGORY",
+                          summary = "미지원 관련 카테고리",
+                          value = """
+                              {
+                                "code" : "NOT_MANAGED_CATEGORY",
+                                "message" : "관리되지 않는 카테고리입니다.",
+                                "data" : null
+                              }
+                              """
+                      ),
                   }
               )
           )
@@ -249,6 +282,7 @@ public interface ProductApi {
   ApiGlobalResponse<ProductInfoList> searchAndSort(
       @Parameter String keyword,
       @Parameter ProductSortKey sortKey,
+      @Parameter String productGroup,
       @Parameter int page,
       @Parameter int size
   );
