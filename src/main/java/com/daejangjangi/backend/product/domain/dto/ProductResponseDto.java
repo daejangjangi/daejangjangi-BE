@@ -76,8 +76,10 @@ public class ProductResponseDto {
       String profile,
 
       @Schema(description = "상품 로그인 회원 좋아요 여부", example = "true")
-      Boolean isLiked
+      Boolean isLiked,
 
+      @Schema(description = "상품 태그", example = "[ \" 유산균 \", \" 식이섬유 \", \" 변비 \" ")
+      List<String> tagList
   ) {
 
   }
