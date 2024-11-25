@@ -87,12 +87,6 @@ public class TokenAuthenticationFilter extends UsernamePasswordAuthenticationFil
     TokenResponseDto tokenResponseDto = tokenService.getToken(authResult);
     MemberResponseDto.Login responseDto =
         MemberMapper.INSTANCE.dtoToLoginResponse(tokenResponseDto);
-    try (Reader reader = new InputStreamReader(request.getInputStream())) {
-      MemberRequestDto.Login loginRequest = gson.fromJson(reader, MemberRequestDto.Login.class);
-      fcmService.save(loginRequest.email(), loginRequest.fcmToken());
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
     writeResponse(response, HttpStatus.OK.value(), ApiGlobalResponse.ok(responseDto));
   }
 
