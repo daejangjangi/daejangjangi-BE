@@ -19,12 +19,12 @@ public class FcmService {
   /**
    * FCM 토큰 저장
    *
-   * @param email    회원 이메일
+   * @param member   회원 정보
    * @param fcmToken FCM 토큰
    */
   @Transactional
-  public void save(String email, String fcmToken) {
-    fcmTokenRepository.findByMemberEmailAndFcmToken(email, fcmToken)
+  public void save(Member member, String fcmToken) {
+    fcmTokenRepository.findByMemberAndFcmToken(member, fcmToken)
         .map(token -> {
           token.updateLastUsedAt();
           return token;
@@ -32,8 +32,7 @@ public class FcmService {
         .orElseGet(() ->
             fcmTokenRepository.save(FcmToken.builder()
                 .fcmToken(fcmToken)
-                .member(
-                    memberRepository.findByEmail(email).orElseThrow(NotFoundMemberException::new))
+                .member(member)
                 .build()));
   }
 

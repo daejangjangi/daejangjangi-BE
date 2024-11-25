@@ -502,29 +502,7 @@ public interface MemberApi {
   @Response200WithSwagger
   @Response401WithSwagger
   @Response403WithSwagger
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "400", description = "잘못된 요청",
-          content = @Content(
-              mediaType = "application/json",
-              array = @ArraySchema(schema = @Schema(implementation = ApiGlobalResponse.class)),
-              examples = {
-                  @ExampleObject(
-                      name = "BAD_REQUEST_FCM_TOKEN",
-                      summary = "FCM 토큰 미입력",
-                      value = """
-                          {
-                            "code": "BAD_REQUEST",
-                            "message": "잘못된 요청입니다.",
-                            "data": [
-                              "fcmToken : FCM 토큰을 입력해주세요."
-                            ]
-                          }"""
-                  )
-              }
-          )
-      )
-  })
-  ApiGlobalResponse<Null> logout(@Valid @RequestBody FcmRequestDto.TcmtokenDeleteRequest request);
+  ApiGlobalResponse<Null> logout();
 
   @Operation(summary = "회원탈퇴", tags = {"Member (회원) API"},
       responses = {
