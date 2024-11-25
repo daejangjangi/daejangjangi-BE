@@ -48,7 +48,18 @@ public interface ProductApi {
                                  "regularPrice : 상품 가격을 입력해주세요."
                               ]
                               """
-                      )
+                      ),
+                      @ExampleObject(
+                          name = "INVALID_PRODUCT_GROUP",
+                          summary = "미지원 상품 그룹",
+                          value = """
+                              {
+                                "code" : "INVALID_PRODUCT_GROUP",
+                                "message" : "지원하지 않는 상품 그룹입니다.",
+                                "data" : null
+                              }
+                              """
+                      ),
                   }
               )
           )
