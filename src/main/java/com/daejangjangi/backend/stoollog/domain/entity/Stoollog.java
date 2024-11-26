@@ -72,6 +72,12 @@ public class Stoollog extends BaseEntity {
     }
   }
 
+  public void updateLoggedAt(LocalDateTime loggedAt) {
+    if (!this.loggedAt.equals(loggedAt)) {
+      this.loggedAt = loggedAt;
+    }
+  }
+
   public void updateMember(Member member) {
     this.member = member;
   }

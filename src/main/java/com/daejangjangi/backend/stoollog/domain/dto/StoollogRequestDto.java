@@ -19,8 +19,8 @@ public class StoollogRequestDto {
       @NotNull(message = "배변 형태를 선택해주세요.")
       Form form,
 
-      @Schema(description = "배변 활동 날짜")
-      @NotNull(message = "배변 활동 날짜를 선택해주세요.")
+      @Schema(description = "배변 활동한 날짜와 시", examples = "2024-11-26T11:00:00.00Z")
+      @NotNull(message = "배변 활동한 날짜와 시를 선택해주세요.")
       LocalDateTime loggedAt
   ) {
 
@@ -38,7 +38,11 @@ public class StoollogRequestDto {
 
       @Schema(description = "배변 형태")
       @NotNull(message = "배변 형태를 선택해주세요.")
-      Form form
+      Form form,
+
+      @Schema(description = "배변 활동한 날짜와 시", examples = "2024-11-26T11:00:00.00Z")
+      @NotNull(message = "배변 활동한 날짜와 시를 선택해주세요.")
+      LocalDateTime loggedAt
   ) {
 
   }
