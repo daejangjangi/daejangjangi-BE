@@ -30,14 +30,20 @@ import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.annotation.PostConstruct;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,6 +64,22 @@ public class ProductService {
   private final DiscountRepository discountRepository;
   private final JPAQueryFactory jpaQueryFactory;
   private final ProductGroupRepository productGroupRepository;
+  private final RedisTemplate<String, String> redisTemplate;
+
+  @Value("${custom.redis.bind.ranking-key}")
+  private String searchRankingPrefix;
+
+  @Value("${custom.redis.bind.user-keyword}")
+  private String searchUserKeywordPrefix;
+
+  private ZSetOperations<String, String> zSetOperations;
+  private ValueOperations<String, String> valueOperations;
+
+  @PostConstruct
+  private void init() {
+    zSetOperations = redisTemplate.opsForZSet();
+    valueOperations = redisTemplate.opsForValue();
+  }
 
   /**
    * 상품 저장
@@ -113,63 +135,6 @@ public class ProductService {
   }
 
   /**
-   * 관련 장질환 저장
-   *
-   * @param product  상품 정보
-   * @param diseases 장질환
-   * @return List - ProductDisease
-   */
-  private List<ProductDisease> saveDisease(Product product, List<Disease> diseases) {
-    List<ProductDisease> productDiseases = new ArrayList<>();
-    for (Disease disease : diseases) {
-      ProductDisease productDisease = ProductDisease.builder()
-          .product(product)
-          .disease(disease)
-          .build();
-      productDiseases.add(productDisease);
-    }
-    return productDiseaseRepository.saveAll(productDiseases);
-  }
-
-  /**
-   * 회원 추천 카테고리 저장
-   *
-   * @param product    상품 정보
-   * @param categories 카테고리
-   * @return List - ProductCategory
-   */
-  private List<ProductCategory> saveCategories(Product product, List<Category> categories) {
-    List<ProductCategory> productCategories = new ArrayList<>();
-    for (Category category : categories) {
-      ProductCategory productCategory = ProductCategory.builder()
-          .product(product)
-          .category(category)
-          .build();
-      productCategories.add(productCategory);
-    }
-    return productCategoryRepository.saveAll(productCategories);
-  }
-
-  /**
-   * 상품 그룹 저장
-   *
-   * @param product  상품 정보
-   * @param nameList 상품 그룹 목록
-   * @return List - ProductGroup
-   */
-  private List<ProductGroup> saveProductGroups(Product product, List<String> nameList) {
-    List<ProductGroup> productGroupList = new ArrayList<>();
-    for (String name : nameList) {
-      ProductGroup productGroup = ProductGroup.builder()
-          .product(product)
-          .name(name)
-          .build();
-      productGroupList.add(productGroup);
-    }
-    return productGroupRepository.saveAll(productGroupList);
-  }
-
-  /**
    * 상품 조회
    *
    * @param productId 상품 ID
@@ -191,13 +156,15 @@ public class ProductService {
       String keyword,
       ProductSortKey sortKey,
       String name,
-      Pageable pageable
+      Pageable pageable,
+      Member member
   ) {
 
     BooleanBuilder predicate = new BooleanBuilder();
 
     // 키워드 검색 조건
     if (StringUtils.hasText(keyword)) {
+      increaseScore(keyword, member.getId());
       predicate.and(
           product.name.like("%" + keyword + "%")
               .or(product.comment
@@ -262,6 +229,11 @@ public class ProductService {
     product.discount(discount);
   }
 
+  /**
+   * 상품 그룹 검증
+   *
+   * @param productGroup 상품 그룹
+   */
   public void validateProductGroup(String productGroup) {
     if (productGroup.trim().isEmpty()
         || Arrays.stream(ProductGroupEnum.values())
@@ -271,6 +243,11 @@ public class ProductService {
     throw new InvalidProductGroupException();
   }
 
+  /**
+   * 상품 그룹 검증
+   *
+   * @param values 상품 그룹 목록
+   */
   public void validateProductGroup(List<String> values) {
     for (String value : values) {
       validateProductGroup(value);
@@ -287,6 +264,65 @@ public class ProductService {
 //
 //    return new ArrayList<>();
 //  }
+
+  /*--------------Private----------------------------Private----------------------------Private---*/
+
+  /**
+   * 관련 장질환 저장
+   *
+   * @param product  상품 정보
+   * @param diseases 장질환
+   * @return List - ProductDisease
+   */
+  private List<ProductDisease> saveDisease(Product product, List<Disease> diseases) {
+    List<ProductDisease> productDiseases = new ArrayList<>();
+    for (Disease disease : diseases) {
+      ProductDisease productDisease = ProductDisease.builder()
+          .product(product)
+          .disease(disease)
+          .build();
+      productDiseases.add(productDisease);
+    }
+    return productDiseaseRepository.saveAll(productDiseases);
+  }
+
+  /**
+   * 회원 추천 카테고리 저장
+   *
+   * @param product    상품 정보
+   * @param categories 카테고리
+   * @return List - ProductCategory
+   */
+  private List<ProductCategory> saveCategories(Product product, List<Category> categories) {
+    List<ProductCategory> productCategories = new ArrayList<>();
+    for (Category category : categories) {
+      ProductCategory productCategory = ProductCategory.builder()
+          .product(product)
+          .category(category)
+          .build();
+      productCategories.add(productCategory);
+    }
+    return productCategoryRepository.saveAll(productCategories);
+  }
+
+  /**
+   * 상품 그룹 저장
+   *
+   * @param product  상품 정보
+   * @param nameList 상품 그룹 목록
+   * @return List - ProductGroup
+   */
+  private List<ProductGroup> saveProductGroups(Product product, List<String> nameList) {
+    List<ProductGroup> productGroupList = new ArrayList<>();
+    for (String name : nameList) {
+      ProductGroup productGroup = ProductGroup.builder()
+          .product(product)
+          .name(name)
+          .build();
+      productGroupList.add(productGroup);
+    }
+    return productGroupRepository.saveAll(productGroupList);
+  }
 
   /**
    * 상품 정렬
@@ -318,5 +354,20 @@ public class ProductService {
           new OrderSpecifier<>(Order.ASC, product.id)
       };
     };
+  }
+
+  /**
+   * 검색어 갯수 증가
+   *
+   * @param keyword  검색 키워드
+   * @param memberId 회원 id - 동일 회원 중복 검색 키워드 입력 방지
+   */
+  private void increaseScore(String keyword, Long memberId) {
+    String key = searchUserKeywordPrefix + memberId + ":" + keyword;
+    if (keyword.equals(valueOperations.get(key))) {
+      return;
+    }
+    valueOperations.set(key, keyword, Duration.ofMinutes(3));
+    zSetOperations.incrementScore(searchRankingPrefix, keyword, 1);
   }
 }
