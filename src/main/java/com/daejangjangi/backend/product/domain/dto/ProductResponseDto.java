@@ -2,6 +2,7 @@ package com.daejangjangi.backend.product.domain.dto;
 
 import com.daejangjangi.backend.global.common.PageFields;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProductResponseDto {
@@ -41,9 +42,12 @@ public class ProductResponseDto {
       PageFields pageFields,
 
       @Schema(description = "상품 목록")
-      List<ProductInfo> myProductLikeList
+      List<ProductInfo> myProductInfoList
   ) {
 
+    public ProductInfoList {
+      myProductInfoList = myProductInfoList == null ? new ArrayList<>() : myProductInfoList;
+    }
   }
 
   @Schema(name = "BestProductListResponse", description = "인기 상품 목록 응답 DTO")
@@ -76,9 +80,14 @@ public class ProductResponseDto {
       String profile,
 
       @Schema(description = "상품 로그인 회원 좋아요 여부", example = "true")
-      Boolean isLiked
+      Boolean isLiked,
 
+      @Schema(description = "상품 태그", example = "[ \" 유산균 \", \" 식이섬유 \", \" 변비 \" ")
+      List<String> tagList
   ) {
 
+    public ProductInfo {
+      tagList = tagList == null ? new ArrayList<>() : tagList;
+    }
   }
 }

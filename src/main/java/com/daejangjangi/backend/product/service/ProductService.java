@@ -12,23 +12,26 @@ import com.daejangjangi.backend.product.domain.entity.Discount;
 import com.daejangjangi.backend.product.domain.entity.Product;
 import com.daejangjangi.backend.product.domain.entity.ProductCategory;
 import com.daejangjangi.backend.product.domain.entity.ProductDisease;
+import com.daejangjangi.backend.product.domain.entity.ProductGroup;
+import com.daejangjangi.backend.product.domain.enums.ProductGroupEnum;
 import com.daejangjangi.backend.product.domain.enums.ProductSortKey;
 import com.daejangjangi.backend.product.domain.mapper.ProductMapper;
+import com.daejangjangi.backend.product.exception.InvalidProductGroupException;
 import com.daejangjangi.backend.product.exception.NotFoundProductException;
 import com.daejangjangi.backend.product.repository.DiscountRepository;
 import com.daejangjangi.backend.product.repository.ProductCategoryRepository;
 import com.daejangjangi.backend.product.repository.ProductDiseaseRepository;
+import com.daejangjangi.backend.product.repository.ProductGroupRepository;
 import com.daejangjangi.backend.product.repository.ProductRepository;
-import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.NumberExpression;
-import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +41,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
@@ -53,6 +57,7 @@ public class ProductService {
   private final ProductDiseaseRepository productDiseaseRepository;
   private final DiscountRepository discountRepository;
   private final JPAQueryFactory jpaQueryFactory;
+  private final ProductGroupRepository productGroupRepository;
 
   /**
    * 상품 저장
@@ -61,12 +66,14 @@ public class ProductService {
    * @param profileImage 프로필 이미지
    * @param diseases     장질환
    * @param categories   카테고리
+   * @param nameList     상품그룹명
    */
   public void register(
       Product product,
       MultipartFile profileImage,
       List<Disease> diseases,
-      List<Category> categories
+      List<Category> categories,
+      List<String> nameList
   ) {
     fileValidator.validateImage(profileImage);
     String imageUrl = s3Manager.upload(profileImage);
@@ -79,6 +86,10 @@ public class ProductService {
     if (!categories.isEmpty()) {
       List<ProductCategory> productCategories = saveCategories(product, categories);
       product.addCategories(productCategories);
+    }
+    if (!nameList.isEmpty()) {
+      List<ProductGroup> productGroups = saveProductGroups(product, nameList);
+      product.addProductGroups(productGroups);
     }
   }
 
@@ -140,6 +151,25 @@ public class ProductService {
   }
 
   /**
+   * 상품 그룹 저장
+   *
+   * @param product  상품 정보
+   * @param nameList 상품 그룹 목록
+   * @return List - ProductGroup
+   */
+  private List<ProductGroup> saveProductGroups(Product product, List<String> nameList) {
+    List<ProductGroup> productGroupList = new ArrayList<>();
+    for (String name : nameList) {
+      ProductGroup productGroup = ProductGroup.builder()
+          .product(product)
+          .name(name)
+          .build();
+      productGroupList.add(productGroup);
+    }
+    return productGroupRepository.saveAll(productGroupList);
+  }
+
+  /**
    * 상품 조회
    *
    * @param productId 상품 ID
@@ -154,16 +184,32 @@ public class ProductService {
    *
    * @param keyword  검색 키워드
    * @param sortKey  정렬 종류
+   * @param name     상품 그룹명
    * @param pageable 페이지 정보
    */
   public Page<Product> getSearchedAndSortedProductList(
       String keyword,
       ProductSortKey sortKey,
+      String name,
       Pageable pageable
   ) {
-    // 검색 조건
-    BooleanExpression predicate = product.name.like("%" + keyword + "%")
-        .or(product.comment.like("%" + keyword + "%"));
+
+    BooleanBuilder predicate = new BooleanBuilder();
+
+    // 키워드 검색 조건
+    if (StringUtils.hasText(keyword)) {
+      predicate.and(
+          product.name.like("%" + keyword + "%")
+              .or(product.comment
+                  .like("%" + keyword + "%")
+              )
+      );
+    }
+
+    // 상품 그룹 조건
+    if (StringUtils.hasText(name)) {
+      predicate.and(product.productGroups.any().name.eq(name));
+    }
 
     // 정렬 조건
     OrderSpecifier<?>[] orderSpecifier = createOrderSpecifier(sortKey);
@@ -172,6 +218,7 @@ public class ProductService {
     List<Long> productIds = jpaQueryFactory
         .select(product.id)
         .from(product)
+        .leftJoin(product.productGroups)
         .where(predicate)
         .orderBy(orderSpecifier)
         .offset(pageable.getOffset())
@@ -182,7 +229,6 @@ public class ProductService {
     JPAQuery<Product> query = jpaQueryFactory
         .selectFrom(product)
         .leftJoin(product.discount).fetchJoin()
-        .leftJoin(product.productLikes).fetchJoin()
         .where(product.id.in(productIds))
         .orderBy(orderSpecifier);
 
@@ -214,6 +260,21 @@ public class ProductService {
       discount = discountRepository.save(discount);
     }
     product.discount(discount);
+  }
+
+  public void validateProductGroup(String productGroup) {
+    if (productGroup.trim().isEmpty()
+        || Arrays.stream(ProductGroupEnum.values())
+        .anyMatch(g -> g.getValue().equals(productGroup))) {
+      return;
+    }
+    throw new InvalidProductGroupException();
+  }
+
+  public void validateProductGroup(List<String> values) {
+    for (String value : values) {
+      validateProductGroup(value);
+    }
   }
 
   /**

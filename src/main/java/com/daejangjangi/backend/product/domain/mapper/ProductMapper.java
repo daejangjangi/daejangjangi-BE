@@ -8,6 +8,7 @@ import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.ProductInf
 import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.RecommendedProduct;
 import com.daejangjangi.backend.product.domain.entity.Discount;
 import com.daejangjangi.backend.product.domain.entity.Product;
+import java.util.ArrayList;
 import java.util.List;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
@@ -49,6 +50,7 @@ public interface ProductMapper {
   @Mapping(target = "saleLink", source = "product.saleLink")
   @Mapping(target = "profile", source = "product.profile")
   @Mapping(target = "isLiked", expression = "java(isLikedByMember(product, member))")
+  @Mapping(target = "tagList", expression = "java(getTagList(product))")
   ProductInfo ProductToInfoDto(Product product, Member member);
 
   default boolean isLikedByMember(Product product, Member member) {
@@ -64,12 +66,20 @@ public interface ProductMapper {
     }
   }
 
+  default List<String> getTagList(Product product) {
+    List<String> tagList = new ArrayList<>(product.getCategories().stream()
+        .map(pc -> pc.getCategory().getName()).toList());
+    tagList.addAll(product.getDiseases().stream()
+        .map(pd -> pd.getDisease().getName()).toList());
+    return tagList;
+  }
+
   @Mapping(target = "pageFields", expression = "java(pageToDto(productInfos))")
-  @Mapping(target = "myProductLikeList", source = "productInfos.content")
+  @Mapping(target = "myProductInfoList", source = "productInfos.content")
   ProductInfoList pageMyProductToDto(Page<ProductInfo> productInfos);
 
   @Mapping(target = "pageFields", expression = "java(pageToDto(productInfos))")
-  @Mapping(target = "myProductLikeList", source = "productInfos.content")
+  @Mapping(target = "myProductInfoList", source = "productInfos.content")
   ProductInfoList pageSearchedProductToDto(Page<ProductInfo> productInfos);
 
   @Mapping(target = "pageNumber", expression = "java(getPageNumber(productInfos))")

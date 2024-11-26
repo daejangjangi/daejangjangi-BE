@@ -35,12 +35,18 @@ public class ProductRequestDto {
       @Schema(description = "회원 추천 카테고리", allowableValues = {
           "유산균", "식이섬유", "저포드맵", "비건", "욕실용품", "아동", "운동기구"
       })
-      List<String> categories
+      List<String> categories,
+
+      @Schema(description = "상품 그룹", allowableValues = {
+          "유산균", "식이섬유", "저포드맵", "간식", "생활용품.리빙"
+      })
+      List<String> productGroups
   ) {
 
     public Register {
       diseases = diseases == null ? new ArrayList<>() : diseases;
       categories = categories == null ? new ArrayList<>() : categories;
+      productGroups = productGroups == null ? new ArrayList<>() : productGroups;
     }
   }
 }

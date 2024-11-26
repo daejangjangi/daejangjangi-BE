@@ -58,10 +58,11 @@ public class ProductController implements ProductApi {
       @Valid @RequestPart ProductRequestDto.Register request,
       @RequestPart MultipartFile profileImage
   ) {
+    productService.validateProductGroup(request.productGroups());
     List<Disease> diseases = diseaseService.findByNames(request.diseases());
     List<Category> categories = categoryService.findByNames(request.categories());
     Product product = ProductMapper.INSTANCE.requestToEntity(request);
-    productService.register(product, profileImage, diseases, categories);
+    productService.register(product, profileImage, diseases, categories, request.productGroups());
     return ApiGlobalResponse.ok();
   }
 
@@ -121,13 +122,15 @@ public class ProductController implements ProductApi {
   public ApiGlobalResponse<ProductInfoList> searchAndSort(
       @RequestParam(value = "keyword", defaultValue = "") String keyword,
       @RequestParam(value = "sortKey", defaultValue = "전체") ProductSortKey sortKey,
+      @RequestParam(value = "productGroup", defaultValue = "") String productGroup,
       @RequestParam(defaultValue = "1") int page,
       @RequestParam(defaultValue = "10") int size
   ) {
+    productService.validateProductGroup(productGroup);
     Member member = memberService.info();
     Pageable pageable = PageRequest.of(page - 1, size, Direction.DESC, "createdAt");
     Page<Product> productList
-        = productService.getSearchedAndSortedProductList(keyword, sortKey, pageable);
+        = productService.getSearchedAndSortedProductList(keyword, sortKey, productGroup, pageable);
     Page<ProductInfo> productInfoList
         = productList.map(product -> ProductMapper.INSTANCE.ProductToInfoDto(product, member));
     ProductInfoList response = ProductMapper.INSTANCE.pageSearchedProductToDto(productInfoList);
