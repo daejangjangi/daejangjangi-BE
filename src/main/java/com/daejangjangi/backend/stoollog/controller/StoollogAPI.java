@@ -2,9 +2,11 @@ package com.daejangjangi.backend.stoollog.controller;
 
 import com.daejangjangi.backend.global.annotation.swagger.Response200WithSwagger;
 import com.daejangjangi.backend.global.annotation.swagger.Response401WithSwagger;
+import com.daejangjangi.backend.global.annotation.swagger.Response403WithSwagger;
 import com.daejangjangi.backend.global.annotation.swagger.ResponseCommonWithSwagger;
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
 import com.daejangjangi.backend.stoollog.domain.dto.StoollogRequestDto;
+import com.daejangjangi.backend.stoollog.domain.dto.StoollogResponseDto.StoollogInfoListResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -15,8 +17,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Null;
+import java.time.LocalDate;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Tag(name = "Stool log (배변 일지) API", description = "배변 일지 관련 API")
 @ResponseCommonWithSwagger
@@ -98,6 +102,16 @@ public interface StoollogAPI {
                               "form : 배변 형태를 선택해주세요."
                             ]
                           }"""
+                  ),
+                  @ExampleObject(
+                      name = "NOT_AUTHORIZED_STOOLLOG",
+                      summary = "배변 일지 수정 권한 없음",
+                      value = """
+                          {
+                            "code": "BAD_REQUEST",
+                            "message": "배변 일지 수정 및 삭제 권한이 없습니다.",
+                            "data": null
+                          }"""
                   )
               }
           )
@@ -109,5 +123,43 @@ public interface StoollogAPI {
   @Operation(summary = "배변 일지 삭제", tags = {"Stool log (배변 일지) API"})
   @Response200WithSwagger
   @Response401WithSwagger
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "400", description = "잘못된 요청",
+          content = @Content(
+              mediaType = "application/json",
+              array = @ArraySchema(schema = @Schema(implementation = ApiGlobalResponse.class)),
+              examples = {
+                  @ExampleObject(
+                      name = "NOT_AUTHORIZED_STOOLLOG",
+                      summary = "배변 일지 삭제 권한 없음",
+                      value = """
+                          {
+                            "code": "BAD_REQUEST",
+                            "message": "배변 일지 수정 및 삭제 권한이 없습니다.",
+                            "data": null
+                          }"""
+                  )
+              }
+          )
+      )
+  })
   ApiGlobalResponse<Null> delete(@PathVariable("stoollogId") Long stoollogId);
+
+  @Operation(summary = "일별로 배변 일지 조회", tags = {"Stool log (배변 일지) API"},
+      responses = {
+          @ApiResponse(
+              responseCode = "200",
+              description = "OK",
+              content = @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = StoollogInfoListResponse.class)
+              )
+          )
+      }
+  )
+  @Response401WithSwagger
+  ApiGlobalResponse<StoollogInfoListResponse> getStoollogs(
+      @Schema(description = "날짜", example = "2024-11-26")
+      @RequestParam LocalDate date);
+
 }
