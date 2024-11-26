@@ -66,7 +66,7 @@ public class StoollogService {
    */
   public List<Stoollog> getStoollogs(Member member, LocalDate date) {
     LocalDateTime startOfDay = date.atStartOfDay();
-    LocalDateTime endOfDay = date.atTime(LocalTime.MAX);
+    LocalDateTime endOfDay = date.atTime(LocalTime.of(23, 59));
     return stoolLogRepository.findByMemberAndLoggedAtBetweenOrderByLoggedAtAsc(member, startOfDay,
         endOfDay);
   }
