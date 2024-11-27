@@ -7,6 +7,7 @@ import com.daejangjangi.backend.disease.domain.Disease;
 import com.daejangjangi.backend.file.service.FileValidator;
 import com.daejangjangi.backend.file.service.S3Manager;
 import com.daejangjangi.backend.member.domain.entity.Member;
+import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.ProductInfo;
 import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.RecommendedProduct;
 import com.daejangjangi.backend.product.domain.entity.Discount;
 import com.daejangjangi.backend.product.domain.entity.Product;
@@ -121,17 +122,15 @@ public class ProductService {
    * @param member 로그인 회원
    * @param count  추천 갯수
    * @return List RecommendedProduct
-   * <p>
-   * // TODO : 태그가 1개 이상 일치하는 상품들이 count 미만인 경우 랜덤한 상품 추가 조회하도록 추가 구현.
    */
-  public List<RecommendedProduct> getRecommendedProducts(Member member, int count) {
-    List<String> myDiseases = member.getDiseases().stream()
-        .map(d -> d.getDisease().getName()).toList();
-    List<String> myCategories = member.getCategories().stream()
-        .map(c -> c.getCategory().getName()).toList();
-    List<Product> recommendedProduct
-        = productRepository.findMyProductList(myDiseases, myCategories, count);
+  public List<RecommendedProduct> getRecommendedProductsInMain(Member member, int count) {
+    List<Product> recommendedProduct = getRecommendedProductList(member, count);
     return ProductMapper.INSTANCE.recommendProductsToDtoList(recommendedProduct);
+  }
+
+  public List<ProductInfo> getRecommendedProductsInDaejanggan(Member member, int count) {
+    List<Product> recommendedProduct = getRecommendedProductList(member, count);
+    return ProductMapper.INSTANCE.productToInfoDto(recommendedProduct, member);
   }
 
   /**
@@ -369,5 +368,25 @@ public class ProductService {
     }
     valueOperations.set(key, keyword, Duration.ofMinutes(3));
     zSetOperations.incrementScore(searchRankingPrefix, keyword, 1);
+  }
+
+  /**
+   * 추천 상품 목록 조회
+   *
+   * @param member 로그인 회원 정보
+   * @param count  추천 상품 갯수
+   * @return List Product
+   */
+  private List<Product> getRecommendedProductList(Member member, int count) {
+    List<String> diseases = member.getDiseases().stream()
+        .map(d -> d.getDisease().getName()).toList();
+    List<String> categories = member.getCategories().stream()
+        .map(c -> c.getCategory().getName()).toList();
+    List<Product> recommendedProducts
+        = productRepository.findMyProductList(diseases, categories, count);
+    if (recommendedProducts.size() < count) {
+      recommendedProducts = productRepository.findRandomProductList(count);
+    }
+    return recommendedProducts;
   }
 }
