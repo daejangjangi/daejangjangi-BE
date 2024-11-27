@@ -1,6 +1,7 @@
 package com.daejangjangi.backend.rank.service;
 
 import jakarta.annotation.PostConstruct;
+import jakarta.transaction.Transactional;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
@@ -51,9 +52,10 @@ public class RankService {
   /**
    * 검색어 중 필요없는 내용 제거 - 24시간 마다 제거
    */
+  @Transactional
   public void cleanupLowRankingKeywords() {
-    log.info("scheduler start!");
     try {
+      log.info("현재 시각 : {}, scheduler 시작", System.currentTimeMillis());
       Long totalKeywordsSize = zSetOperations.size(searchRankingKey);
       if (totalKeywordsSize == null || totalKeywordsSize <= TOP_N) {
         return;
@@ -61,6 +63,7 @@ public class RankService {
       Set<String> keywordsToRemove = zSetOperations.reverseRange(searchRankingKey, TOP_N, -1);
       zSetOperations.removeRange(searchRankingKey, 0, totalKeywordsSize - (TOP_N + 1));
       cleanupUserSearchHistory(keywordsToRemove);
+      log.info("scheduler 정상 동작 완료");
     } catch (Exception e) {
       log.error("Exception : ", e);
       throw new RuntimeException("검색 키워드 일괄 삭제 실패"); // TODO : 예외 추가하기
@@ -74,7 +77,7 @@ public class RankService {
    */
   private void cleanupUserSearchHistory(Set<String> keywordsToRemove) {
     Set<String> userKeys = redisTemplate.keys(searchUserKeywordPrefix + "*");
-    if (userKeys == null || userKeys.isEmpty()) {
+    if (userKeys.isEmpty()) {
       return;
     }
 

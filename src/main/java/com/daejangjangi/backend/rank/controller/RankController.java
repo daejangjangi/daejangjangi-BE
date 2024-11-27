@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/ranks")
-public class RankController {
+public class RankController implements RankApi {
 
   private final RankService rankService;
 
@@ -31,7 +31,7 @@ public class RankController {
 
   @PreAuthorize("hasAuthority('ADMIN')")
   @DeleteMapping
-  public ApiGlobalResponse<Null> deleteRanking() {
+  public ApiGlobalResponse<Null> deleteLowRanking() {
     rankService.cleanupLowRankingKeywords();
     return ApiGlobalResponse.ok();
   }
