@@ -14,7 +14,7 @@ public class SwaggerConfig {
   @Bean
   public OpenAPI openAPI() {
     Info info = new Info();
-    info.title("Daejangjangi Api Documentation").description("대장장이 API 문서입니다.")
+    info.title("Daejangjangi API Documentation").description("대장장이 API 문서입니다.")
         .version("1.0.0");
 
     SecurityScheme jwtSecurityScheme = new SecurityScheme().type(SecurityScheme.Type.HTTP)
