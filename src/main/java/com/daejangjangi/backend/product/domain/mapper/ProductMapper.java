@@ -10,6 +10,9 @@ import com.daejangjangi.backend.product.domain.entity.Discount;
 import com.daejangjangi.backend.product.domain.entity.Product;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import org.mapstruct.BeanMapping;
+import org.mapstruct.Builder;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -42,16 +45,24 @@ public interface ProductMapper {
 //  @IterableMapping(elementTargetType = ProductInfo.class, qualifiedByName = "myProductToDto")
 //  List<ProductInfo> bestProductToDto(List<Product> bestProduct);
 
-  @Named("myProductToDto")
-  @Mapping(target = "id", source = "product.id")
-  @Mapping(target = "name", source = "product.name")
-  @Mapping(target = "regularPrice", source = "product.regularPrice")
-  @Mapping(target = "discountRate", expression = "java(initDiscountRate(product.getDiscount()))")
-  @Mapping(target = "saleLink", source = "product.saleLink")
-  @Mapping(target = "profile", source = "product.profile")
-  @Mapping(target = "isLiked", expression = "java(isLikedByMember(product, member))")
-  @Mapping(target = "tagList", expression = "java(getTagList(product))")
-  ProductInfo ProductToInfoDto(Product product, Member member);
+  default List<ProductInfo> productToInfoDto(List<Product> productList, Member member) {
+    return productList.stream()
+        .map(product -> productToInfoDto(product, member))
+        .collect(Collectors.toList());
+  }
+  
+  default ProductInfo productToInfoDto(Product product, Member member) {
+    return new ProductInfo(
+        product.getId(),
+        product.getName(),
+        product.getRegularPrice(),
+        initDiscountRate(product.getDiscount()),
+        product.getSaleLink(),
+        product.getProfile(),
+        isLikedByMember(product, member),
+        getTagList(product)
+    );
+  }
 
   default boolean isLikedByMember(Product product, Member member) {
     return product.getProductLikes().stream()

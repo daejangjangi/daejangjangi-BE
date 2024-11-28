@@ -79,15 +79,27 @@ public class ProductController implements ProductApi {
   }
 
   @PreAuthorize("hasAuthority('MEMBER')")
-  @GetMapping("/recommend")
-  public ApiGlobalResponse<ProductResponseDto.RecommendedProductList> recommend(
+  @GetMapping("/recommend/main")
+  public ApiGlobalResponse<ProductResponseDto.RecommendedProductList> recommendInMain(
       @RequestParam int count
   ) {
     Member member = memberService.info();
     List<ProductResponseDto.RecommendedProduct> recommendedProducts
-        = productService.getRecommendedProducts(member, count);
+        = productService.getRecommendedProductsInMain(member, count);
     ProductResponseDto.RecommendedProductList response
         = new RecommendedProductList(recommendedProducts);
+    return ApiGlobalResponse.ok(response);
+  }
+
+  @PreAuthorize("hasAuthority('MEMBER')")
+  @GetMapping("/recommend/daejanggan")
+  public ApiGlobalResponse<ProductInfoList> recommendInDaejanggan(
+      @RequestParam int count
+  ) {
+    Member member = memberService.info();
+    List<ProductInfo> recommendedProducts
+        = productService.getRecommendedProductsInDaejanggan(member, count);
+    ProductInfoList response = new ProductInfoList(null, recommendedProducts);
     return ApiGlobalResponse.ok(response);
   }
 
@@ -112,7 +124,7 @@ public class ProductController implements ProductApi {
     Pageable pageable = PageRequest.of(page - 1, size, Direction.DESC, "createdAt");
     Page<Product> myLikedList = productLikeService.findByMember(member, pageable);
     Page<ProductInfo> myProductLikes
-        = myLikedList.map(product -> ProductMapper.INSTANCE.ProductToInfoDto(product, member));
+        = myLikedList.map(product -> ProductMapper.INSTANCE.productToInfoDto(product, member));
     ProductInfoList response = ProductMapper.INSTANCE.pageMyProductToDto(myProductLikes);
     return ApiGlobalResponse.ok(response);
   }
@@ -133,7 +145,7 @@ public class ProductController implements ProductApi {
         = productService.getSearchedAndSortedProductList(keyword, sortKey, productGroup, pageable,
         member);
     Page<ProductInfo> productInfoList
-        = productList.map(product -> ProductMapper.INSTANCE.ProductToInfoDto(product, member));
+        = productList.map(product -> ProductMapper.INSTANCE.productToInfoDto(product, member));
     ProductInfoList response = ProductMapper.INSTANCE.pageSearchedProductToDto(productInfoList);
     return ApiGlobalResponse.ok(response);
   }
