@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/fcms")
+@RequestMapping("/api/v1/fcms")
 @RequiredArgsConstructor
 public class FcmController implements FcmApi {
 
