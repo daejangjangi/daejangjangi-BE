@@ -130,7 +130,8 @@ public class ProductController implements ProductApi {
     Member member = memberService.info();
     Pageable pageable = PageRequest.of(page - 1, size, Direction.DESC, "createdAt");
     Page<Product> productList
-        = productService.getSearchedAndSortedProductList(keyword, sortKey, productGroup, pageable);
+        = productService.getSearchedAndSortedProductList(keyword, sortKey, productGroup, pageable,
+        member);
     Page<ProductInfo> productInfoList
         = productList.map(product -> ProductMapper.INSTANCE.ProductToInfoDto(product, member));
     ProductInfoList response = ProductMapper.INSTANCE.pageSearchedProductToDto(productInfoList);

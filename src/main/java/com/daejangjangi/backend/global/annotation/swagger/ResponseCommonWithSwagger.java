@@ -24,6 +24,8 @@ import java.lang.annotation.Target;
             mediaType = "application/json",
             schema = @Schema(implementation = ApiGlobalResponse.class),
             examples = @ExampleObject(
+                name = "INTERNAL_SERVER_ERROR",
+                summary = "서버 내부 오류",
                 value = """
                     {
                       "code": "INTERNAL_SERVER_ERROR",
