@@ -22,6 +22,13 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
   List<Product> findMyProductList(
       @Param("diseaseNames") List<String> diseaseNames,
       @Param("categoryNames") List<String> categoryNames,
-      @Param("count") Integer count
+      @Param("count") int count
   );
+
+  @Query(value = """
+      SELECT DISTINCT p FROM Product p
+      ORDER BY RAND()
+      LIMIT :count
+      """)
+  List<Product> findRandomProductList(@Param("count") int count);
 }

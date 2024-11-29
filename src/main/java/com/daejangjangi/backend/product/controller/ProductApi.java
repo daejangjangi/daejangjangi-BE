@@ -109,7 +109,7 @@ public interface ProductApi {
       @Parameter DiscountRegister request
   );
 
-  @Operation(summary = "추천 상품 조회", tags = {"Product (상품) API"},
+  @Operation(summary = "추천 상품 조회(메인)", tags = {"Product (상품) API"},
       responses = {
           @ApiResponse(
               responseCode = "200",
@@ -143,7 +143,46 @@ public interface ProductApi {
   )
   @Response401WithSwagger
   @Response403WithSwagger
-  ApiGlobalResponse<ProductResponseDto.RecommendedProductList> recommend(@RequestParam int count);
+  ApiGlobalResponse<ProductResponseDto.RecommendedProductList> recommendInMain(
+      @RequestParam int count);
+
+
+  @Operation(summary = "추천 상품 조회(대장간)", tags = {"Product (상품) API"},
+      responses = {
+          @ApiResponse(
+              responseCode = "200",
+              description = "OK",
+              content = @Content(
+                  mediaType = "application/json",
+                  array = @ArraySchema(schema = @Schema(implementation = ProductResponseDto.ProductInfoList.class))
+              )
+          ),
+          @ApiResponse(
+              responseCode = "400",
+              description = "잘못된 요청",
+              content = @Content(
+                  mediaType = "application/json",
+                  array = @ArraySchema(schema = @Schema(implementation = ApiGlobalResponse.class)),
+                  examples = {
+                      @ExampleObject(
+                          name = "NOT_FOUND_MEMBER",
+                          summary = "미가입 회원",
+                          value = """
+                              {
+                                "code": "NOT_FOUND_MEMBER",
+                                "message": "존재하지 않는 회원입니다.",
+                                "data": null
+                              }"""
+                      )
+                  }
+              )
+          )
+      }
+  )
+  @Response401WithSwagger
+  @Response403WithSwagger
+  ApiGlobalResponse<ProductResponseDto.ProductInfoList> recommendInDaejanggan(
+      @RequestParam int count);
 
   @Operation(summary = "상품 좋아요", tags = {"Product (상품) API"},
       responses = {
