@@ -35,7 +35,7 @@ public class BannerService {
   }
 
   public List<BannerInfo> list() {
-    List<Banner> bannerList = bannerRepository.findAll();
+    List<Banner> bannerList = bannerRepository.findAllWithProduct();
     return BannerMapper.INSTANCE.entityToResponse(bannerList);
   }
 }
