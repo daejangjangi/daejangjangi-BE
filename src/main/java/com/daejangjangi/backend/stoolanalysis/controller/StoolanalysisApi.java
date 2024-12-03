@@ -2,8 +2,10 @@ package com.daejangjangi.backend.stoolanalysis.controller;
 
 import com.daejangjangi.backend.global.annotation.swagger.ResponseCommonWithSwagger;
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
+import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisRequestDto;
 import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisResponseDto;
 import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisResponseDto.ImageInfo;
+import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisResponseDto.StoolDiagnosticResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -12,6 +14,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -54,5 +58,13 @@ public interface StoolanalysisApi {
       )
   })
   ApiGlobalResponse<ImageInfo> analyzeImage(@RequestPart MultipartFile stoolImage);
+
+  @Operation(summary = "배변 진단", tags = {"Stool Analysis (배변 분석) API"})
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "OK",
+          content = @Content(schema = @Schema(implementation = StoolanalysisResponseDto.StoolDiagnosticResult.class)))
+  })
+  ApiGlobalResponse<StoolDiagnosticResult> diagnose(
+      @Valid @RequestBody StoolanalysisRequestDto.StoolDiagnose request);
 
 }
