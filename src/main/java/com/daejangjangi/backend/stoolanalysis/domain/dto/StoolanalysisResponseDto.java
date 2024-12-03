@@ -31,8 +31,9 @@ public class StoolanalysisResponseDto {
   }
 
 
-  @Schema(name = "StoolInfoResponse", description = " DTO")
-  public record StoolInfo(
+  @Schema(name = "StoolDiagnosticResultResponse", description = "배변 진단 응답 DTO")
+  public record StoolDiagnosticResult(
+      @Schema(description = "배변 진단 결과")
       String user_language
   ) {
 

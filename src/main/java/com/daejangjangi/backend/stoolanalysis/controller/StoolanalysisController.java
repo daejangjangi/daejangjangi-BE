@@ -1,13 +1,16 @@
 package com.daejangjangi.backend.stoolanalysis.controller;
 
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
-import com.daejangjangi.backend.member.service.MemberService;
+import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisRequestDto;
 import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisResponseDto.ImageInfo;
+import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisResponseDto.StoolDiagnosticResult;
 import com.daejangjangi.backend.stoolanalysis.service.StoolanalysisService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,7 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class StoolanalysisController implements StoolanalysisApi {
 
-  private final MemberService memberService;
   private final StoolanalysisService stoolanalysisService;
 
   @PreAuthorize("hasAuthority('MEMBER')")
@@ -28,5 +30,11 @@ public class StoolanalysisController implements StoolanalysisApi {
     return ApiGlobalResponse.ok(stoolanalysisService.analyzeImage(stoolImage));
   }
 
+  @PreAuthorize("hasAuthority('MEMBER')")
+  @PostMapping("/diagnosis")
+  public ApiGlobalResponse<StoolDiagnosticResult> diagnose(
+      @Valid @RequestBody StoolanalysisRequestDto.StoolDiagnose request) {
+    return ApiGlobalResponse.ok(stoolanalysisService.diagnoseStool(request));
+  }
 
 }
