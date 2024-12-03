@@ -385,4 +385,40 @@ public interface ProductApi {
   ApiGlobalResponse<Null> registerLookUpLog(
       @Parameter Long productId
   );
+
+  @Operation(summary = "최근 인기 상품 조회", tags = {"Product (상품) API"},
+      responses = {
+          @ApiResponse(
+              responseCode = "200",
+              description = "OK",
+              content = @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = ProductInfoList.class)
+              )
+          ),
+          @ApiResponse(
+              responseCode = "400",
+              description = "잘못된 요청",
+              content = @Content(
+                  mediaType = "application/json",
+                  array = @ArraySchema(schema = @Schema(implementation = ApiGlobalResponse.class)),
+                  examples = {
+                      @ExampleObject(
+                          name = "NOT_FOUND_MEMBER",
+                          summary = "미가입 회원",
+                          value = """
+                              {
+                                "code": "NOT_FOUND_MEMBER",
+                                "message": "존재하지 않는 회원입니다.",
+                                "data": null
+                              }"""
+                      ),
+                  }
+              )
+          )
+      }
+  )
+  @Response401WithSwagger
+  @Response403WithSwagger
+  ApiGlobalResponse<ProductInfoList> popularProducts();
 }

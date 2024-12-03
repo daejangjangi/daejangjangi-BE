@@ -1,6 +1,7 @@
 package com.daejangjangi.backend.product.domain.dto;
 
 import com.daejangjangi.backend.global.common.PageFields;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +38,8 @@ public class ProductResponseDto {
 
   @Schema(name = "ProductInfoListResponse", description = "상품 목록 응답 DTO")
   public record ProductInfoList(
-
+      
+      @JsonInclude(JsonInclude.Include.NON_NULL)
       @Schema(description = "페이징 정보")
       PageFields pageFields,
 

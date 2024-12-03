@@ -8,6 +8,7 @@ import com.daejangjangi.backend.file.service.FileValidator;
 import com.daejangjangi.backend.file.service.S3Manager;
 import com.daejangjangi.backend.member.domain.entity.Member;
 import com.daejangjangi.backend.product.domain.doc.ProductLookUpLog;
+import com.daejangjangi.backend.product.domain.dto.ProductLookUpLogDto;
 import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.ProductInfo;
 import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.RecommendedProduct;
 import com.daejangjangi.backend.product.domain.entity.Discount;
@@ -15,7 +16,6 @@ import com.daejangjangi.backend.product.domain.entity.Product;
 import com.daejangjangi.backend.product.domain.entity.ProductCategory;
 import com.daejangjangi.backend.product.domain.entity.ProductDisease;
 import com.daejangjangi.backend.product.domain.entity.ProductGroup;
-import com.daejangjangi.backend.product.domain.enums.LogType;
 import com.daejangjangi.backend.product.domain.enums.ProductGroupEnum;
 import com.daejangjangi.backend.product.domain.enums.ProductSortKey;
 import com.daejangjangi.backend.product.domain.mapper.ProductMapper;
@@ -36,8 +36,12 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.annotation.PostConstruct;
 import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -85,6 +89,15 @@ public class ProductService {
     zSetOperations = redisTemplate.opsForZSet();
     valueOperations = redisTemplate.opsForValue();
   }
+
+  private static final String[] DEFAULT_PRODUCT_LIST = {
+      "추석선물세트 푸룬 건자두 2구 선물세트 넛츠앤 37호",
+      "프로바이오틱스 유산균19 30포(2개) MN970254 [원산지:국산]",
+      "커클랜드 그릭 요거트 플레인 논팻 907g [원산지:미국]",
+      "KAMUT 골드 카무트 효소 3g x 30포 1통 [원산지:상세설명에 표시]",
+      "Brelat 브렐렛 모짜렐라 치즈 125g [원산지:상세설명에 표시]",
+      "버터넛 마운틴 팜 메이플 시럽 237ml [원산지:미국]"
+  };
 
   /**
    * 상품 저장
@@ -279,15 +292,26 @@ public class ProductService {
   }
 
   /**
-   * TODO : 고민이 필요하다.
-   * 조회 시마다 해당 상품에 대한 조회수를 rdb + redis에 카운팅한다.(이는
+   * 최신 인기 상품 조회
    *
    * @return List Product
    */
-//  public List<Product> getBestProducts() {
-//
-//    return new ArrayList<>();
-//  }
+  public List<Product> getPopularProducts() {
+    List<Product> productList;
+    List<ProductLookUpLogDto> logs = getTopViewedProductList();
+    // TODO : 로직 최적화 예정
+    if (logs.size() >= 6) {
+      List<Long> productIdList = logs.stream().map(ProductLookUpLogDto::getProductId).toList();
+      productList = productRepository.findByIdIn(productIdList);
+    } else {
+      productList = productRepository.findByNameIn(Arrays.asList(DEFAULT_PRODUCT_LIST));
+
+      if (productList.size() < 6) {
+        throw new RuntimeException("기본 조회 상품이 정상적으로 등록되지 않았습니다. DB를 확인해주세요.");
+      }
+    }
+    return productList;
+  }
 
   /*--------------Private----------------------------Private----------------------------Private---*/
 
@@ -413,5 +437,13 @@ public class ProductService {
       recommendedProducts = productRepository.findRandomProductList(count);
     }
     return recommendedProducts;
+  }
+
+  private List<ProductLookUpLogDto> getTopViewedProductList() {
+    LocalDateTime toDate = LocalDateTime.now();
+    LocalDateTime fromDate = toDate.minusDays(10);
+    Date from = Date.from(fromDate.atZone(ZoneId.systemDefault()).toInstant());
+    Date to = Date.from(toDate.atZone(ZoneId.systemDefault()).toInstant());
+    return productLogRepository.findByLookedAtBetween(from, to);
   }
 }

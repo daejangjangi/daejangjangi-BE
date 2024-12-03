@@ -161,13 +161,14 @@ public class ProductController implements ProductApi {
     return ApiGlobalResponse.ok(response);
   }
 
-  //  @PreAuthorize("hasAuthority('MEMBER')")
-//  @GetMapping("/best")
-//  public ApiGlobalResponse<BestProductList> bestProducts() {
-//    List<Product> bestProduct = productService.getBestProducts();
-//    List<ProductInfo> productInfoList
-//        = ProductMapper.INSTANCE.bestProductToDto(bestProduct);
-//    BestProductList response = new BestProductList(productInfoList);
-//    return ApiGlobalResponse.ok(response);
-//  }
+  @PreAuthorize("hasAuthority('MEMBER')")
+  @GetMapping("/popular")
+  public ApiGlobalResponse<ProductInfoList> popularProducts() {
+    Member member = memberService.info();
+    List<Product> bestProduct = productService.getPopularProducts();
+    List<ProductInfo> productInfoList
+        = ProductMapper.INSTANCE.productToInfoDto(bestProduct, member);
+    ProductInfoList response = new ProductInfoList(null, productInfoList);
+    return ApiGlobalResponse.ok(response);
+  }
 }
