@@ -69,6 +69,20 @@ public class S3Manager {
     }
   }
 
+  public String upload(String directory, MultipartFile file) {
+    try {
+      String originFileName = file.getOriginalFilename();
+      String fileName = UUID.randomUUID() + "_" + originFileName;
+      String key = directory + fileName;
+      S3Resource s3Resource = s3Template.upload(bucketName, key, file.getInputStream(),
+          ObjectMetadata.builder().contentType(file.getContentType()).build());
+      return s3Resource.getURL().toString();
+    } catch (IOException e) {
+      log.error("File-UploadError : ", e);
+      throw new ServerDataException();
+    }
+  }
+
   public void deleteProfile(String profile) {
     String s3Url = "https://" + bucketName + ".s3." + region + ".amazonaws.com/";
     try {
