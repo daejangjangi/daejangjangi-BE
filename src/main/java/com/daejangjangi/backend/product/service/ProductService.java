@@ -7,6 +7,7 @@ import com.daejangjangi.backend.disease.domain.Disease;
 import com.daejangjangi.backend.file.service.FileValidator;
 import com.daejangjangi.backend.file.service.S3Manager;
 import com.daejangjangi.backend.member.domain.entity.Member;
+import com.daejangjangi.backend.product.domain.doc.ProductLookUpLog;
 import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.ProductInfo;
 import com.daejangjangi.backend.product.domain.dto.ProductResponseDto.RecommendedProduct;
 import com.daejangjangi.backend.product.domain.entity.Discount;
@@ -14,6 +15,7 @@ import com.daejangjangi.backend.product.domain.entity.Product;
 import com.daejangjangi.backend.product.domain.entity.ProductCategory;
 import com.daejangjangi.backend.product.domain.entity.ProductDisease;
 import com.daejangjangi.backend.product.domain.entity.ProductGroup;
+import com.daejangjangi.backend.product.domain.enums.LogType;
 import com.daejangjangi.backend.product.domain.enums.ProductGroupEnum;
 import com.daejangjangi.backend.product.domain.enums.ProductSortKey;
 import com.daejangjangi.backend.product.domain.mapper.ProductMapper;
@@ -23,6 +25,7 @@ import com.daejangjangi.backend.product.repository.DiscountRepository;
 import com.daejangjangi.backend.product.repository.ProductCategoryRepository;
 import com.daejangjangi.backend.product.repository.ProductDiseaseRepository;
 import com.daejangjangi.backend.product.repository.ProductGroupRepository;
+import com.daejangjangi.backend.product.repository.ProductLogRepository;
 import com.daejangjangi.backend.product.repository.ProductRepository;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Order;
@@ -66,6 +69,7 @@ public class ProductService {
   private final JPAQueryFactory jpaQueryFactory;
   private final ProductGroupRepository productGroupRepository;
   private final RedisTemplate<String, String> redisTemplate;
+  private final ProductLogRepository productLogRepository;
 
   @Value("${custom.redis.bind.ranking-key}")
   private String searchRankingPrefix;
@@ -114,6 +118,27 @@ public class ProductService {
       List<ProductGroup> productGroups = saveProductGroups(product, nameList);
       product.addProductGroups(productGroups);
     }
+  }
+
+  /**
+   * 상품 조회 로그 추가
+   *
+   * @param product 상품 정보
+   * @param member  회원 정보
+   */
+  public void createLookUpLog(Product product, Member member) {
+    /**
+     * 로그에 필요한 데이터
+     * - 조회 시간
+     * - 상품 ID
+     * - 조회 회원 ID
+     * - type : view(확장성 고려)
+     */
+    ProductLookUpLog lookUpLog = ProductLookUpLog.builder()
+        .memberId(member.getId())
+        .productId(product.getId())
+        .build();
+    productLogRepository.save(lookUpLog);
   }
 
   /**

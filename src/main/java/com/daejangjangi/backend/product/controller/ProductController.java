@@ -79,6 +79,17 @@ public class ProductController implements ProductApi {
   }
 
   @PreAuthorize("hasAuthority('MEMBER')")
+  @PostMapping("/lookup/{productId}")
+  public ApiGlobalResponse<Null> registerLookUpLog(
+      @PathVariable("productId") Long productId
+  ) {
+    Product product = productService.findById(productId);
+    Member member = memberService.info();
+    productService.createLookUpLog(product, member);
+    return ApiGlobalResponse.ok();
+  }
+
+  @PreAuthorize("hasAuthority('MEMBER')")
   @GetMapping("/recommend/main")
   public ApiGlobalResponse<ProductResponseDto.RecommendedProductList> recommendInMain(
       @RequestParam int count
