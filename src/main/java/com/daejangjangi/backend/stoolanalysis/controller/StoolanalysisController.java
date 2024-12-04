@@ -1,11 +1,17 @@
 package com.daejangjangi.backend.stoolanalysis.controller;
 
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
+import com.daejangjangi.backend.member.domain.entity.Member;
+import com.daejangjangi.backend.member.service.MemberService;
 import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisRequestDto;
 import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisResponseDto.ImageInfo;
 import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisResponseDto.StoolDiagnosticResult;
+import com.daejangjangi.backend.stoolanalysis.domain.entity.StoolDiagnosis;
+import com.daejangjangi.backend.stoolanalysis.domain.mapper.StoolDiagnosisMapper;
 import com.daejangjangi.backend.stoolanalysis.service.StoolanalysisService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Null;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class StoolanalysisController implements StoolanalysisApi {
 
+  private final MemberService memberService;
   private final StoolanalysisService stoolanalysisService;
 
   @PreAuthorize("hasAuthority('MEMBER')")
@@ -35,6 +42,18 @@ public class StoolanalysisController implements StoolanalysisApi {
   public ApiGlobalResponse<StoolDiagnosticResult> diagnose(
       @Valid @RequestBody StoolanalysisRequestDto.StoolDiagnose request) {
     return ApiGlobalResponse.ok(stoolanalysisService.diagnoseStool(request));
+  }
+
+  @PreAuthorize("hasAuthority('MEMBER')")
+  @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+  public ApiGlobalResponse<Null> register(
+      @Valid @RequestPart StoolanalysisRequestDto.Register request,
+      @RequestPart(required = false) List<MultipartFile> stoolImages) {
+    Member member = memberService.info();
+    StoolDiagnosis stoolDiagnosis = StoolDiagnosisMapper.INSTANCE.requestToEntity(request,
+        request.stoolDiagnose().stools().get(0), member);
+    stoolanalysisService.register(stoolDiagnosis, stoolImages, request.stoolImageUrl());
+    return ApiGlobalResponse.ok();
   }
 
 }

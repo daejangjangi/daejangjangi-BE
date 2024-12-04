@@ -83,6 +83,24 @@ public class S3Manager {
     }
   }
 
+  public List<String> uploadWithoutOrder(String directory, List<MultipartFile> files) {
+    List<String> imageUrls = new ArrayList<>();
+    try {
+      for (MultipartFile file : files) {
+        String originFileName = file.getOriginalFilename();
+        String fileName = UUID.randomUUID() + "_" + originFileName;
+        String key = directory + fileName;
+        S3Resource s3Resource = s3Template.upload(bucketName, key, file.getInputStream(),
+            ObjectMetadata.builder().contentType(file.getContentType()).build());
+        imageUrls.add(s3Resource.getURL().toString());
+      }
+      return imageUrls;
+    } catch (IOException e) {
+      log.error("File-UploadError : ", e);
+      throw new ServerDataException();
+    }
+  }
+
   public void deleteProfile(String profile) {
     String s3Url = "https://" + bucketName + ".s3." + region + ".amazonaws.com/";
     try {

@@ -42,4 +42,13 @@ public class StoolanalysisRequestDto {
   ) {
 
   }
+
+  @Schema(name = "DiagnosisResultRegisterRequest", description = "배변 진단 결과 저장 요청 DTO")
+  public record Register(
+      StoolDiagnose stoolDiagnose,
+      String diagnosisDescription,
+      String stoolImageUrl
+  ) {
+
+  }
 }
