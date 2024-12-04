@@ -22,6 +22,7 @@ import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -74,7 +75,7 @@ public class StoolDiagnosis extends BaseEntity {
   @Column(name = "stool_form", nullable = false)
   private Form form;
 
-  @Column(name = "stool_diet_type", nullable = false)
+  @Column(name = "diet_type", nullable = false)
   private DietType dietType;
 
   @Column(name = "stool_protein_lumps", nullable = false)
@@ -86,16 +87,16 @@ public class StoolDiagnosis extends BaseEntity {
   @Column(name = "stool_bloody", nullable = false)
   private boolean isBloody;
 
-  @Column(name = "bloody_stool_Description", length = 500)
+  @Column(name = "bloody_stool_description", length = 500)
   private String bloodyStoolDescription;
 
-  @Column(name = "stool_additional_description", length = 500)
+  @Column(name = "additional_description", length = 500)
   private String additionalDescription;
 
   @Column(name = "diet_description", length = 500)
   private String dietDescription;
 
-  @Column(name = "stool_diagnosis_Description", length = 10000, nullable = false)
+  @Column(name = "stool_diagnosis_description", length = 10000, nullable = false)
   private String diagnosisDescription;
 
   @Column(name = "stool_at", nullable = false)
@@ -112,17 +113,18 @@ public class StoolDiagnosis extends BaseEntity {
   @JoinColumn(name = "member_id")
   private Member member;
 
-  public void updateStoolog(Stoollog stoollog) {
+  public void updateStoollog(Stoollog stoollog) {
     this.stoollog = stoollog;
   }
 
   public void addStoolImages(List<StoolImage> images) {
-    if (this.stoolImages == null) {
+    if (Objects.isNull(this.stoolImages)) {
       this.stoolImages = new ArrayList<>();
     }
 
     for (StoolImage image : images) {
       this.stoolImages.add(image);
+      image.updateStoolDiagnosis(this);
     }
   }
 

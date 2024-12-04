@@ -16,6 +16,7 @@ import com.daejangjangi.backend.stoollog.repository.StoollogRepository;
 import jakarta.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -69,27 +70,27 @@ public class StoolanalysisService {
   @Transactional
   public void register(StoolDiagnosis stoolDiagnosis, List<MultipartFile> stoolImages,
       String analyzedImage) {
-    stoolDiagnosis = stooldiagnosisRepository.save(stoolDiagnosis);
     Stoollog stoollog = stoollogRepository.save(Stoollog.builder()
         .color(stoolDiagnosis.getColor())
         .loggedAt(stoolDiagnosis.getStoolAt())
         .form(stoolDiagnosis.getForm()).build());
-    stoolDiagnosis.updateStoolog(stoollog);
+    stoolDiagnosis.updateStoollog(stoollog);
+    stoolDiagnosis = stooldiagnosisRepository.save(stoolDiagnosis);
 
     List<StoolImage> addImages = new ArrayList<>();
     addImages.add(StoolImage.builder()
-        .stooldiagnosis(stoolDiagnosis)
         .stoolImage(analyzedImage)
+        .stooldiagnosis(stoolDiagnosis)
         .build());
 
-    if (stoolImages != null) {
+    if (!Objects.isNull(stoolImages)) {
       fileValidator.validateImages(stoolImages);
       List<String> imageUrls = s3Manager.uploadWithoutOrder(STOOL_ROOT_DIRECTORY, stoolImages);
 
       for (String imageUrl : imageUrls) {
         addImages.add(StoolImage.builder()
-            .stooldiagnosis(stoolDiagnosis)
             .stoolImage(imageUrl)
+            .stooldiagnosis(stoolDiagnosis)
             .build());
       }
     }

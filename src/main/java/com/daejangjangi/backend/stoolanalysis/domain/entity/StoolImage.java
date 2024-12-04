@@ -44,4 +44,7 @@ public class StoolImage extends BaseEntity {
   @JoinColumn(name = "stool_diagnosis_id")
   private StoolDiagnosis stooldiagnosis;
 
+  public void updateStoolDiagnosis(StoolDiagnosis stooldiagnosis) {
+    this.stooldiagnosis = stooldiagnosis;
+  }
 }
