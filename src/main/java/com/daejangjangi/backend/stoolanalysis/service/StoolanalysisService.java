@@ -60,9 +60,11 @@ public class StoolanalysisService {
   }
 
   /**
-   * @param stoolDiagnosis
-   * @param stoolImages
-   * @param analyzedImage
+   * 배변 분석 결과 일지에 저장
+   *
+   * @param stoolDiagnosis 배변 분석 결과 정보
+   * @param stoolImages    추가적인 배변 이미지 파일들
+   * @param analyzedImage  분석된 이미지 url
    */
   @Transactional
   public void register(StoolDiagnosis stoolDiagnosis, List<MultipartFile> stoolImages,
@@ -94,12 +96,5 @@ public class StoolanalysisService {
 
     List<StoolImage> saveImages = stoolimageRepository.saveAll(addImages);
     stoolDiagnosis.addStoolImages(saveImages);
-
-  }
-
-  public void get(Long id) {
-    StoolDiagnosis stoolDiagnosis = stooldiagnosisRepository.findById(id).get();
-    stoolDiagnosis.getStoollog();
-
   }
 }

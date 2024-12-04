@@ -3,6 +3,7 @@ package com.daejangjangi.backend.stoolanalysis.domain.entity;
 import com.daejangjangi.backend.global.common.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -38,7 +39,8 @@ public class StoolImage extends BaseEntity {
   @Column(name = "stool_image", nullable = false)
   private String stoolImage;
 
-  @ManyToOne
+  // TODO 다대일 null 허용?
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "stool_diagnosis_id")
   private StoolDiagnosis stooldiagnosis;
 

@@ -20,11 +20,10 @@ public class StoolanalysisResponseDto {
       @Schema(description = "혈변 여부")
       boolean isBloody,
 
-      @Schema(description = "배변 점액")
+      @Schema(description = "배변 점액 존재 여부")
       Mucus mucus,
 
-      // TODO 설명 수정
-      @Schema(description = "배변 흰색 알갱이")
+      @Schema(description = "배변에 뭉친 흰색 알갱이 존재 여부")
       ProteinLumps proteinLumps
   ) {
 

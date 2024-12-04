@@ -104,7 +104,6 @@ public class StoolDiagnosis extends BaseEntity {
   @OneToMany(mappedBy = "stooldiagnosis", orphanRemoval = true, cascade = CascadeType.ALL)
   private List<StoolImage> stoolImages;
 
-
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "stool_log_id")
   private Stoollog stoollog;

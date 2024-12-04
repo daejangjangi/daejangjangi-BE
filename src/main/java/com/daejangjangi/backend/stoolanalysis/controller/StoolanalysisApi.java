@@ -64,7 +64,41 @@ public interface StoolanalysisApi {
   @Operation(summary = "배변 진단", tags = {"Stool Analysis (배변 분석) API"})
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "OK",
-          content = @Content(schema = @Schema(implementation = StoolanalysisResponseDto.StoolDiagnosticResult.class)))
+          content = @Content(schema = @Schema(implementation = StoolanalysisResponseDto.StoolDiagnosticResult.class))),
+      @ApiResponse(responseCode = "400", description = "잘못된 요청",
+          content = @Content(
+              mediaType = "application/json",
+              array = @ArraySchema(schema = @Schema(implementation = ApiGlobalResponse.class)),
+              examples = {
+                  // Additional Description
+                  @ExampleObject(
+                      name = "BAD_REQUEST_ADDITIONAL_DESCRIPTION_SIZE",
+                      summary = "배변 상태 이외의 추가 증상 사이즈 오류",
+                      value = """
+                          {
+                            "code": "BAD_REQUEST",
+                            "message": "잘못된 요청입니다.",
+                            "data": [
+                              "additionalDescription : 배변 상태 이외의 추가 증상은 최대 500자리 이하이어야 합니다."
+                            ]
+                          }"""
+                  ),
+                  // Diet Description
+                  @ExampleObject(
+                      name = "BAD_REQUEST_DIET_DESCRIPTION_SIZE",
+                      summary = "오늘 먹은 음식 설명 사이즈 오류",
+                      value = """
+                          {
+                            "code": "BAD_REQUEST",
+                            "message": "잘못된 요청입니다.",
+                            "data": [
+                              "dietDescription : 오늘 먹은 음식 설명은 최대 500자리 이하이어야 합니다."
+                            ]
+                          }"""
+                  )
+              }
+          )
+      )
   })
   ApiGlobalResponse<StoolDiagnosticResult> diagnose(
       @Valid @RequestBody StoolanalysisRequestDto.StoolDiagnose request);
@@ -97,6 +131,58 @@ public interface StoolanalysisApi {
                              "code": "NOT_IMAGE_ERROR",
                              "message": "이미지 파일만 업로드할 수 있습니다.",
                              "data": null
+                          }"""
+                  ),
+                  // Diagnosis Description
+                  @ExampleObject(
+                      name = "BAD_REQUEST_DIAGNOSIS_DESCRIPTION_BLANK",
+                      summary = "배변 분석 결과 미입력",
+                      value = """
+                          {
+                            "code": "BAD_REQUEST",
+                            "message": "잘못된 요청입니다.",
+                            "data": [
+                              "diagnosisDescription : 배변 분석 결과를 입력하세요."
+                            ]
+                          }"""
+                  ),
+                  // Stool Image Url
+                  @ExampleObject(
+                      name = "BAD_REQUEST_STOOL_IMAGE_URL_BLANK",
+                      summary = "배변 이미지 분석에 사용된 이미지 aws url 미입력",
+                      value = """
+                          {
+                            "code": "BAD_REQUEST",
+                            "message": "잘못된 요청입니다.",
+                            "data": [
+                              "stoolImageUrl : 배변 이미지 분석에 사용된 이미지 aws url을 입력하세요."
+                            ]
+                          }"""
+                  ),
+                  // Additional Description
+                  @ExampleObject(
+                      name = "BAD_REQUEST_ADDITIONAL_DESCRIPTION_SIZE",
+                      summary = "배변 상태 이외의 추가 증상 사이즈 오류",
+                      value = """
+                          {
+                            "code": "BAD_REQUEST",
+                            "message": "잘못된 요청입니다.",
+                            "data": [
+                              "additionalDescription : 배변 상태 이외의 추가 증상은 최대 500자리 이하이어야 합니다."
+                            ]
+                          }"""
+                  ),
+                  // Diet Description
+                  @ExampleObject(
+                      name = "BAD_REQUEST_DIET_DESCRIPTION_SIZE",
+                      summary = "오늘 먹은 음식 설명 사이즈 오류",
+                      value = """
+                          {
+                            "code": "BAD_REQUEST",
+                            "message": "잘못된 요청입니다.",
+                            "data": [
+                              "dietDescription : 오늘 먹은 음식 설명은 최대 500자리 이하이어야 합니다."
+                            ]
                           }"""
                   )
               }
