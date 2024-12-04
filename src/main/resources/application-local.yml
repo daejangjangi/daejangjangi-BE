@@ -30,3 +30,7 @@ spring:
     # MONGO
     mongodb:
       uri: mongodb://localhost:27017/test
+
+logging:
+  level:
+    org.springframework.data.mongodb.core.MongoTemplate: DEBUG
