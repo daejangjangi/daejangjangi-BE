@@ -13,6 +13,16 @@ java {
     }
 }
 
+ext {
+    set('springCloudVersion', "2023.0.3")
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
@@ -80,6 +90,9 @@ dependencies {
 
     // Firebase
     implementation 'com.google.firebase:firebase-admin:9.2.0'
+
+    // Spring Cloud
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 
     // Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
