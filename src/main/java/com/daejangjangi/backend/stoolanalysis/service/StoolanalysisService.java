@@ -5,7 +5,7 @@ import com.daejangjangi.backend.file.service.S3Manager;
 import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisRequestDto.ImageAnalyze;
 import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisRequestDto.StoolDiagnose;
 import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisResponseDto.ImageInfo;
-import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisResponseDto.StoolDiagnosticResult;
+import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisResponseDto.StoolDiagnosticAiResult;
 import com.daejangjangi.backend.stoolanalysis.domain.entity.StoolDiagnosis;
 import com.daejangjangi.backend.stoolanalysis.domain.entity.StoolImage;
 import com.daejangjangi.backend.stoolanalysis.openfeign.StoolanalysisOpenFeign;
@@ -56,7 +56,7 @@ public class StoolanalysisService {
    * @param request 배변 정보
    * @return StoolDiagnosticResult
    */
-  public StoolDiagnosticResult diagnoseStool(@Valid StoolDiagnose request) {
+  public StoolDiagnosticAiResult diagnoseStool(@Valid StoolDiagnose request) {
     return openFeign.diagnosisStool(request);
   }
 
@@ -70,10 +70,12 @@ public class StoolanalysisService {
   @Transactional
   public void register(StoolDiagnosis stoolDiagnosis, List<MultipartFile> stoolImages,
       String analyzedImage) {
-    Stoollog stoollog = stoollogRepository.save(Stoollog.builder()
+    Stoollog stoollog = Stoollog.builder()
         .color(stoolDiagnosis.getColor())
         .loggedAt(stoolDiagnosis.getStoolAt())
-        .form(stoolDiagnosis.getForm()).build());
+        .form(stoolDiagnosis.getForm()).build();
+    stoollog.updateMember(stoolDiagnosis.getMember());
+    stoollog = stoollogRepository.save(stoollog);
     stoolDiagnosis.updateStoollog(stoollog);
     stoolDiagnosis = stooldiagnosisRepository.save(stoolDiagnosis);
 
