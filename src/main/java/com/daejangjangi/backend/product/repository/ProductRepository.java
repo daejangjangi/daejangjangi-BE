@@ -31,4 +31,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
       LIMIT :count
       """)
   List<Product> findRandomProductList(@Param("count") int count);
+
+  List<Product> findByIdIn(List<Long> ids);
+
+  List<Product> findByNameIn(List<String> names);
 }
