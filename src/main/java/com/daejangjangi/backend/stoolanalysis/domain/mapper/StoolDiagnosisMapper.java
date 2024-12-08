@@ -3,6 +3,8 @@ package com.daejangjangi.backend.stoolanalysis.domain.mapper;
 import com.daejangjangi.backend.member.domain.entity.Member;
 import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisRequestDto.Register;
 import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisRequestDto.Stools;
+import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisResponseDto.StoolDiagnosticAiResult;
+import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisResponseDto.StoolDiagnosticResult;
 import com.daejangjangi.backend.stoolanalysis.domain.entity.StoolDiagnosis;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -13,7 +15,7 @@ public interface StoolDiagnosisMapper {
 
   StoolDiagnosisMapper INSTANCE = Mappers.getMapper(StoolDiagnosisMapper.class);
 
-  @Mapping(target = "stoolAt", source = "stoolInfo.stoolAt")
+  @Mapping(target = "stoolAt", expression = "java(stoolInfo.convertToSeoulTime())")
   @Mapping(target = "color", source = "stoolInfo.color")
   @Mapping(target = "form", source = "stoolInfo.form")
   @Mapping(target = "isBloody", source = "stoolInfo.isBloody")
@@ -26,4 +28,11 @@ public interface StoolDiagnosisMapper {
   @Mapping(target = "diagnosisDescription", source = "registerRequest.diagnosisDescription")
   @Mapping(target = "member", source = "member")
   StoolDiagnosis requestToEntity(Register registerRequest, Stools stoolInfo, Member member);
+
+  @Mapping(target = "color", source = "stools.color")
+  @Mapping(target = "form", source = "stools.form")
+  @Mapping(target = "date", expression = "java(stools.convertToSeoulTime())")
+  @Mapping(target = "result", source = "result.user_language")
+  StoolDiagnosticResult stoolDiagnosticAiResultToResponse(Stools stools,
+      StoolDiagnosticAiResult result);
 }
