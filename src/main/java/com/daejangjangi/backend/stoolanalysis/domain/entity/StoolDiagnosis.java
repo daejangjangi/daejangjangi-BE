@@ -11,6 +11,8 @@ import com.daejangjangi.backend.stoollog.domain.enums.Form;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -30,7 +32,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
-@Table(name = "stool_ diagnoses")
+@Table(name = "stool_diagnoses")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class StoolDiagnosis extends BaseEntity {
 
@@ -70,18 +72,23 @@ public class StoolDiagnosis extends BaseEntity {
   private Long id;
 
   @Column(name = "stool_color", nullable = false)
+  @Enumerated(EnumType.STRING)
   private Color color;
 
   @Column(name = "stool_form", nullable = false)
+  @Enumerated(EnumType.STRING)
   private Form form;
 
   @Column(name = "diet_type", nullable = false)
+  @Enumerated(EnumType.STRING)
   private DietType dietType;
 
   @Column(name = "stool_protein_lumps", nullable = false)
+  @Enumerated(EnumType.STRING)
   private ProteinLumps proteinLumps;
 
   @Column(name = "stool_mucus", nullable = false)
+  @Enumerated(EnumType.STRING)
   private Mucus mucus;
 
   @Column(name = "stool_bloody", nullable = false)
