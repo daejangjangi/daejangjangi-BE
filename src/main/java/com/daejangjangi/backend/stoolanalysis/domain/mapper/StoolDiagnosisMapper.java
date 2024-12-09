@@ -5,6 +5,8 @@ import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisRequestDto
 import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisRequestDto.Stools;
 import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisResponseDto.StoolDiagnosticAiResult;
 import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisResponseDto.StoolDiagnosticResult;
+import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisResponseDto.StoolImageAiAnalysis;
+import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisResponseDto.StoolImageAnalysis;
 import com.daejangjangi.backend.stoolanalysis.domain.entity.StoolDiagnosis;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -35,4 +37,9 @@ public interface StoolDiagnosisMapper {
   @Mapping(target = "result", source = "result.user_language")
   StoolDiagnosticResult stoolDiagnosticAiResultToResponse(Stools stools,
       StoolDiagnosticAiResult result);
+
+  @Mapping(target = "stoolImageAiAnalysis", source = "stoolImageAiAnalysis")
+  @Mapping(target = "stoolImageUrl", source = "stoolImageUrl")
+  StoolImageAnalysis stoolImageAnalysisToResponse(StoolImageAiAnalysis stoolImageAiAnalysis,
+      String stoolImageUrl);
 }

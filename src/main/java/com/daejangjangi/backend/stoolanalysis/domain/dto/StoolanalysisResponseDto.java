@@ -9,8 +9,8 @@ import java.time.LocalDateTime;
 
 public class StoolanalysisResponseDto {
 
-  @Schema(name = "StoolImageInfoResponse", description = "배변 이미지 분석 응답 DTO")
-  public record ImageInfo(
+  @Schema(name = "StoolImageAiAnalysisResponse", description = "배변 이미지 AI 분석 응답 DTO")
+  public record StoolImageAiAnalysis(
 
       @Schema(description = "배변 색상")
       Color color,
@@ -26,6 +26,18 @@ public class StoolanalysisResponseDto {
 
       @Schema(description = "배변에 뭉친 흰색 알갱이 존재 여부")
       ProteinLumps proteinLumps
+  ) {
+
+  }
+
+  @Schema(name = "StoolImageAnalysisResponse", description = "배변 이미지 분석 응답 DTO")
+  public record StoolImageAnalysis(
+
+      @Schema(description = "배변 이미지 AI 분석 결과")
+      StoolImageAiAnalysis stoolImageAiAnalysis,
+
+      @Schema(description = "AWS s3에 업로드된 이미지 url")
+      String stoolImageUrl
   ) {
 
   }
