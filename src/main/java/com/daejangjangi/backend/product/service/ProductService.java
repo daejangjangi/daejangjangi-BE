@@ -48,6 +48,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -218,35 +219,34 @@ public class ProductService {
     // 정렬 조건
     OrderSpecifier<?>[] orderSpecifier = createOrderSpecifier(sortKey);
 
-//  1. 우선 ID만 페이징하여 조회
+    // 서브쿼리로 ID 조회
     List<Long> productIds = jpaQueryFactory
         .select(product.id)
+        .distinct()
         .from(product)
         .leftJoin(product.productGroups)
         .where(predicate)
-        .orderBy(orderSpecifier)
         .offset(pageable.getOffset())
         .limit(pageable.getPageSize())
         .fetch();
 
-//  2. 조회된 ID로 실제 데이터 조회
-    JPAQuery<Product> query = jpaQueryFactory
+    // 카운트 쿼리
+    Long total = jpaQueryFactory
+        .select(product.countDistinct())
+        .from(product)
+        .leftJoin(product.productGroups)
+        .where(predicate)
+        .fetchOne();
+
+    // 결과 조회
+    List<Product> results = jpaQueryFactory
         .selectFrom(product)
         .leftJoin(product.discount).fetchJoin()
         .where(product.id.in(productIds))
-        .orderBy(orderSpecifier);
+        .orderBy(orderSpecifier)
+        .fetch();
 
-//  3. 카운트 쿼리
-    JPAQuery<Long> countQuery = jpaQueryFactory
-        .select(product.countDistinct())
-        .from(product)
-        .where(predicate);
-
-    return PageableExecutionUtils.getPage(
-        query.fetch(),
-        pageable,
-        countQuery::fetchOne
-    );
+    return new PageImpl<>(results, pageable, total != null ? total : 0L);
   }
 
   /**
