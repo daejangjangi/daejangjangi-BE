@@ -226,6 +226,7 @@ public class ProductService {
         .from(product)
         .leftJoin(product.productGroups)
         .where(predicate)
+        .orderBy(orderSpecifier)
         .offset(pageable.getOffset())
         .limit(pageable.getPageSize())
         .fetch();
@@ -398,8 +399,8 @@ public class ProductService {
         };
       }
       default -> new OrderSpecifier[]{
-          new OrderSpecifier<>(Order.DESC, product.createdAt),
-          new OrderSpecifier<>(Order.ASC, product.id)
+//          new OrderSpecifier<>(Order.DESC, product.createdAt),
+          new OrderSpecifier<>(Order.DESC, product.id)
       };
     };
   }
