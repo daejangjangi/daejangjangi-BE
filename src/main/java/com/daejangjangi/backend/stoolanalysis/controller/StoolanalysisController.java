@@ -4,8 +4,9 @@ import com.daejangjangi.backend.global.response.ApiGlobalResponse;
 import com.daejangjangi.backend.member.domain.entity.Member;
 import com.daejangjangi.backend.member.service.MemberService;
 import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisRequestDto;
-import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisResponseDto.ImageInfo;
+import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisResponseDto.StoolDiagnosticAiResult;
 import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisResponseDto.StoolDiagnosticResult;
+import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisResponseDto.StoolImageAnalysis;
 import com.daejangjangi.backend.stoolanalysis.domain.entity.StoolDiagnosis;
 import com.daejangjangi.backend.stoolanalysis.domain.mapper.StoolDiagnosisMapper;
 import com.daejangjangi.backend.stoolanalysis.service.StoolanalysisService;
@@ -32,7 +33,7 @@ public class StoolanalysisController implements StoolanalysisApi {
 
   @PreAuthorize("hasAuthority('MEMBER')")
   @PostMapping(value = "/image", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-  public ApiGlobalResponse<ImageInfo> analyzeImage(
+  public ApiGlobalResponse<StoolImageAnalysis> analyzeImage(
       @RequestPart MultipartFile stoolImage) {
     return ApiGlobalResponse.ok(stoolanalysisService.analyzeImage(stoolImage));
   }
@@ -41,7 +42,10 @@ public class StoolanalysisController implements StoolanalysisApi {
   @PostMapping("/diagnosis")
   public ApiGlobalResponse<StoolDiagnosticResult> diagnose(
       @Valid @RequestBody StoolanalysisRequestDto.StoolDiagnose request) {
-    return ApiGlobalResponse.ok(stoolanalysisService.diagnoseStool(request));
+    StoolDiagnosticAiResult aiResult = stoolanalysisService.diagnoseStool(request);
+    StoolDiagnosticResult response = StoolDiagnosisMapper.INSTANCE.stoolDiagnosticAiResultToResponse(
+        request.stools().get(0), aiResult);
+    return ApiGlobalResponse.ok(response);
   }
 
   @PreAuthorize("hasAuthority('MEMBER')")

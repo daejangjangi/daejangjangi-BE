@@ -4,10 +4,12 @@ import com.daejangjangi.backend.file.service.FileValidator;
 import com.daejangjangi.backend.file.service.S3Manager;
 import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisRequestDto.ImageAnalyze;
 import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisRequestDto.StoolDiagnose;
-import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisResponseDto.ImageInfo;
-import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisResponseDto.StoolDiagnosticResult;
+import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisResponseDto.StoolDiagnosticAiResult;
+import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisResponseDto.StoolImageAiAnalysis;
+import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisResponseDto.StoolImageAnalysis;
 import com.daejangjangi.backend.stoolanalysis.domain.entity.StoolDiagnosis;
 import com.daejangjangi.backend.stoolanalysis.domain.entity.StoolImage;
+import com.daejangjangi.backend.stoolanalysis.domain.mapper.StoolDiagnosisMapper;
 import com.daejangjangi.backend.stoolanalysis.openfeign.StoolanalysisOpenFeign;
 import com.daejangjangi.backend.stoolanalysis.repository.StoolDiagnosisRepository;
 import com.daejangjangi.backend.stoolanalysis.repository.StoolImageRepository;
@@ -42,12 +44,13 @@ public class StoolanalysisService {
    * @param stoolImage 배변 이미지 파일
    * @return ImageInfo
    */
-  public ImageInfo analyzeImage(MultipartFile stoolImage) {
+  public StoolImageAnalysis analyzeImage(MultipartFile stoolImage) {
     fileValidator.validateImage(stoolImage);
     String imageUrl = s3Manager.upload(STOOL_ROOT_DIRECTORY, stoolImage);
-    System.out.println(imageUrl);
     ImageAnalyze analyzeImage = new ImageAnalyze(imageUrl);
-    return openFeign.analyzeImage(analyzeImage);
+    StoolImageAiAnalysis stoolImageAiAnalysis = openFeign.analyzeImage(analyzeImage);
+    return StoolDiagnosisMapper.INSTANCE.stoolImageAnalysisToResponse(stoolImageAiAnalysis,
+        imageUrl);
   }
 
   /**
@@ -56,7 +59,7 @@ public class StoolanalysisService {
    * @param request 배변 정보
    * @return StoolDiagnosticResult
    */
-  public StoolDiagnosticResult diagnoseStool(@Valid StoolDiagnose request) {
+  public StoolDiagnosticAiResult diagnoseStool(@Valid StoolDiagnose request) {
     return openFeign.diagnosisStool(request);
   }
 
@@ -70,10 +73,12 @@ public class StoolanalysisService {
   @Transactional
   public void register(StoolDiagnosis stoolDiagnosis, List<MultipartFile> stoolImages,
       String analyzedImage) {
-    Stoollog stoollog = stoollogRepository.save(Stoollog.builder()
+    Stoollog stoollog = Stoollog.builder()
         .color(stoolDiagnosis.getColor())
         .loggedAt(stoolDiagnosis.getStoolAt())
-        .form(stoolDiagnosis.getForm()).build());
+        .form(stoolDiagnosis.getForm()).build();
+    stoollog.updateMember(stoolDiagnosis.getMember());
+    stoollog = stoollogRepository.save(stoollog);
     stoolDiagnosis.updateStoollog(stoollog);
     stoolDiagnosis = stooldiagnosisRepository.save(stoolDiagnosis);
 

@@ -18,20 +18,19 @@ public interface StoollogMapper {
   @Mapping(target = "id", ignore = true)
   @Mapping(target = "color", source = "request.color")
   @Mapping(target = "form", source = "request.form")
-  @Mapping(target = "loggedAt", source = "request.loggedAt")
+  @Mapping(target = "loggedAt", expression = "java(request.convertToSeoulTime())")
   Stoollog registerRequestToEntity(StoollogRequestDto.StoollogRegisterRequest request);
 
   @Mapping(target = "id", source = "request.id")
   @Mapping(target = "color", source = "request.color")
   @Mapping(target = "form", source = "request.form")
-  @Mapping(target = "loggedAt", source = "request.loggedAt")
+  @Mapping(target = "loggedAt", expression = "java(request.convertToSeoulTime())")
   Stoollog modifyRequestToEntity(StoollogRequestDto.StoollogModifyRequest request);
 
   @Named("stoollogToStoollogInfo")
   @Mapping(target = "id", source = "stoollog.id")
   @Mapping(target = "color", source = "stoollog.color")
   @Mapping(target = "form", source = "stoollog.form")
-  @Mapping(target = "loggedAt", source = "stoollog.loggedAt")
   StoollogInfoResponse stoollogToStoollogInfo(Stoollog stoollog);
 
   @IterableMapping(qualifiedByName = "stoollogToStoollogInfo")

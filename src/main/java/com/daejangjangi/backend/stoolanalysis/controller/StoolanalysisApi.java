@@ -4,8 +4,8 @@ import com.daejangjangi.backend.global.annotation.swagger.ResponseCommonWithSwag
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
 import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisRequestDto;
 import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisResponseDto;
-import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisResponseDto.ImageInfo;
 import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisResponseDto.StoolDiagnosticResult;
+import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisResponseDto.StoolImageAnalysis;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -29,7 +29,7 @@ public interface StoolanalysisApi {
       description = "확장자 PNG 이미지 파일만 업로드 가능")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "OK",
-          content = @Content(schema = @Schema(implementation = StoolanalysisResponseDto.ImageInfo.class))),
+          content = @Content(schema = @Schema(implementation = StoolanalysisResponseDto.StoolImageAnalysis.class))),
       @ApiResponse(responseCode = "400", description = "잘못된 요청",
           content = @Content(
               mediaType = "application/json",
@@ -59,7 +59,7 @@ public interface StoolanalysisApi {
           )
       )
   })
-  ApiGlobalResponse<ImageInfo> analyzeImage(@RequestPart MultipartFile stoolImage);
+  ApiGlobalResponse<StoolImageAnalysis> analyzeImage(@RequestPart MultipartFile stoolImage);
 
   @Operation(summary = "배변 진단", tags = {"Stool Analysis (배변 분석) API"})
   @ApiResponses(value = {
@@ -106,8 +106,6 @@ public interface StoolanalysisApi {
   @Operation(summary = "배변 분석 결과 일지에 등록", tags = {"Stool Analysis (배변 분석) API"},
       description = "확장자 PNG 이미지 파일만 업로드 가능")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "OK",
-          content = @Content(schema = @Schema(implementation = StoolanalysisResponseDto.ImageInfo.class))),
       @ApiResponse(responseCode = "400", description = "잘못된 요청",
           content = @Content(
               mediaType = "application/json",
