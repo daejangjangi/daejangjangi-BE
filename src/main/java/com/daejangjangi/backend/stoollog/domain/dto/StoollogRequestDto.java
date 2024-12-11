@@ -26,11 +26,6 @@ public class StoollogRequestDto {
       LocalDateTime loggedAt
   ) {
 
-    public LocalDateTime convertToSeoulTime() {
-      ZonedDateTime utcZoned = this.loggedAt.atZone(ZoneId.of("UTC"));
-      ZonedDateTime seoulZoned = utcZoned.withZoneSameInstant(ZoneId.of("Asia/Seoul"));
-      return seoulZoned.toLocalDateTime();
-    }
   }
 
   @Schema(description = "배변 일지 수정")
@@ -52,11 +47,6 @@ public class StoollogRequestDto {
       LocalDateTime loggedAt
   ) {
 
-    public LocalDateTime convertToSeoulTime() {
-      ZonedDateTime utcZoned = this.loggedAt.atZone(ZoneId.of("UTC"));
-      ZonedDateTime seoulZoned = utcZoned.withZoneSameInstant(ZoneId.of("Asia/Seoul"));
-      return seoulZoned.toLocalDateTime();
-    }
   }
 
 }

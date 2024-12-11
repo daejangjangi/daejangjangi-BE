@@ -8,6 +8,9 @@ import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisResponseDt
 import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisResponseDto.StoolImageAiAnalysis;
 import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisResponseDto.StoolImageAnalysis;
 import com.daejangjangi.backend.stoolanalysis.domain.entity.StoolDiagnosis;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -17,7 +20,7 @@ public interface StoolDiagnosisMapper {
 
   StoolDiagnosisMapper INSTANCE = Mappers.getMapper(StoolDiagnosisMapper.class);
 
-  @Mapping(target = "stoolAt", expression = "java(stoolInfo.convertToSeoulTime())")
+  @Mapping(target = "stoolAt", expression = "java(convertToSeoulTime(stoolInfo.stoolAt()))")
   @Mapping(target = "color", source = "stoolInfo.color")
   @Mapping(target = "form", source = "stoolInfo.form")
   @Mapping(target = "isBloody", source = "stoolInfo.isBloody")
@@ -31,15 +34,22 @@ public interface StoolDiagnosisMapper {
   @Mapping(target = "member", source = "member")
   StoolDiagnosis requestToEntity(Register registerRequest, Stools stoolInfo, Member member);
 
-  @Mapping(target = "color", source = "stools.color")
-  @Mapping(target = "form", source = "stools.form")
-  @Mapping(target = "date", expression = "java(stools.convertToSeoulTime())")
-  @Mapping(target = "result", source = "result.user_language")
-  StoolDiagnosticResult stoolDiagnosticAiResultToResponse(Stools stools,
+  @Mapping(target = "color", source = "stool.color")
+  @Mapping(target = "form", source = "stool.form")
+  @Mapping(target = "date", expression = "java(convertToSeoulTime(stool.stoolAt()))")
+  @Mapping(target = "result", source = "result.userLanguage")
+  StoolDiagnosticResult stoolDiagnosticAiResultToResponse(Stools stool,
       StoolDiagnosticAiResult result);
 
   @Mapping(target = "stoolImageAiAnalysis", source = "stoolImageAiAnalysis")
   @Mapping(target = "stoolImageUrl", source = "stoolImageUrl")
   StoolImageAnalysis stoolImageAnalysisToResponse(StoolImageAiAnalysis stoolImageAiAnalysis,
       String stoolImageUrl);
+
+  default LocalDateTime convertToSeoulTime(LocalDateTime stoolAt) {
+    ZonedDateTime utcZoned = stoolAt.atZone(ZoneId.of("UTC"));
+    ZonedDateTime seoulZoned = utcZoned.withZoneSameInstant(ZoneId.of("Asia/Seoul"));
+    return seoulZoned.toLocalDateTime();
+  }
+
 }

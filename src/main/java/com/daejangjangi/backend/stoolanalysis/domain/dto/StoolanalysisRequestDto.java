@@ -10,8 +10,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.List;
 
 public class StoolanalysisRequestDto {
@@ -62,11 +60,6 @@ public class StoolanalysisRequestDto {
       Mucus mucus
   ) {
 
-    public LocalDateTime convertToSeoulTime() {
-      ZonedDateTime utcZoned = this.stoolAt.atZone(ZoneId.of("UTC"));
-      ZonedDateTime seoulZoned = utcZoned.withZoneSameInstant(ZoneId.of("Asia/Seoul"));
-      return seoulZoned.toLocalDateTime();
-    }
   }
 
   @Schema(name = "DiagnosisResultRegisterRequest", description = "배변 분석 결과 저장 요청 DTO")

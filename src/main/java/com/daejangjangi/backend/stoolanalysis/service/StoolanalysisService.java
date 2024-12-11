@@ -15,7 +15,6 @@ import com.daejangjangi.backend.stoolanalysis.repository.StoolDiagnosisRepositor
 import com.daejangjangi.backend.stoolanalysis.repository.StoolImageRepository;
 import com.daejangjangi.backend.stoollog.domain.entity.Stoollog;
 import com.daejangjangi.backend.stoollog.repository.StoollogRepository;
-import jakarta.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -59,7 +58,7 @@ public class StoolanalysisService {
    * @param request 배변 정보
    * @return StoolDiagnosticResult
    */
-  public StoolDiagnosticAiResult diagnoseStool(@Valid StoolDiagnose request) {
+  public StoolDiagnosticAiResult diagnoseStool(StoolDiagnose request) {
     return openFeign.diagnosisStool(request);
   }
 

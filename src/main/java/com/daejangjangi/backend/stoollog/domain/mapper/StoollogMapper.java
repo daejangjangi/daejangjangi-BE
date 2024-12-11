@@ -3,6 +3,9 @@ package com.daejangjangi.backend.stoollog.domain.mapper;
 import com.daejangjangi.backend.stoollog.domain.dto.StoollogRequestDto;
 import com.daejangjangi.backend.stoollog.domain.dto.StoollogResponseDto.StoollogInfoResponse;
 import com.daejangjangi.backend.stoollog.domain.entity.Stoollog;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
@@ -18,13 +21,13 @@ public interface StoollogMapper {
   @Mapping(target = "id", ignore = true)
   @Mapping(target = "color", source = "request.color")
   @Mapping(target = "form", source = "request.form")
-  @Mapping(target = "loggedAt", expression = "java(request.convertToSeoulTime())")
+  @Mapping(target = "loggedAt", expression = "java(convertToSeoulTime(request.loggedAt()))")
   Stoollog registerRequestToEntity(StoollogRequestDto.StoollogRegisterRequest request);
 
   @Mapping(target = "id", source = "request.id")
   @Mapping(target = "color", source = "request.color")
   @Mapping(target = "form", source = "request.form")
-  @Mapping(target = "loggedAt", expression = "java(request.convertToSeoulTime())")
+  @Mapping(target = "loggedAt", expression = "java(convertToSeoulTime(request.loggedAt()))")
   Stoollog modifyRequestToEntity(StoollogRequestDto.StoollogModifyRequest request);
 
   @Named("stoollogToStoollogInfo")
@@ -36,5 +39,9 @@ public interface StoollogMapper {
   @IterableMapping(qualifiedByName = "stoollogToStoollogInfo")
   List<StoollogInfoResponse> entityToResponse(List<Stoollog> stoollogs);
 
-
+  default LocalDateTime convertToSeoulTime(LocalDateTime stoolAt) {
+    ZonedDateTime utcZoned = stoolAt.atZone(ZoneId.of("UTC"));
+    ZonedDateTime seoulZoned = utcZoned.withZoneSameInstant(ZoneId.of("Asia/Seoul"));
+    return seoulZoned.toLocalDateTime();
+  }
 }
