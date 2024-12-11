@@ -222,10 +222,10 @@ public class ProductService {
     // 서브쿼리로 ID 조회
     List<Long> productIds = jpaQueryFactory
         .select(product.id)
-        .distinct()
         .from(product)
         .leftJoin(product.productGroups)
         .where(predicate)
+        .groupBy(product.id)
         .orderBy(orderSpecifier)
         .offset(pageable.getOffset())
         .limit(pageable.getPageSize())
@@ -399,7 +399,6 @@ public class ProductService {
         };
       }
       default -> new OrderSpecifier[]{
-//          new OrderSpecifier<>(Order.DESC, product.createdAt),
           new OrderSpecifier<>(Order.DESC, product.id)
       };
     };
