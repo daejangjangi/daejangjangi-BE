@@ -189,4 +189,7 @@ public interface StoolanalysisApi {
       )
   })
   ApiGlobalResponse<Null> register(@PathVariable("diagnosisId") Long diagnosisId);
+
+  @Operation(summary = "배변 분석 결과 삭제", tags = {"Stool Analysis (배변 분석) API"})
+  ApiGlobalResponse<Null> remove(@PathVariable("diagnosisId") Long diagnosisId);
 }

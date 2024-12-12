@@ -96,6 +96,19 @@ public class StoolanalysisService {
   }
 
   /**
+   * 배변 진단 결과 삭제
+   *
+   * @param member      로그인 정보
+   * @param diagnosisId 배변 진단 id
+   */
+  @Transactional
+  public void remove(Member member, Long diagnosisId) {
+    StoolDiagnosis stoolDiagnosis = findById(diagnosisId);
+    validAuthor(member, stoolDiagnosis);
+    stooldiagnosisRepository.delete(stoolDiagnosis);
+  }
+
+  /**
    * id로 배변 진단 찾기
    *
    * @param diagnosisId 배변 진단 id
