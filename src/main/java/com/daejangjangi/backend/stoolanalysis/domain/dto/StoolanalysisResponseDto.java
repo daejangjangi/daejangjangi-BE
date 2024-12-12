@@ -37,7 +37,7 @@ public class StoolanalysisResponseDto {
       @Schema(description = "배변 이미지 AI 분석 결과")
       StoolImageAiAnalysis stoolImageAiAnalysis,
 
-      @Schema(description = "AWS s3에 업로드된 이미지 url")
+      @Schema(description = "배변 이미지 url")
       String stoolImageUrl
   ) {
 
@@ -46,7 +46,6 @@ public class StoolanalysisResponseDto {
 
   @Schema(name = "StoolDiagnosticAiResultResponse", description = "배변 분석 AI 진단 응답 DTO")
   public record StoolDiagnosticAiResult(
-
       @Schema(description = "배변 진단 결과",
           example = "보호자님께,\\n\\n아기의 변에 대한 정보를 주셔서 감사합니다.  "
               + "아이보리색의 딱딱한 변에 피가 섞여 있고, 점액이나 단백질 덩어리는 없으며, "
@@ -64,7 +63,7 @@ public class StoolanalysisResponseDto {
           example = "보호자님께,\\n\\n아기의 변에 대한 정보를 주셔서 감사합니다.  "
               + "아이보리색의 딱딱한 변에 피가 섞여 있고, 점액이나 단백질 덩어리는 없으며, "
               + "모유만 먹는다는 설명을 바탕으로 몇 가지 가능성을 고려해 볼 필요가 있습니다... ")
-      String result,
+      String diagnosticResult,
 
       @Schema(description = "배변 분석일")
       LocalDateTime date,

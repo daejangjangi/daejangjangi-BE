@@ -1,9 +1,8 @@
 package com.daejangjangi.backend.stoolanalysis.domain.mapper;
 
 import com.daejangjangi.backend.member.domain.entity.Member;
-import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisRequestDto.Register;
+import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisRequestDto.StoolDiagnoseAi;
 import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisRequestDto.Stools;
-import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisResponseDto.StoolDiagnosticAiResult;
 import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisResponseDto.StoolDiagnosticResult;
 import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisResponseDto.StoolImageAiAnalysis;
 import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisResponseDto.StoolImageAnalysis;
@@ -27,19 +26,20 @@ public interface StoolDiagnosisMapper {
   @Mapping(target = "bloodyStoolDescription", source = "stoolInfo.bloodyStoolDescription")
   @Mapping(target = "proteinLumps", source = "stoolInfo.proteinLumps")
   @Mapping(target = "mucus", source = "stoolInfo.mucus")
-  @Mapping(target = "additionalDescription", source = "registerRequest.stoolDiagnose.dietDescription")
-  @Mapping(target = "dietType", source = "registerRequest.stoolDiagnose.dietType")
-  @Mapping(target = "dietDescription", source = "registerRequest.stoolDiagnose.additionalDescription")
-  @Mapping(target = "diagnosisDescription", source = "registerRequest.diagnosisDescription")
+  @Mapping(target = "additionalDescription", source = "aiRequest.dietDescription")
+  @Mapping(target = "dietType", source = "aiRequest.dietType")
+  @Mapping(target = "dietDescription", source = "aiRequest.additionalDescription")
+  @Mapping(target = "diagnosisDescription", source = "diagnosisDescription")
   @Mapping(target = "member", source = "member")
-  StoolDiagnosis requestToEntity(Register registerRequest, Stools stoolInfo, Member member);
+  StoolDiagnosis requestToEntity(StoolDiagnoseAi aiRequest, Stools stoolInfo, Member member,
+      String diagnosisDescription);
 
   @Mapping(target = "color", source = "stool.color")
   @Mapping(target = "form", source = "stool.form")
   @Mapping(target = "date", expression = "java(convertToSeoulTime(stool.stoolAt()))")
-  @Mapping(target = "result", source = "result.userLanguage")
+  @Mapping(target = "diagnosticResult", source = "diagnosticResult")
   StoolDiagnosticResult stoolDiagnosticAiResultToResponse(Stools stool,
-      StoolDiagnosticAiResult result);
+      String diagnosticResult);
 
   @Mapping(target = "stoolImageAiAnalysis", source = "stoolImageAiAnalysis")
   @Mapping(target = "stoolImageUrl", source = "stoolImageUrl")
