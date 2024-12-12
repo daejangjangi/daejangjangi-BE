@@ -17,7 +17,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Null;
 import java.util.List;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -101,9 +101,10 @@ public interface StoolanalysisApi {
       )
   })
   ApiGlobalResponse<StoolDiagnosticResult> diagnose(
-      @Valid @RequestBody StoolanalysisRequestDto.StoolDiagnose request);
+      @Valid @RequestPart StoolanalysisRequestDto.StoolDiagnose request,
+      @RequestPart(required = false) List<MultipartFile> stoolImages);
 
-  @Operation(summary = "배변 분석 결과 일지에 등록", tags = {"Stool Analysis (배변 분석) API"},
+  @Operation(summary = "배변 분석 결과 저장", tags = {"Stool Analysis (배변 분석) API"},
       description = "확장자 PNG 이미지 파일만 업로드 가능")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "400", description = "잘못된 요청",
@@ -187,6 +188,5 @@ public interface StoolanalysisApi {
           )
       )
   })
-  ApiGlobalResponse<Null> register(@Valid @RequestPart StoolanalysisRequestDto.Register request,
-      @RequestPart(required = false) List<MultipartFile> stoolImages);
+  ApiGlobalResponse<Null> register(@PathVariable("diagnosisId") Long diagnosisId);
 }

@@ -39,7 +39,6 @@ public class StoolImage extends BaseEntity {
   @Column(name = "stool_image", nullable = false)
   private String stoolImage;
 
-  // TODO 다대일 null 허용?
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "stool_diagnosis_id")
   private StoolDiagnosis stooldiagnosis;

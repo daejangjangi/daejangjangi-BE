@@ -5,7 +5,6 @@ import com.daejangjangi.backend.member.domain.entity.Member;
 import com.daejangjangi.backend.stoolanalysis.domain.enums.DietType;
 import com.daejangjangi.backend.stoolanalysis.domain.enums.Mucus;
 import com.daejangjangi.backend.stoolanalysis.domain.enums.ProteinLumps;
-import com.daejangjangi.backend.stoollog.domain.entity.Stoollog;
 import com.daejangjangi.backend.stoollog.domain.enums.Color;
 import com.daejangjangi.backend.stoollog.domain.enums.Form;
 import jakarta.persistence.CascadeType;
@@ -64,6 +63,7 @@ public class StoolDiagnosis extends BaseEntity {
     this.stoolAt = stoolAt;
     this.diagnosisDescription = diagnosisDescription;
     this.stoolImages = new ArrayList<>();
+    this.resultSaved = false;
   }
 
   @Id
@@ -109,20 +109,15 @@ public class StoolDiagnosis extends BaseEntity {
   @Column(name = "stool_at", nullable = false)
   private LocalDateTime stoolAt;
 
+  @Column(name = "diagnosis_result_saved", nullable = false)
+  private boolean resultSaved;
+
   @OneToMany(mappedBy = "stooldiagnosis", orphanRemoval = true, cascade = CascadeType.ALL)
   private List<StoolImage> stoolImages;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "stool_log_id")
-  private Stoollog stoollog;
-
-  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "member_id")
   private Member member;
-
-  public void updateStoollog(Stoollog stoollog) {
-    this.stoollog = stoollog;
-  }
 
   public void addStoolImages(List<StoolImage> images) {
     if (Objects.isNull(this.stoolImages)) {
@@ -133,6 +128,10 @@ public class StoolDiagnosis extends BaseEntity {
       this.stoolImages.add(image);
       image.updateStoolDiagnosis(this);
     }
+  }
+
+  public void updateResultSaved() {
+    this.resultSaved = true;
   }
 
 }
