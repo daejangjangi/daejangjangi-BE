@@ -23,7 +23,7 @@ public interface StoolDiagnosisMapper {
 
   StoolDiagnosisMapper INSTANCE = Mappers.getMapper(StoolDiagnosisMapper.class);
 
-  @Mapping(target = "stoolAt", expression = "java(convertToSeoulTime(stoolInfo.stoolAt(), false))")
+  @Mapping(target = "stoolAt", source = "stoolInfo.stoolAt")
   @Mapping(target = "color", source = "stoolInfo.color")
   @Mapping(target = "form", source = "stoolInfo.form")
   @Mapping(target = "isBloody", source = "stoolInfo.isBloody")
@@ -68,7 +68,5 @@ public interface StoolDiagnosisMapper {
     } else {
       return stoolAt;
     }
-
   }
-
 }

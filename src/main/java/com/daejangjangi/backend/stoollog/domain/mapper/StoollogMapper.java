@@ -21,13 +21,13 @@ public interface StoollogMapper {
   @Mapping(target = "id", ignore = true)
   @Mapping(target = "color", source = "request.color")
   @Mapping(target = "form", source = "request.form")
-  @Mapping(target = "loggedAt", expression = "java(convertToSeoulTime(request.loggedAt(), false))")
+  @Mapping(target = "loggedAt", source = "request.loggedAt")
   Stoollog registerRequestToEntity(StoollogRequestDto.StoollogRegisterRequest request);
 
   @Mapping(target = "id", source = "request.id")
   @Mapping(target = "color", source = "request.color")
   @Mapping(target = "form", source = "request.form")
-  @Mapping(target = "loggedAt", expression = "java(convertToSeoulTime(request.loggedAt(), false))")
+  @Mapping(target = "loggedAt", source = "request.loggedAt")
   Stoollog modifyRequestToEntity(StoollogRequestDto.StoollogModifyRequest request);
 
   @Named("stoollogToStoollogInfo")
