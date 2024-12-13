@@ -19,10 +19,15 @@ import com.daejangjangi.backend.stoolanalysis.exception.UnauthorizedStoolExcepti
 import com.daejangjangi.backend.stoolanalysis.openfeign.StoolanalysisOpenFeign;
 import com.daejangjangi.backend.stoolanalysis.repository.StoolDiagnosisRepository;
 import com.daejangjangi.backend.stoolanalysis.repository.StoolImageRepository;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -182,5 +187,20 @@ public class StoolanalysisService {
     return stooldiagnosisRepository.save(stoolDiagnosis);
   }
 
-
+  /**
+   * 배변 분석 결과 조회
+   *
+   * @param member   회원 정보
+   * @param pageable 페이징 정보
+   * @return Page - StoolDiagnosis
+   */
+  public Page<StoolDiagnosis> getStoolInfos(Member member, Pageable pageable) {
+    LocalDateTime date = LocalDate.now()
+        .minusMonths(1)
+        .atStartOfDay(ZoneId.systemDefault())
+        .withZoneSameInstant(ZoneId.of("UTC"))
+        .toLocalDateTime();
+    return stooldiagnosisRepository.findByMemberAndResultSavedAndStoolAtGreaterThanEqual(member,
+        true, date, pageable);
+  }
 }

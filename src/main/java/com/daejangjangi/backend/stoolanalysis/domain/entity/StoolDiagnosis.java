@@ -7,6 +7,7 @@ import com.daejangjangi.backend.stoolanalysis.domain.enums.Mucus;
 import com.daejangjangi.backend.stoolanalysis.domain.enums.ProteinLumps;
 import com.daejangjangi.backend.stoollog.domain.enums.Color;
 import com.daejangjangi.backend.stoollog.domain.enums.Form;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -117,6 +118,7 @@ public class StoolDiagnosis extends BaseEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "member_id")
+  @JsonIgnore
   private Member member;
 
   public void addStoolImages(List<StoolImage> images) {
