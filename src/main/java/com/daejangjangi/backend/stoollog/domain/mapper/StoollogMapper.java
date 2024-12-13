@@ -21,27 +21,32 @@ public interface StoollogMapper {
   @Mapping(target = "id", ignore = true)
   @Mapping(target = "color", source = "request.color")
   @Mapping(target = "form", source = "request.form")
-  @Mapping(target = "loggedAt", expression = "java(convertToSeoulTime(request.loggedAt()))")
+  @Mapping(target = "loggedAt", expression = "java(convertToSeoulTime(request.loggedAt(), false))")
   Stoollog registerRequestToEntity(StoollogRequestDto.StoollogRegisterRequest request);
 
   @Mapping(target = "id", source = "request.id")
   @Mapping(target = "color", source = "request.color")
   @Mapping(target = "form", source = "request.form")
-  @Mapping(target = "loggedAt", expression = "java(convertToSeoulTime(request.loggedAt()))")
+  @Mapping(target = "loggedAt", expression = "java(convertToSeoulTime(request.loggedAt(), false))")
   Stoollog modifyRequestToEntity(StoollogRequestDto.StoollogModifyRequest request);
 
   @Named("stoollogToStoollogInfo")
   @Mapping(target = "id", source = "stoollog.id")
   @Mapping(target = "color", source = "stoollog.color")
   @Mapping(target = "form", source = "stoollog.form")
+  @Mapping(target = "loggedAt", expression = "java(convertToSeoulTime(stoollog.getLoggedAt(), true))")
   StoollogInfoResponse stoollogToStoollogInfo(Stoollog stoollog);
 
   @IterableMapping(qualifiedByName = "stoollogToStoollogInfo")
   List<StoollogInfoResponse> entityToResponse(List<Stoollog> stoollogs);
 
-  default LocalDateTime convertToSeoulTime(LocalDateTime stoolAt) {
-    ZonedDateTime utcZoned = stoolAt.atZone(ZoneId.of("UTC"));
-    ZonedDateTime seoulZoned = utcZoned.withZoneSameInstant(ZoneId.of("Asia/Seoul"));
-    return seoulZoned.toLocalDateTime();
+  default LocalDateTime convertToSeoulTime(LocalDateTime stoolAt, boolean check) {
+    if (check) {
+      ZonedDateTime utcZoned = stoolAt.atZone(ZoneId.of("UTC"));
+      ZonedDateTime seoulZoned = utcZoned.withZoneSameInstant(ZoneId.of("Asia/Seoul"));
+      return seoulZoned.toLocalDateTime();
+    } else {
+      return stoolAt;
+    }
   }
 }
