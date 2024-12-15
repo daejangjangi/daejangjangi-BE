@@ -8,6 +8,7 @@ import com.daejangjangi.backend.stoollog.repository.StoollogRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -65,8 +66,10 @@ public class StoollogService {
    * @return List StoollogResponse
    */
   public List<Stoollog> getStoollogs(Member member, LocalDate date) {
-    LocalDateTime startOfDay = date.atStartOfDay();
-    LocalDateTime endOfDay = date.atTime(LocalTime.of(23, 59));
+    LocalDateTime startOfDay = date.atStartOfDay(ZoneId.of("Asia/Seoul"))
+        .minusHours(9).toLocalDateTime();
+    LocalDateTime endOfDay = date.atTime(LocalTime.of(23, 59, 59))
+        .minusHours(9);
     return stoolLogRepository.findByMemberAndLoggedAtBetweenOrderByLoggedAtAsc(member, startOfDay,
         endOfDay);
   }

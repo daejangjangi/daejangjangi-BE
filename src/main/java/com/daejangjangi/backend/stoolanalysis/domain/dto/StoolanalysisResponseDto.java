@@ -1,11 +1,14 @@
 package com.daejangjangi.backend.stoolanalysis.domain.dto;
 
+import com.daejangjangi.backend.global.common.PageFields;
 import com.daejangjangi.backend.stoolanalysis.domain.enums.Mucus;
 import com.daejangjangi.backend.stoolanalysis.domain.enums.ProteinLumps;
 import com.daejangjangi.backend.stoollog.domain.enums.Color;
 import com.daejangjangi.backend.stoollog.domain.enums.Form;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class StoolanalysisResponseDto {
 
@@ -36,7 +39,7 @@ public class StoolanalysisResponseDto {
       @Schema(description = "배변 이미지 AI 분석 결과")
       StoolImageAiAnalysis stoolImageAiAnalysis,
 
-      @Schema(description = "AWS s3에 업로드된 이미지 url")
+      @Schema(description = "배변 이미지 url")
       String stoolImageUrl
   ) {
 
@@ -49,7 +52,9 @@ public class StoolanalysisResponseDto {
           example = "보호자님께,\\n\\n아기의 변에 대한 정보를 주셔서 감사합니다.  "
               + "아이보리색의 딱딱한 변에 피가 섞여 있고, 점액이나 단백질 덩어리는 없으며, "
               + "모유만 먹는다는 설명을 바탕으로 몇 가지 가능성을 고려해 볼 필요가 있습니다... ")
-      String user_language
+      @JsonProperty("user_language")
+      String userLanguage
+
   ) {
 
   }
@@ -60,12 +65,45 @@ public class StoolanalysisResponseDto {
           example = "보호자님께,\\n\\n아기의 변에 대한 정보를 주셔서 감사합니다.  "
               + "아이보리색의 딱딱한 변에 피가 섞여 있고, 점액이나 단백질 덩어리는 없으며, "
               + "모유만 먹는다는 설명을 바탕으로 몇 가지 가능성을 고려해 볼 필요가 있습니다... ")
-      String result,
+      String diagnosticResult,
+
+      @Schema(description = "배변 분석일")
       LocalDateTime date,
+      @Schema(description = "배변 묽기")
       Form form,
+      @Schema(description = "배변 색상")
       Color color
   ) {
 
   }
+
+  @Schema(name = "StoolDiagnosticInfoResponse", description = "배변 분석 결과 정보 응답 DTO")
+  public record StoolDiagnosticInfo(
+      @Schema(description = "배변 분석 결과 id")
+      Long stoolDiagnosisId,
+
+      @Schema(description = "배변 색상")
+      Color color,
+
+      @Schema(description = "배변 묽기")
+      Form form,
+
+      @Schema(description = "배변 분석일")
+      LocalDateTime stoolAt
+  ) {
+
+  }
+
+  @Schema(name = "StoolDiagnosticInfosResponse", description = "배변 분석 결과 정보 목록 응답 DTO")
+  public record StoolDiagnosticInfos(
+      @Schema(description = "배변 분석 결과 정보 목록")
+      List<StoolDiagnosticInfo> infos,
+
+      @Schema(description = "페이징 정보")
+      PageFields pageFields
+  ) {
+
+  }
+
 
 }

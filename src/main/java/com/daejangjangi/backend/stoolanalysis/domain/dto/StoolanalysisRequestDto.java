@@ -10,15 +10,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.List;
 
 public class StoolanalysisRequestDto {
 
 
-  @Schema(name = "StoolImageAnalyzeRequest", description = "배변 이미지 분석 요청 DTO")
-  public record ImageAnalyze(
+  @Schema(name = "StoolImageAnalyzeAiRequest", description = "배변 이미지 분석 AI 요청 DTO")
+  public record ImageAnalyzeAi(
       @Schema(description = "배변 이미지 분석에 필요한 이미지 aws url")
       @NotBlank(message = "배변 이미지 분석에 사용할 이미지 aws url을 입력하세요.")
       String imageUrl
@@ -26,8 +24,19 @@ public class StoolanalysisRequestDto {
 
   }
 
-  @Schema(name = "StoolDiagnoseRequest", description = "배변 진단 분석 요청 DTO")
+  @Schema(name = "StoolDiagnoseRequest", description = "배변 진단 요청 DTO")
   public record StoolDiagnose(
+      StoolDiagnoseAi stoolDiagnose,
+
+      @Schema(description = "배변 이미지 분석에 사용된 이미지 aws url")
+      @NotBlank(message = "배변 이미지 분석에 사용된 이미지 aws url을 입력하세요.")
+      String stoolImageUrl
+  ) {
+
+  }
+
+  @Schema(name = "StoolDiagnoseAiRequest", description = "배변 진단 AI 요청 DTO")
+  public record StoolDiagnoseAi(
       List<Stools> stools,
 
       @Schema(description = "배변 상태 이외의 추가 증상")
@@ -60,24 +69,6 @@ public class StoolanalysisRequestDto {
       ProteinLumps proteinLumps,
       @Schema(description = "배변 점액 여부")
       Mucus mucus
-  ) {
-
-    public LocalDateTime convertToSeoulTime() {
-      ZonedDateTime utcZoned = this.stoolAt.atZone(ZoneId.of("UTC"));
-      ZonedDateTime seoulZoned = utcZoned.withZoneSameInstant(ZoneId.of("Asia/Seoul"));
-      return seoulZoned.toLocalDateTime();
-    }
-  }
-
-  @Schema(name = "DiagnosisResultRegisterRequest", description = "배변 분석 결과 저장 요청 DTO")
-  public record Register(
-      StoolDiagnose stoolDiagnose,
-      @Schema(description = "배변 분석 결과")
-      @NotBlank(message = "배변 분석 결과를 입력해주세요.")
-      String diagnosisDescription,
-      @Schema(description = "배변 이미지 분석에 사용된 이미지 aws url")
-      @NotBlank(message = "배변 이미지 분석에 사용된 이미지 aws url을 입력하세요.")
-      String stoolImageUrl
   ) {
 
   }

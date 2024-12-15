@@ -1,6 +1,7 @@
 package com.daejangjangi.backend.stoolanalysis.domain.entity;
 
 import com.daejangjangi.backend.global.common.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -39,9 +40,9 @@ public class StoolImage extends BaseEntity {
   @Column(name = "stool_image", nullable = false)
   private String stoolImage;
 
-  // TODO 다대일 null 허용?
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "stool_diagnosis_id")
+  @JsonIgnore
   private StoolDiagnosis stooldiagnosis;
 
   public void updateStoolDiagnosis(StoolDiagnosis stooldiagnosis) {
