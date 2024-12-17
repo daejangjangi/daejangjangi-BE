@@ -195,11 +195,7 @@ public class StoolanalysisService {
    * @return Page - StoolDiagnosis
    */
   public Page<StoolDiagnosis> getStoolInfos(Member member, Pageable pageable) {
-    LocalDateTime date = LocalDate.now()
-        .minusMonths(1)
-        .atStartOfDay(ZoneId.systemDefault())
-        .withZoneSameInstant(ZoneId.of("UTC"))
-        .toLocalDateTime();
+    LocalDateTime date = LocalDate.now().minusMonths(1).atStartOfDay();
     return stooldiagnosisRepository.findByMemberAndResultSavedAndStoolAtGreaterThanEqual(member,
         true, date, pageable);
   }

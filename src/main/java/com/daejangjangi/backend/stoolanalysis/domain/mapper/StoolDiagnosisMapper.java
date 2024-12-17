@@ -23,7 +23,7 @@ public interface StoolDiagnosisMapper {
 
   StoolDiagnosisMapper INSTANCE = Mappers.getMapper(StoolDiagnosisMapper.class);
 
-  @Mapping(target = "stoolAt", source = "stoolInfo.stoolAt")
+  @Mapping(target = "stoolAt", expression = "java(convertToSeoulTime(stoolInfo.stoolAt(), true))")
   @Mapping(target = "color", source = "stoolInfo.color")
   @Mapping(target = "form", source = "stoolInfo.form")
   @Mapping(target = "isBloody", source = "stoolInfo.isBloody")
@@ -40,7 +40,7 @@ public interface StoolDiagnosisMapper {
 
   @Mapping(target = "color", source = "stool.color")
   @Mapping(target = "form", source = "stool.form")
-  @Mapping(target = "date", expression = "java(convertToSeoulTime(stool.stoolAt(), true))")
+  @Mapping(target = "date", source = "stool.stoolAt")
   @Mapping(target = "diagnosticResult", source = "diagnosticResult")
   StoolDiagnosticResult stoolDiagnosticAiResultToResponse(Stools stool,
       String diagnosticResult);
@@ -54,7 +54,7 @@ public interface StoolDiagnosisMapper {
   @Mapping(target = "stoolDiagnosisId", source = "stoolDiagnosis.id")
   @Mapping(target = "color", source = "stoolDiagnosis.color")
   @Mapping(target = "form", source = "stoolDiagnosis.form")
-  @Mapping(target = "stoolAt", expression = "java(convertToSeoulTime(stoolDiagnosis.getStoolAt(), true))")
+  @Mapping(target = "stoolAt", source = "stoolDiagnosis.stoolAt")
   StoolDiagnosticInfo stoolDiagnosisToStoolDiagnosticInfo(StoolDiagnosis stoolDiagnosis);
 
   @IterableMapping(qualifiedByName = "stoolDiagnosisToStoolDiagnosticInfo")

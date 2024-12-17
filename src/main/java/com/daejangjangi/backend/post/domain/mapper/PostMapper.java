@@ -77,13 +77,4 @@ public interface PostMapper {
       return 0;
     }
   }
-
-  default LocalDateTime convertToSeoulTime(LocalDateTime date) {
-    if (date != null) {
-      ZonedDateTime utcZoned = date.atZone(ZoneId.of("UTC"));
-      ZonedDateTime seoulZoned = utcZoned.withZoneSameInstant(ZoneId.of("Asia/Seoul"));
-      return seoulZoned.toLocalDateTime();
-    }
-    return null;
-  }
 }
