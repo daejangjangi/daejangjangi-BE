@@ -4,6 +4,9 @@ import com.daejangjangi.backend.member.domain.entity.Member;
 import com.daejangjangi.backend.post.domain.dto.PostRequestDto;
 import com.daejangjangi.backend.post.domain.dto.PostResponseDto;
 import com.daejangjangi.backend.post.domain.entity.Post;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -41,7 +44,6 @@ public interface PostMapper {
   PostResponseDto.DetailInfo entityToPostDetailInfoResponse(Post post, Member member,
       List<PostResponseDto.CommentInfo> commentInfos);
 
-
   @Mapping(target = "id", source = "post.id")
   @Mapping(target = "title", source = "post.title")
   @Mapping(target = "content", source = "post.content")
@@ -74,5 +76,14 @@ public interface PostMapper {
     } else {
       return 0;
     }
+  }
+
+  default LocalDateTime convertToSeoulTime(LocalDateTime date) {
+    if (date != null) {
+      ZonedDateTime utcZoned = date.atZone(ZoneId.of("UTC"));
+      ZonedDateTime seoulZoned = utcZoned.withZoneSameInstant(ZoneId.of("Asia/Seoul"));
+      return seoulZoned.toLocalDateTime();
+    }
+    return null;
   }
 }

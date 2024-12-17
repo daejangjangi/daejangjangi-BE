@@ -4,10 +4,16 @@ import com.daejangjangi.backend.board.domain.entity.Board;
 import com.daejangjangi.backend.board.domain.entity.BoardPost;
 import com.daejangjangi.backend.board.repository.BoardPostRepository;
 import com.daejangjangi.backend.member.domain.entity.Member;
+import com.daejangjangi.backend.post.domain.dto.PostResponseDto;
+import com.daejangjangi.backend.post.domain.dto.PostResponseDto.CommentInfo;
 import com.daejangjangi.backend.post.domain.entity.Post;
+import com.daejangjangi.backend.post.domain.mapper.PostMapper;
 import com.daejangjangi.backend.post.exception.NotFoundPostException;
 import com.daejangjangi.backend.post.exception.NotPostAuthorException;
 import com.daejangjangi.backend.post.repository.PostRepository;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -183,5 +189,71 @@ public class PostService {
    */
   public Page<Post> findHotPosts(Pageable pageable) {
     return postRepository.findByLikeCountGreaterThanEqual(5L, pageable);
+  }
+
+  /**
+   * 게시글 상세 조회
+   *
+   * @param member 회원 정보
+   * @param post   게시글 정보
+   * @return DetailInfo
+   */
+  public PostResponseDto.DetailInfo getInfo(Member member, Post post) {
+    return PostMapper.INSTANCE.entityToPostDetailInfoResponse(post, member,
+        getCommentInfo(member, post));
+  }
+
+  /**
+   * 특정 게시글의 댓글 목록 조회
+   *
+   * @param member 회원 정보
+   * @param post   게시글 정보
+   * @return List - CommentInfo
+   */
+  private List<PostResponseDto.CommentInfo> getCommentInfo(Member member, Post post) {
+    List<PostResponseDto.CommentInfo> commentInfos = new ArrayList<>();
+    post.getComments().forEach(comment -> {
+      PostResponseDto.CommentInfo info = CommentInfo.builder()
+          .id(comment.getId())
+          .likes((long) comment.getLikes().size())
+          .createdAt(convertToSeoulTime(comment.getCreatedAt()))
+          .content(comment.getContent())
+          .nickname((comment.getMember() == null) ? null : comment.getMember().getNickname())
+          .isDeleted(comment.isDeleted())
+          .profile((comment.getMember() == null) ? null : comment.getMember().getProfile())
+          .isLiked(comment.getLikes().stream().anyMatch(like -> like.getMember().equals(member)))
+          .isAuthor(comment.getMember() != null && comment.getMember().equals(member)).build();
+
+      if (comment.getParent() == null) {
+        comment.getChildren().forEach(child -> {
+          PostResponseDto.CommentInfo childInfo = CommentInfo.builder()
+              .id(child.getId())
+              .likes((long) child.getLikes().size())
+              .createdAt(convertToSeoulTime(child.getCreatedAt()))
+              .content(child.getContent())
+              .nickname((child.getMember() == null) ? null : child.getMember().getNickname())
+              .isDeleted(child.isDeleted())
+              .profile((child.getMember() == null) ? null : child.getMember().getProfile())
+              .isLiked(
+                  child.getLikes().stream().anyMatch(like -> like.getMember().equals(member)))
+              .isAuthor(child.getMember() != null && child.getMember().equals(member)).build();
+          info.addCommentInfo(childInfo);
+        });
+        commentInfos.add(info);
+      }
+    });
+    return commentInfos;
+  }
+
+  /**
+   * 날짜 UTC에서 KST로 변환
+   *
+   * @param date 날짜 정보
+   * @return LocalDateTime
+   */
+  private LocalDateTime convertToSeoulTime(LocalDateTime date) {
+    ZonedDateTime utcZoned = date.atZone(ZoneId.of("UTC"));
+    ZonedDateTime seoulZoned = utcZoned.withZoneSameInstant(ZoneId.of("Asia/Seoul"));
+    return seoulZoned.toLocalDateTime();
   }
 }
