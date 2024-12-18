@@ -5,6 +5,7 @@ import com.daejangjangi.backend.global.response.ApiGlobalResponse;
 import com.daejangjangi.backend.member.domain.entity.Member;
 import com.daejangjangi.backend.member.service.MemberService;
 import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisRequestDto;
+import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisResponseDto.StoolDiagnosticDetailInfo;
 import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisResponseDto.StoolDiagnosticInfo;
 import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisResponseDto.StoolDiagnosticInfos;
 import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisResponseDto.StoolDiagnosticResult;
@@ -70,6 +71,16 @@ public class StoolanalysisController implements StoolanalysisApi {
     Member member = memberService.info();
     stoolanalysisService.remove(member, diagnosisId);
     return ApiGlobalResponse.ok();
+  }
+
+  @PreAuthorize("hasAuthority('MEMBER')")
+  @GetMapping("/{diagnosisId}")
+  public ApiGlobalResponse<StoolDiagnosticDetailInfo> getStoolInfo(
+      @PathVariable("diagnosisId") Long diagnosisId) {
+    StoolDiagnosis stoolDiagnosis = stoolanalysisService.getStoolInfo(diagnosisId);
+    StoolDiagnosticDetailInfo response = StoolDiagnosisMapper.INSTANCE.stoolDiagnosisToStoolDiagnosticDetailInfo(
+        stoolDiagnosis);
+    return ApiGlobalResponse.ok(response);
   }
 
   @PreAuthorize("hasAuthority('MEMBER')")
