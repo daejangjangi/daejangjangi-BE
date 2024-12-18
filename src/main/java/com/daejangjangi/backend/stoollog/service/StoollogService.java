@@ -66,10 +66,8 @@ public class StoollogService {
    * @return List StoollogResponse
    */
   public List<Stoollog> getStoollogs(Member member, LocalDate date) {
-    LocalDateTime startOfDay = date.atStartOfDay(ZoneId.of("Asia/Seoul"))
-        .minusHours(9).toLocalDateTime();
-    LocalDateTime endOfDay = date.atTime(LocalTime.of(23, 59, 59))
-        .minusHours(9);
+    LocalDateTime startOfDay = date.atStartOfDay();
+    LocalDateTime endOfDay = date.atTime(LocalTime.of(23, 59, 59));
     return stoolLogRepository.findByMemberAndLoggedAtBetweenOrderByLoggedAtAsc(member, startOfDay,
         endOfDay);
   }

@@ -11,9 +11,6 @@ import com.daejangjangi.backend.post.domain.mapper.PostMapper;
 import com.daejangjangi.backend.post.exception.NotFoundPostException;
 import com.daejangjangi.backend.post.exception.NotPostAuthorException;
 import com.daejangjangi.backend.post.repository.PostRepository;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -216,7 +213,7 @@ public class PostService {
       PostResponseDto.CommentInfo info = CommentInfo.builder()
           .id(comment.getId())
           .likes((long) comment.getLikes().size())
-          .createdAt(convertToSeoulTime(comment.getCreatedAt()))
+          .createdAt(comment.getCreatedAt())
           .content(comment.getContent())
           .nickname((comment.getMember() == null) ? null : comment.getMember().getNickname())
           .isDeleted(comment.isDeleted())
@@ -229,7 +226,7 @@ public class PostService {
           PostResponseDto.CommentInfo childInfo = CommentInfo.builder()
               .id(child.getId())
               .likes((long) child.getLikes().size())
-              .createdAt(convertToSeoulTime(child.getCreatedAt()))
+              .createdAt(child.getCreatedAt())
               .content(child.getContent())
               .nickname((child.getMember() == null) ? null : child.getMember().getNickname())
               .isDeleted(child.isDeleted())
@@ -243,17 +240,5 @@ public class PostService {
       }
     });
     return commentInfos;
-  }
-
-  /**
-   * 날짜 UTC에서 KST로 변환
-   *
-   * @param date 날짜 정보
-   * @return LocalDateTime
-   */
-  private LocalDateTime convertToSeoulTime(LocalDateTime date) {
-    ZonedDateTime utcZoned = date.atZone(ZoneId.of("UTC"));
-    ZonedDateTime seoulZoned = utcZoned.withZoneSameInstant(ZoneId.of("Asia/Seoul"));
-    return seoulZoned.toLocalDateTime();
   }
 }
