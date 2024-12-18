@@ -5,6 +5,7 @@ services:
     environment:
       - MYSQL_DATABASE=daejangjangi
       - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+      - TZ=Asia/Seoul
 
     ports:
       - "13306:3306" # local 에서 사용중인 DB와 port 충돌하여 수정.
