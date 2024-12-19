@@ -3,6 +3,7 @@ package com.daejangjangi.backend.stoolanalysis.domain.mapper;
 import com.daejangjangi.backend.member.domain.entity.Member;
 import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisRequestDto.StoolDiagnoseAi;
 import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisRequestDto.Stools;
+import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisResponseDto.StoolDiagnosticDetailInfo;
 import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisResponseDto.StoolDiagnosticInfo;
 import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisResponseDto.StoolDiagnosticResult;
 import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisResponseDto.StoolImageAiAnalysis;
@@ -56,6 +57,13 @@ public interface StoolDiagnosisMapper {
   @Mapping(target = "form", source = "stoolDiagnosis.form")
   @Mapping(target = "stoolAt", source = "stoolDiagnosis.stoolAt")
   StoolDiagnosticInfo stoolDiagnosisToStoolDiagnosticInfo(StoolDiagnosis stoolDiagnosis);
+
+  @Mapping(target = "color", source = "stoolDiagnosis.color")
+  @Mapping(target = "form", source = "stoolDiagnosis.form")
+  @Mapping(target = "date", source = "stoolDiagnosis.stoolAt")
+  @Mapping(target = "diagnosticResult", source = "stoolDiagnosis.diagnosisDescription")
+  StoolDiagnosticDetailInfo stoolDiagnosisToStoolDiagnosticDetailInfo(
+      StoolDiagnosis stoolDiagnosis);
 
   @IterableMapping(qualifiedByName = "stoolDiagnosisToStoolDiagnosticInfo")
   List<StoolDiagnosticInfo> entityToResponse(List<StoolDiagnosis> stoolDiagnoses);

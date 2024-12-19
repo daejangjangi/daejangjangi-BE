@@ -6,6 +6,7 @@ import com.daejangjangi.backend.global.annotation.swagger.ResponseCommonWithSwag
 import com.daejangjangi.backend.global.response.ApiGlobalResponse;
 import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisRequestDto;
 import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisResponseDto;
+import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisResponseDto.StoolDiagnosticDetailInfo;
 import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisResponseDto.StoolDiagnosticInfos;
 import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisResponseDto.StoolDiagnosticResult;
 import com.daejangjangi.backend.stoolanalysis.domain.dto.StoolanalysisResponseDto.StoolImageAnalysis;
@@ -207,7 +208,7 @@ public interface StoolanalysisApi {
   })
   ApiGlobalResponse<Null> remove(@PathVariable("diagnosisId") Long diagnosisId);
 
-  @Operation(summary = "배변 분석 결과 조회", tags = {"Stool Analysis (배변 분석) API"})
+  @Operation(summary = "배변 분석 결과 목록 조회", tags = {"Stool Analysis (배변 분석) API"})
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "OK",
           content = @Content(schema = @Schema(implementation = StoolDiagnosticInfos.class)))
@@ -215,4 +216,32 @@ public interface StoolanalysisApi {
   @Response401WithSwagger
   ApiGlobalResponse<StoolDiagnosticInfos> getStoolInfos(@RequestParam(defaultValue = "10") int size,
       @RequestParam(defaultValue = "1") int page);
+
+  @Operation(summary = "배변 분석 결과 세부 조회", tags = {"Stool Analysis (배변 분석) API"})
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "OK",
+          content = @Content(schema = @Schema(implementation = StoolDiagnosticDetailInfo.class))),
+      @ApiResponse(responseCode = "400", description = "잘못된 요청",
+          content = @Content(
+              mediaType = "application/json",
+              array = @ArraySchema(schema = @Schema(implementation = ApiGlobalResponse.class)),
+              examples = {
+                  @ExampleObject(
+                      name = "NOT_FOUND_STOOL_DIAGNOSIS",
+                      summary = "존재하지 않는 배변 진단 데이터",
+                      value = """
+                          {
+                            "code": "BAD_REQUEST",
+                            "message": "잘못된 요청입니다.",
+                            "data": [
+                              "diagnosisId : 존재하지 않는 배변 진단 데이터입니다."
+                            ]
+                          }"""
+                  )
+              }
+          )
+      )
+  })
+  ApiGlobalResponse<StoolDiagnosticDetailInfo> getStoolInfo(
+      @PathVariable("diagnosisId") Long diagnosisId);
 }

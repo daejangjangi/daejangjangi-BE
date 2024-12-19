@@ -188,7 +188,7 @@ public class StoolanalysisService {
   }
 
   /**
-   * 배변 분석 결과 조회
+   * 배변 분석 결과 목록 조회
    *
    * @param member   회원 정보
    * @param pageable 페이징 정보
@@ -198,5 +198,16 @@ public class StoolanalysisService {
     LocalDateTime date = LocalDate.now().minusMonths(1).atStartOfDay();
     return stooldiagnosisRepository.findByMemberAndResultSavedAndStoolAtGreaterThanEqual(member,
         true, date, pageable);
+  }
+
+  /**
+   * 배변 분석 결과 세부 조회
+   *
+   * @param diagnosisId 배변 분석 결과 id
+   * @return StoolDiagnosis
+   */
+  public StoolDiagnosis getStoolInfo(Long diagnosisId) {
+    return stooldiagnosisRepository.findById(diagnosisId)
+        .orElseThrow(NotFoundStoolDiagnosisException::new);
   }
 }
